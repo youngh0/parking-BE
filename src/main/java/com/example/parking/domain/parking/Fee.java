@@ -8,9 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Fee {
 
-    private int fee;
+    private Integer fee;
 
-    public Fee(int fee) {
+    private Fee(Integer fee) {
         this.fee = fee;
+    }
+
+    public static Fee from(Integer fee) {
+        return new Fee(fee);
     }
 }

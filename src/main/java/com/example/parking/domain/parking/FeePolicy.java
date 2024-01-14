@@ -31,4 +31,13 @@ public class FeePolicy {
     @Embedded
     @AttributeOverride(name = "fee", column = @Column(name = "max_fee"))
     private Fee dayMaximumFee;
+
+    public FeePolicy(final Fee baseFee, final Fee extraFee, final TimeUnit baseTimeUnit, final TimeUnit extraTimUnit,
+                     final Fee dayMaximumFee) {
+        this.baseFee = baseFee;
+        this.extraFee = extraFee;
+        this.baseTimeUnit = baseTimeUnit;
+        this.extraTimUnit = extraTimUnit;
+        this.dayMaximumFee = dayMaximumFee;
+    }
 }
