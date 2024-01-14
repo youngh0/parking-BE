@@ -4,8 +4,7 @@ import jakarta.persistence.Embeddable;
 import java.time.LocalTime;
 
 @Embeddable
-public class
-TimeInfo {
+public class TimeInfo {
 
     private LocalTime beginTime;
     private LocalTime endTime;
