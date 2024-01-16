@@ -1,4 +1,4 @@
-package com.example.parking.application;
+package com.example.parking.application.seoul.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
