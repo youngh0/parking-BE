@@ -18,68 +18,85 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.stereotype.Component;
 
-@Controller
-public class TestApi {
+@Component
+public class SeoulCityParkingAdapter implements ParkingAdapter{
 
     private static final Set<String> TIMED_PARKING_RULES = Set.of("1", "3", "5");
     private static final String STREET_PARKING_TYPE = "노상 주차장";
     private static final String FREE = "무료";
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HHmm");
 
-    private final String apiKey = "/7a7250537070617238334472465257";
-    private final String apiType = "/json";
+    private final SeoulCityParkingApi api;
 
-    @GetMapping("/test")
-    public void send() {
-        String startIndex = "/1";
-        String endIndex = "/1000";
-        String url = "http://openapi.seoul.go.kr:8088" + apiKey + apiType + "/GetParkingInfo" + startIndex + endIndex;
+    public SeoulCityParkingAdapter(final SeoulCityParkingApi api) {
+        this.api = api;
+    }
 
-        final RestTemplate restTemplate = new RestTemplate();
-        final ResponseEntity<SeoulCityParkingResponse> response = restTemplate.getForEntity(url,
-                SeoulCityParkingResponse.class);
-        final List<SeoulCityParking> rows = response.getBody().getParkingInfo().getRows();
+    @Override
+    public List<Parking> convert() {
+        final List<SeoulCityParking> rows = api.call()
+                .getParkingInfo()
+                .getRows();
 
         final List<SeoulCityParking> seoulCityParkingLots = calculateCapacity(filterByOperation(rows));
 
-        final SeoulCityParking seoulCityParking = seoulCityParkingLots.get(0);
+        return seoulCityParkingLots.stream()
+                .map(this::toParking)
+                .collect(Collectors.toList());
+    }
 
-        BaseInformation baseInformation = new BaseInformation(seoulCityParking.getTel(), seoulCityParking.getAddr(),
+    private Parking toParking(final SeoulCityParking seoulCityParking) {
+        return new Parking(getBaseInformation(seoulCityParking), getType(seoulCityParking),
+                getLocation(seoulCityParking), getSpace(seoulCityParking), getOperatingTime(seoulCityParking),
+                getFeePolicy(seoulCityParking), getFreePolicy(seoulCityParking));
+    }
+
+    private BaseInformation getBaseInformation(final SeoulCityParking seoulCityParking) {
+        return new BaseInformation(seoulCityParking.getTel(), seoulCityParking.getAddr(),
                 seoulCityParking.getParkingName(),
                 seoulCityParking.getParkingCode());
+    }
 
-        Type type = Type.find(seoulCityParking.getParkingTypeNM());
-        Location location = new Location(seoulCityParking.getLng(), seoulCityParking.getLat());
+    private Type getType(final SeoulCityParking seoulCityParking) {
+        return Type.find(seoulCityParking.getParkingTypeNM());
+    }
 
-        final Space space = new Space(seoulCityParking.getQueStatus() == 1, seoulCityParking.getCapacity(),
+    private Location getLocation(final SeoulCityParking seoulCityParking) {
+        return new Location(seoulCityParking.getLng(), seoulCityParking.getLat());
+    }
+
+    private Space getSpace(final SeoulCityParking seoulCityParking) {
+        return new Space(seoulCityParking.getQueStatus() == 1, seoulCityParking.getCapacity(),
                 seoulCityParking.getCurParking());
+    }
 
-        final OperatingTime operatingTime = new OperatingTime(
+    private OperatingTime getOperatingTime(final SeoulCityParking seoulCityParking) {
+        return new OperatingTime(
                 new TimeInfo(parsingOperationTime(seoulCityParking.getWeekdayBeginTime()),
                         parsingOperationTime(seoulCityParking.getWeekdayEndTime())),
                 new TimeInfo(parsingOperationTime(seoulCityParking.getWeekendBeginTime()),
                         parsingOperationTime(seoulCityParking.getWeekendEndTime())),
                 new TimeInfo(parsingOperationTime(seoulCityParking.getHolidayBeginTime()),
                         parsingOperationTime(seoulCityParking.getHolidayEndTime()))
-
         );
-        final FreePolicy freePolicy = new FreePolicy(seoulCityParking.getPayNM().equals(FREE),
-                seoulCityParking.getSaturdayPayNM().equals(FREE), seoulCityParking.getHolidayPayNM().equals(FREE));
+    }
 
-        final FeePolicy feePolicy = new FeePolicy(Fee.from(seoulCityParking.getRates()),
+    private LocalTime parsingOperationTime(String time) {
+        return LocalTime.parse(time, TIME_FORMATTER);
+    }
+
+    private FeePolicy getFeePolicy(final SeoulCityParking seoulCityParking) {
+        return new FeePolicy(Fee.from(seoulCityParking.getRates()),
                 Fee.from(seoulCityParking.getAddRates()),
                 TimeUnit.from(seoulCityParking.getTimeRate()), TimeUnit.from(seoulCityParking.getAddTimeRate()),
                 Fee.from(seoulCityParking.getDayMaximum()));
+    }
 
-        final Parking parking = new Parking(baseInformation, type, location, space, operatingTime, feePolicy,
-                freePolicy);
-
-        System.out.println("parking = " + parking);
+    private FreePolicy getFreePolicy(final SeoulCityParking seoulCityParking) {
+        return new FreePolicy(seoulCityParking.getPayNM().equals(FREE),
+                seoulCityParking.getSaturdayPayNM().equals(FREE), seoulCityParking.getHolidayPayNM().equals(FREE));
     }
 
     private List<SeoulCityParking> filterByOperation(final List<SeoulCityParking> rows) {
@@ -101,19 +118,4 @@ public class TestApi {
             return parking;
         }).toList();
     }
-
-    private LocalTime parsingOperationTime(String time) {
-        return LocalTime.parse(time, TIME_FORMATTER);
-    }
-
-    /**
-     * todo
-     * 1. 노상 주차장의 경우
-     * capacity 다 더해서 구해야함
-     *
-     * 2. OPERATION_RULE이 1이 아닌 경우
-     * 버릴 것 (버스전용 주차장)
-     *
-     * SeoulCityParkingResponse -> Parking 객체로 변환
-     */
 }

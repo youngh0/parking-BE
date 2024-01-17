@@ -24,6 +24,10 @@ public enum Type {
     }
 
     public static Type find(String description) {
-        return descriptions.get(description);
+        final String key = descriptions.keySet().stream()
+                .filter(type -> type.startsWith(description))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("요청한 유형의 주차장을 찾을 수 없습니다."));
+        return descriptions.get(key);
     }
 }
