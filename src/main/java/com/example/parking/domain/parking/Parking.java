@@ -32,22 +32,24 @@ public class Parking extends AuditingEntity {
     private Space space;
 
     @Embedded
+    private FreeOperatingTime freeOperatingTime;
+
+    @Embedded
     private OperatingTime operatingTime;
 
     @Embedded
     private FeePolicy feePolicy;
 
-    @Embedded
-    private FreePolicy freePolicy;
-
-    public Parking(BaseInformation baseInformation, ParkingType parkingType, Location location, Space space,
-                   OperatingTime operatingTime, FeePolicy feePolicy, FreePolicy freePolicy) {
+    public Parking(final BaseInformation baseInformation, final ParkingType parkingType, final Location location,
+                   final Space space,
+                   final FreeOperatingTime freeOperatingTime, final OperatingTime operatingTime,
+                   final FeePolicy feePolicy) {
         this.baseInformation = baseInformation;
         this.parkingType = parkingType;
         this.location = location;
         this.space = space;
+        this.freeOperatingTime = freeOperatingTime;
         this.operatingTime = operatingTime;
         this.feePolicy = feePolicy;
-        this.freePolicy = freePolicy;
     }
 }
