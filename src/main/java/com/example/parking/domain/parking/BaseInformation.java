@@ -9,15 +9,13 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class BaseInformation {
 
+    private String name;
     private String tel;
     private String address;
-    private String name;
-    private String code;
 
-    public BaseInformation(String tel, String address, String name, String code) {
+    public BaseInformation(String name, String tel, String address) {
+        this.name = name;
         this.tel = tel;
         this.address = address;
-        this.name = name;
-        this.code = code;
     }
 }
