@@ -1,4 +1,4 @@
-package com.example.parking.application;
+package com.example.parking.application.coordinate;
 
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
@@ -16,5 +16,6 @@ public class CoordinateErrorHandler implements ResponseErrorHandler {
     @Override
     public void handleError(ClientHttpResponse response) throws IOException {
         log.warn("fail while extracting coordinate by address code: {}", response.getStatusCode());
+        throw new IllegalArgumentException("예외발생");
     }
 }
