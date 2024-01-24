@@ -23,7 +23,7 @@ public class Parking extends AuditingEntity {
     private BaseInformation baseInformation;
 
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private ParkingType parkingType;
 
     @Embedded
     private Location location;
@@ -40,10 +40,10 @@ public class Parking extends AuditingEntity {
     @Embedded
     private FreePolicy freePolicy;
 
-    public Parking(BaseInformation baseInformation, Type type, Location location, Space space,
+    public Parking(BaseInformation baseInformation, ParkingType parkingType, Location location, Space space,
                    OperatingTime operatingTime, FeePolicy feePolicy, FreePolicy freePolicy) {
         this.baseInformation = baseInformation;
-        this.type = type;
+        this.parkingType = parkingType;
         this.location = location;
         this.space = space;
         this.operatingTime = operatingTime;
