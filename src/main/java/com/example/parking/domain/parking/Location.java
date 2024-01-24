@@ -1,15 +1,16 @@
 package com.example.parking.domain.parking;
 
-import jakarta.persistence.Embeddable;
+import static lombok.AccessLevel.PROTECTED;
 
+import jakarta.persistence.Embeddable;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = PROTECTED)
 @Embeddable
 public class Location {
 
     private String longitude;
     private String latitude;
-
-    protected Location() {
-    }
 
     public Location(String longitude, String latitude) {
         this.longitude = longitude;
