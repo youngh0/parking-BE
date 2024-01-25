@@ -11,7 +11,8 @@ import lombok.Getter;
 public enum ParkingType {
     OFF_STREET("노외 주차장"),
     ON_STREET("노상 주차장"),
-    MECHANICAL("기계식 주차장");
+    MECHANICAL("기계식 주차장"),
+    NO_INFO("정보 없음");
 
     private static final Map<String, ParkingType> descriptions =
             Collections.unmodifiableMap(Stream.of(values())
@@ -24,6 +25,6 @@ public enum ParkingType {
     }
 
     public static ParkingType find(String description) {
-        return descriptions.get(description);
+        return descriptions.getOrDefault(description, NO_INFO);
     }
 }
