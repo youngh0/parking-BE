@@ -1,87 +1,53 @@
 package com.example.parking.domain.parking;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 class FreePolicyTest {
 
-    @Test
-    void 언제나_무료이면_계산_시간이_0이다() {
+    @ParameterizedTest
+    @MethodSource("getDay")
+    void 특정_날이_무료인지_확인한다(
+            boolean isFree,
+            boolean isSaturdayFree,
+            boolean isHolidayFree,
+            Day today,
+            boolean expected
+    ) {
         // given
-        FreePolicy freePolicy = new FreePolicy(true, true, true);
-        int weekdayMinutes = 100;
-        int saturdayMinutes = 200;
-        int weekendMinutes = 300;
-        int expected = 0;
+        FreePolicy freePolicy = new FreePolicy(isFree, isSaturdayFree, isHolidayFree);
+        DayParking dayParking = new DayParking(100, today);
 
         // when
-        int actual = freePolicy.calculateMinutes(weekdayMinutes, saturdayMinutes, weekendMinutes);
+        boolean actual = freePolicy.isNotFreeDay(dayParking);
 
         // then
         Assertions.assertThat(actual).isEqualTo(expected);
     }
 
-    @Test
-    void 토요일과_공휴일이_무료이면_주중_시간만_나온다() {
-        // given
-        FreePolicy freePolicy = new FreePolicy(false, true, true);
-        int weekdayMinutes = 100;
-        int saturdayMinutes = 200;
-        int weekendMinutes = 300;
-        int expected = 100;
+    static Stream<Arguments> getDay() {
+        return Stream.of(
+                Arguments.of(true, true, true, Day.WEEKDAY, false),
+                Arguments.of(false, true, true, Day.WEEKDAY, true),
+                Arguments.of(false, true, false, Day.WEEKDAY, true),
+                Arguments.of(false, false, true, Day.WEEKDAY, true),
+                Arguments.of(false, false, false, Day.WEEKDAY, true),
 
-        // when
-        int actual = freePolicy.calculateMinutes(weekdayMinutes, saturdayMinutes, weekendMinutes);
+                Arguments.of(true, true, true, Day.SATURDAY, false),
+                Arguments.of(false, true, true, Day.SATURDAY, false),
+                Arguments.of(false, true, false, Day.SATURDAY, false),
+                Arguments.of(false, false, true, Day.SATURDAY, true),
+                Arguments.of(false, false, false, Day.SATURDAY, true),
 
-        // then
-        Assertions.assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void 토요일만_무료이면_주중_시간에_공휴일_시간을_더한_시간이_나온다() {
-        // given
-        FreePolicy freePolicy = new FreePolicy(false, true, false);
-        int weekdayMinutes = 100;
-        int saturdayMinutes = 200;
-        int weekendMinutes = 300;
-        int expected = 400;
-
-        // when
-        int actual = freePolicy.calculateMinutes(weekdayMinutes, saturdayMinutes, weekendMinutes);
-
-        // then
-        Assertions.assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void 공휴일만_무료이면_주중_시간에_토요일_시간을_더한_시간이_나온다() {
-        // given
-        FreePolicy freePolicy = new FreePolicy(false, false, true);
-        int weekdayMinutes = 100;
-        int saturdayMinutes = 200;
-        int weekendMinutes = 300;
-        int expected = 300;
-
-        // when
-        int actual = freePolicy.calculateMinutes(weekdayMinutes, saturdayMinutes, weekendMinutes);
-
-        // then
-        Assertions.assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void 언제나_유료이면_주중_시간에_토요일_시간에_공휴일_시간을_더한_시간이_나온다() {
-        // given
-        FreePolicy freePolicy = new FreePolicy(false, false, false);
-        int weekdayMinutes = 100;
-        int saturdayMinutes = 200;
-        int weekendMinutes = 300;
-        int expected = 600;
-
-        // when
-        int actual = freePolicy.calculateMinutes(weekdayMinutes, saturdayMinutes, weekendMinutes);
-
-        // then
-        Assertions.assertThat(actual).isEqualTo(expected);
+                Arguments.of(true, true, true, Day.HOLIDAY, false),
+                Arguments.of(false, true, true, Day.HOLIDAY, false),
+                Arguments.of(false, true, false, Day.HOLIDAY, true),
+                Arguments.of(false, false, true, Day.HOLIDAY, false),
+                Arguments.of(false, false, false, Day.HOLIDAY, true)
+        );
     }
 }

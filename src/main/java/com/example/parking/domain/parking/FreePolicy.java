@@ -18,19 +18,16 @@ public class FreePolicy {
         this.isHolidayFree = isHolidayFree;
     }
 
-    public int calculateMinutes(int weekdayMinutes, int saturdayMinutes, int holidayMinutes) {
+    public boolean isNotFreeDay(DayParking dayParking) {
         if (isFree) {
-            return 0;
+            return false;
         }
-        if (isSaturdayFree && isHolidayFree) {
-            return weekdayMinutes;
+        if (dayParking.getDay() == Day.WEEKDAY) {
+            return true;
         }
-        if (isSaturdayFree) {
-            return weekdayMinutes + holidayMinutes;
+        if (dayParking.getDay() == Day.SATURDAY) {
+            return !isSaturdayFree;
         }
-        if (isHolidayFree) {
-            return weekdayMinutes + saturdayMinutes;
-        }
-        return weekdayMinutes + saturdayMinutes + holidayMinutes;
+        return !isHolidayFree;
     }
 }
