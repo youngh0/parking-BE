@@ -2,11 +2,13 @@ package com.example.parking.domain.parking;
 
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
 @Embeddable
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Fee {
 
@@ -28,6 +30,10 @@ public class Fee {
 
     public Fee plus(Fee fee) {
         return new Fee(this.fee + fee.fee);
+    }
+
+    public static Fee min(Fee fee, Fee otherFee) {
+        return new Fee(Math.min(fee.fee, otherFee.fee));
     }
 
     @Override
