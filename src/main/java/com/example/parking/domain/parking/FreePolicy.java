@@ -17,4 +17,20 @@ public class FreePolicy {
         this.isSaturdayFree = isSaturdayFree;
         this.isHolidayFree = isHolidayFree;
     }
+
+    public int calculateMinutes(int weekdayMinutes, int saturdayMinutes, int holidayMinutes) {
+        if (isFree) {
+            return 0;
+        }
+        if (isSaturdayFree && isHolidayFree) {
+            return weekdayMinutes;
+        }
+        if (isSaturdayFree) {
+            return weekdayMinutes + holidayMinutes;
+        }
+        if (isHolidayFree) {
+            return weekdayMinutes + saturdayMinutes;
+        }
+        return weekdayMinutes + saturdayMinutes + holidayMinutes;
+    }
 }
