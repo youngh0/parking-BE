@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Parking extends AuditingEntity {
@@ -49,5 +51,14 @@ public class Parking extends AuditingEntity {
         this.operatingTime = operatingTime;
         this.feePolicy = feePolicy;
         this.freePolicy = freePolicy;
+    }
+
+    public Fee calculateParkingFee(List<DayParking> dayParkings) {
+        return dayParkings.stream()
+                .filter(dayParking -> freePolicy.isNotFreeDay(dayParking))
+                .map(DayParking::getMinutes)
+                .map(minutes -> feePolicy.calculateFee(minutes))
+                .reduce(Fee::plus)
+                .orElse(Fee.ZERO);
     }
 }
