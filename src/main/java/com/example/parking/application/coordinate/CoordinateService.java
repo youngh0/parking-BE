@@ -16,10 +16,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class CoordinateService {
 
     private static final String KAKAO_URL = "https://dapi.kakao.com/v2/local/search/address.json";
+    private static final Coordinate INVALID_COORDINATE = new Coordinate(0, 0);
 
     private final RestTemplate restTemplate;
     private final CoordinateRestTemplateInterceptor coordinateRestTemplateInterceptor;
-    private static final Coordinate INVALID_COORDINATE = new Coordinate(0, 0);
 
     @Autowired
     public CoordinateService(RestTemplateBuilder restTemplateBuilder,
