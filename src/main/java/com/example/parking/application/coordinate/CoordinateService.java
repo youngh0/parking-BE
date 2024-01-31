@@ -19,7 +19,7 @@ public class CoordinateService {
 
     private final RestTemplate restTemplate;
     private final CoordinateRestTemplateInterceptor coordinateRestTemplateInterceptor;
-    private final Coordinate INVALID_COORDINATE = new Coordinate(0, 0);
+    private static final Coordinate INVALID_COORDINATE = new Coordinate(0, 0);
 
     @Autowired
     public CoordinateService(RestTemplateBuilder restTemplateBuilder,
@@ -29,6 +29,7 @@ public class CoordinateService {
         this.restTemplate = restTemplateBuilder
                 .errorHandler(new CoordinateErrorHandler())
                 .additionalInterceptors(List.of(coordinateRestTemplateInterceptor))
+                .rootUri(KAKAO_URL)
                 .build();
     }
 
