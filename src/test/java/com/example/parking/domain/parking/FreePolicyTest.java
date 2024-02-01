@@ -11,7 +11,7 @@ class FreePolicyTest {
 
     @ParameterizedTest
     @MethodSource("getDay")
-    void 특정_날이_무료인지_확인한다(
+    void 요금이_존재하는_날인지를_확인한다(
             boolean isFree,
             boolean isSaturdayFree,
             boolean isHolidayFree,
