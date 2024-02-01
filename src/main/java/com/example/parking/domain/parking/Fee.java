@@ -33,7 +33,10 @@ public class Fee {
     }
 
     public static Fee min(Fee fee, Fee otherFee) {
-        return new Fee(Math.min(fee.fee, otherFee.fee));
+        if (fee.fee < otherFee.fee) {
+            return fee;
+        }
+        return otherFee;
     }
 
     @Override
