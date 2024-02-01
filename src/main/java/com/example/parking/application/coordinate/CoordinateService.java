@@ -24,16 +24,16 @@ public class CoordinateService {
         this.restTemplate = restTemplate;
     }
 
-    public Location extractLocationByAddress(String address, double latitude, double longitude) {
+    public Location extractLocationByAddress(String address, double longitude, double latitude) {
         UriComponents uriComponents = makeCompleteUri(address);
         ResponseEntity<CoordinateResponse> result = connect(uriComponents);
 
         if (isEmptyResultData(result)) {
-            return new Location(latitude, longitude);
+            return new Location(longitude, latitude);
         }
 
         ExactLocation exactLocation = getExactLocation(result);
-        return new Location(exactLocation.getX(), exactLocation.getY());
+        return new Location(exactLocation.getLongitude(), exactLocation.getLatitude());
     }
 
     private ExactLocation getExactLocation(ResponseEntity<CoordinateResponse> result) {

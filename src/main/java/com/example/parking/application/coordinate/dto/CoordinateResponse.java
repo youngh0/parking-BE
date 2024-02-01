@@ -20,11 +20,18 @@ public class CoordinateResponse {
         this.meta = meta;
     }
 
-    @Getter
     @NoArgsConstructor
     public static class ExactLocation {
         private Double x;
         private Double y;
+
+        public Double getLatitude() {
+            return y;
+        }
+
+        public Double getLongitude() {
+            return x;
+        }
     }
 
     @Getter
