@@ -10,19 +10,19 @@ import lombok.NoArgsConstructor;
 public class CoordinateResponse {
 
     @JsonProperty("documents")
-    private List<Document> documents;
+    private List<ExactLocation> exactLocations;
 
     @JsonProperty("meta")
     private Meta meta;
 
-    public CoordinateResponse(List<Document> documents, Meta meta) {
-        this.documents = documents;
+    public CoordinateResponse(List<ExactLocation> exactLocations, Meta meta) {
+        this.exactLocations = exactLocations;
         this.meta = meta;
     }
 
     @Getter
     @NoArgsConstructor
-    public static class Document {
+    public static class ExactLocation {
         private Double x;
         private Double y;
     }

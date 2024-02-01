@@ -1,7 +1,8 @@
 package com.example.parking.application.coordinate;
 
 import com.example.parking.application.coordinate.dto.CoordinateResponse;
-import com.example.parking.application.coordinate.dto.CoordinateResponse.Document;
+import com.example.parking.application.coordinate.dto.CoordinateResponse.ExactLocation;
+import com.example.parking.domain.parking.Location;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,7 +16,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class CoordinateService {
 
     private static final String KAKAO_URL = "https://dapi.kakao.com/v2/local/search/address.json";
-    private static final Coordinate INVALID_COORDINATE = new Coordinate(0, 0);
 
     private final RestTemplate restTemplate;
 
@@ -24,24 +24,39 @@ public class CoordinateService {
         this.restTemplate = restTemplate;
     }
 
-    public Coordinate extractCoordinateByAddress(String address) {
-        UriComponents uriComponents = UriComponentsBuilder
-                .fromHttpUrl(KAKAO_URL)
-                .queryParam("query", address)
-                .build();
+    public Location extractLocationByAddress(String address, double latitude, double longitude) {
+        UriComponents uriComponents = makeCompleteUri(address);
+        ResponseEntity<CoordinateResponse> result = connect(uriComponents);
 
-        ResponseEntity<CoordinateResponse> result = restTemplate.getForEntity(
+        if (isEmptyResultData(result)) {
+            return new Location(latitude, longitude);
+        }
+
+        ExactLocation exactLocation = getExactLocation(result);
+        return new Location(exactLocation.getX(), exactLocation.getY());
+    }
+
+    private ExactLocation getExactLocation(ResponseEntity<CoordinateResponse> result) {
+        List<ExactLocation> exactLocations = result.getBody().getExactLocations();
+        return exactLocations.get(0);
+    }
+
+    private ResponseEntity<CoordinateResponse> connect(UriComponents uriComponents) {
+        return restTemplate.getForEntity(
                 uriComponents.toString(),
                 CoordinateResponse.class
         );
+    }
 
+    private UriComponents makeCompleteUri(String address) {
+        return UriComponentsBuilder
+                .fromHttpUrl(KAKAO_URL)
+                .queryParam("query", address)
+                .build();
+    }
+
+    private boolean isEmptyResultData(ResponseEntity<CoordinateResponse> result) {
         Integer matchingDataCount = result.getBody().getMeta().getTotalCount();
-        if (matchingDataCount == 0) {
-            return INVALID_COORDINATE;
-        }
-
-        List<Document> documents = result.getBody().getDocuments();
-        Document document = documents.get(0);
-        return new Coordinate(document.getX(), document.getY());
+        return matchingDataCount == 0;
     }
 }
