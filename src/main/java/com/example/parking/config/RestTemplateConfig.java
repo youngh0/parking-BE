@@ -1,28 +1,25 @@
 package com.example.parking.config;
 
 import com.example.parking.application.coordinate.CoordinateErrorHandler;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RestTemplateConfig {
 
-    @Bean
-    @Qualifier("coordinateRestTemplate")
-    public RestTemplate coordinateRestTemplate(RestTemplateBuilder restTemplateBuilder) {
-        return restTemplateBuilder
-                .errorHandler(new CoordinateErrorHandler())
-                .additionalInterceptors(List.of(coordinateRestTemplateInterceptor()))
-                .build();
-    }
+    private static final String AUTH_HEADER = "Authorization";
 
     @Bean
-    public ClientHttpRequestInterceptor coordinateRestTemplateInterceptor() {
-        return new CoordinateRestTemplateInterceptor();
+    @Qualifier("coordinateRestTemplate")
+    public RestTemplate coordinateRestTemplate(RestTemplateBuilder restTemplateBuilder,
+                                               @Value("${kakao.key}") String kakaoUrl) {
+        return restTemplateBuilder
+                .errorHandler(new CoordinateErrorHandler())
+                .defaultHeader(AUTH_HEADER, kakaoUrl)
+                .build();
     }
 }
