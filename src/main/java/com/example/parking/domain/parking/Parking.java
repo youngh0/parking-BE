@@ -55,7 +55,7 @@ public class Parking extends AuditingEntity {
 
     public Fee calculateParkingFee(List<DayParking> dayParkings) {
         return dayParkings.stream()
-                .filter(dayParking -> freePolicy.isNotFreeDay(dayParking))
+                .filter(freePolicy::isNotFreeDay)
                 .map(DayParking::getMinutes)
                 .map(minutes -> feePolicy.calculateFee(minutes))
                 .reduce(Fee::plus)
