@@ -16,7 +16,6 @@ class FeePolicyTest {
         Fee actual = feePolicy.calculateFee(minutes);
 
         // then
-        System.out.println(actual.getFee());
         Assertions.assertThat(actual).isEqualTo(expected);
     }
 
