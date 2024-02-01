@@ -2,10 +2,9 @@ package com.example.parking.application.coordinate;
 
 import com.example.parking.application.coordinate.dto.CoordinateResponse;
 import com.example.parking.application.coordinate.dto.CoordinateResponse.Document;
-import com.example.parking.config.CoordinateRestTemplateInterceptor;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -19,18 +18,10 @@ public class CoordinateService {
     private static final Coordinate INVALID_COORDINATE = new Coordinate(0, 0);
 
     private final RestTemplate restTemplate;
-    private final CoordinateRestTemplateInterceptor coordinateRestTemplateInterceptor;
 
     @Autowired
-    public CoordinateService(RestTemplateBuilder restTemplateBuilder,
-                             CoordinateRestTemplateInterceptor coordinateRestTemplateInterceptor) {
-        this.coordinateRestTemplateInterceptor = coordinateRestTemplateInterceptor;
-
-        this.restTemplate = restTemplateBuilder
-                .errorHandler(new CoordinateErrorHandler())
-                .additionalInterceptors(List.of(coordinateRestTemplateInterceptor))
-                .rootUri(KAKAO_URL)
-                .build();
+    public CoordinateService(@Qualifier("coordinateRestTemplate") RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     public Coordinate extractCoordinateByAddress(String address) {

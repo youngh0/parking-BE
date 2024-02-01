@@ -6,9 +6,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.stereotype.Component;
 
-@Component
 public class CoordinateRestTemplateInterceptor implements ClientHttpRequestInterceptor {
 
     private static final String AUTH_HEADER = "Authorization";
@@ -19,6 +17,7 @@ public class CoordinateRestTemplateInterceptor implements ClientHttpRequestInter
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
             throws IOException {
+
         request.getHeaders().set(AUTH_HEADER, kakaoAuthHeader);
         return execution.execute(request, body);
     }
