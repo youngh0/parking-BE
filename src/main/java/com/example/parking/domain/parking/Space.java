@@ -1,20 +1,43 @@
 package com.example.parking.domain.parking;
 
+import static lombok.AccessLevel.*;
+
 import jakarta.persistence.Embeddable;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class Space {
 
-    private Boolean currentParkingProviding;
+    private static final Integer NO_PROVIDE = -1;
+
     private Integer capacity;
     private Integer currentParking;
 
-    public Space(final Boolean currentParkingProviding, final Integer capacity, final Integer currentParking) {
-        this.currentParkingProviding = currentParkingProviding;
+    private Space(Integer capacity, Integer currentParking) {
         this.capacity = capacity;
         this.currentParking = currentParking;
+    }
+
+    public static Space of(String capacity, String currentParking) {
+        return new Space(parseInt(capacity), parseInt(currentParking));
+    }
+
+    private static Integer parseInt(String number) {
+        try {
+            return Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            return NO_PROVIDE;
+        }
+    }
+
+    public static Space of(Integer capacity, Integer currentParking) {
+        if (capacity < 0) {
+            capacity = NO_PROVIDE;
+        }
+        if (currentParking < 0) {
+            currentParking = NO_PROVIDE;
+        }
+        return new Space(capacity, currentParking);
     }
 }

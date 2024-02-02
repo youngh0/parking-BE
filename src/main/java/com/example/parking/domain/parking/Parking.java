@@ -1,5 +1,7 @@
 package com.example.parking.domain.parking;
 
+import static lombok.AccessLevel.*;
+
 import com.example.parking.domain.AuditingEntity;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class Parking extends AuditingEntity {
 
     @Id
@@ -24,9 +26,6 @@ public class Parking extends AuditingEntity {
     @Embedded
     private BaseInformation baseInformation;
 
-    @Enumerated(EnumType.STRING)
-    private Type type;
-
     @Embedded
     private Location location;
 
@@ -34,23 +33,22 @@ public class Parking extends AuditingEntity {
     private Space space;
 
     @Embedded
+    private FreeOperatingTime freeOperatingTime;
+
+    @Embedded
     private OperatingTime operatingTime;
 
     @Embedded
     private FeePolicy feePolicy;
 
-    @Embedded
-    private FreePolicy freePolicy;
-
-    public Parking(BaseInformation baseInformation, Type type, Location location, Space space,
-                   OperatingTime operatingTime, FeePolicy feePolicy, FreePolicy freePolicy) {
+    public Parking(BaseInformation baseInformation, Location location, Space space,
+                   FreeOperatingTime freeOperatingTime, OperatingTime operatingTime, FeePolicy feePolicy) {
         this.baseInformation = baseInformation;
-        this.type = type;
         this.location = location;
         this.space = space;
+        this.freeOperatingTime = freeOperatingTime;
         this.operatingTime = operatingTime;
         this.feePolicy = feePolicy;
-        this.freePolicy = freePolicy;
     }
 
     public Fee calculateParkingFee(List<DayParking> dayParkings) {

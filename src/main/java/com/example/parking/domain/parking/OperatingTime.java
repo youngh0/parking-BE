@@ -1,43 +1,37 @@
 package com.example.parking.domain.parking;
 
+import static lombok.AccessLevel.*;
+
 import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = PROTECTED)
 @Embeddable
 public class OperatingTime {
 
-    @AttributeOverrides({
-            @AttributeOverride(name = "beginTime", column = @Column(name = "weekday_begin_time")),
-            @AttributeOverride(name = "endTime", column = @Column(name = "weekday_end_time"))
-    })
+    @AttributeOverride(name = "beginTime", column = @Column(name = "weekday_begin_time"))
+    @AttributeOverride(name = "endTime", column = @Column(name = "weekday_end_time"))
     @Embedded
     private TimeInfo weekday;
 
-    @AttributeOverrides({
-            @AttributeOverride(name = "beginTime", column = @Column(name = "weekend_begin_time")),
-            @AttributeOverride(name = "endTime", column = @Column(name = "weekend_end_time"))
-    })
+    @AttributeOverride(name = "beginTime", column = @Column(name = "saturday_begin_time"))
+    @AttributeOverride(name = "endTime", column = @Column(name = "saturday_end_time"))
     @Embedded
-    private TimeInfo weekend;
+    private TimeInfo saturday;
 
-    @AttributeOverrides({
-            @AttributeOverride(name = "beginTime", column = @Column(name = "holiday_begin_time")),
-            @AttributeOverride(name = "endTime", column = @Column(name = "holiday_end_time"))
-    })
+    @AttributeOverride(name = "beginTime", column = @Column(name = "holiday_begin_time"))
+    @AttributeOverride(name = "endTime", column = @Column(name = "holiday_end_time"))
     @Embedded
     private TimeInfo holiday;
 
-    protected OperatingTime() {
-    }
-
     public OperatingTime(TimeInfo weekday,
-                         TimeInfo weekend,
+                         TimeInfo saturday,
                          TimeInfo holiday) {
         this.weekday = weekday;
-        this.weekend = weekend;
+        this.saturday = saturday;
         this.holiday = holiday;
     }
 }

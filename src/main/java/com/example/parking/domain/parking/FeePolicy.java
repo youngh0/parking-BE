@@ -12,28 +12,27 @@ import static lombok.AccessLevel.PROTECTED;
 @Embeddable
 public class FeePolicy {
 
-    @Embedded
     @AttributeOverride(name = "fee", column = @Column(name = "base_fee"))
+    @Embedded
     private Fee baseFee;
 
-    @Embedded
     @AttributeOverride(name = "fee", column = @Column(name = "extra_fee"))
+    @Embedded
     private Fee extraFee;
 
-    @Embedded
     @AttributeOverride(name = "timeUnit", column = @Column(name = "base_time_unit"))
+    @Embedded
     private TimeUnit baseTimeUnit;
 
-    @Embedded
     @AttributeOverride(name = "timeUnit", column = @Column(name = "extra_time_unit"))
+    @Embedded
     private TimeUnit extraTimUnit;
 
+    @AttributeOverride(name = "fee", column = @Column(name = "day_maximum_fee"))
     @Embedded
-    @AttributeOverride(name = "fee", column = @Column(name = "max_fee"))
     private Fee dayMaximumFee;
 
-    public FeePolicy(final Fee baseFee, final Fee extraFee, final TimeUnit baseTimeUnit, final TimeUnit extraTimUnit,
-                     final Fee dayMaximumFee) {
+    public FeePolicy(Fee baseFee, Fee extraFee, TimeUnit baseTimeUnit, TimeUnit extraTimUnit, Fee dayMaximumFee) {
         this.baseFee = baseFee;
         this.extraFee = extraFee;
         this.baseTimeUnit = baseTimeUnit;
