@@ -1,19 +1,15 @@
 package com.example.parking.domain.parking;
 
-import static lombok.AccessLevel.*;
+import static lombok.AccessLevel.PROTECTED;
 
 import com.example.parking.domain.AuditingEntity;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
@@ -53,7 +49,7 @@ public class Parking extends AuditingEntity {
 
     public Fee calculateParkingFee(List<DayParking> dayParkings) {
         return dayParkings.stream()
-                .filter(freePolicy::isNotFreeDay)
+//                .filter(freePolicy::isNotFreeDay)
                 .map(DayParking::getMinutes)
                 .map(minutes -> feePolicy.calculateFee(minutes))
                 .reduce(Fee::plus)
