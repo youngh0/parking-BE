@@ -43,7 +43,7 @@ public class FeePolicy {
 
     public Fee calculateFee(int oneDayMinutes) {
         if (baseTimeUnit.isEqualOrGreaterThan(oneDayMinutes)) {
-            return Fee.from(baseFee.getFee());
+            return baseFee;
         }
         oneDayMinutes = oneDayMinutes - baseTimeUnit.getTimeUnit();
         int time = extraTimUnit.calculateQuotient(oneDayMinutes);
