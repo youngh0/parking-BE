@@ -1,5 +1,7 @@
 package com.example.parking.domain.parking;
 
+import static lombok.AccessLevel.*;
+
 import com.example.parking.domain.AuditingEntity;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -12,7 +14,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class Parking extends AuditingEntity {
 
     @Id
@@ -37,10 +39,8 @@ public class Parking extends AuditingEntity {
     @Embedded
     private FeePolicy feePolicy;
 
-    public Parking(final BaseInformation baseInformation, final Location location,
-                   final Space space,
-                   final FreeOperatingTime freeOperatingTime, final OperatingTime operatingTime,
-                   final FeePolicy feePolicy) {
+    public Parking(BaseInformation baseInformation, Location location, Space space,
+                   FreeOperatingTime freeOperatingTime, OperatingTime operatingTime, FeePolicy feePolicy) {
         this.baseInformation = baseInformation;
         this.location = location;
         this.space = space;
