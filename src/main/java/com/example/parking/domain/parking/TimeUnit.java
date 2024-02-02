@@ -1,12 +1,13 @@
 package com.example.parking.domain.parking;
 
+import static lombok.AccessLevel.PROTECTED;
+
 import jakarta.persistence.Embeddable;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 @Getter
 public class TimeUnit {
 

@@ -8,22 +8,23 @@ import java.util.stream.Stream;
 import lombok.Getter;
 
 @Getter
-public enum Type {
+public enum ParkingType {
     OFF_STREET("노외 주차장"),
     ON_STREET("노상 주차장"),
-    MECHANICAL("기계식 주차장");
+    MECHANICAL("기계식 주차장"),
+    NO_INFO("정보 없음");
 
-    private static final Map<String, Type> descriptions =
+    private static final Map<String, ParkingType> descriptions =
             Collections.unmodifiableMap(Stream.of(values())
-                    .collect(Collectors.toMap(Type::getDescription, Function.identity())));
+                    .collect(Collectors.toMap(ParkingType::getDescription, Function.identity())));
 
     private final String description;
 
-    Type(String description) {
+    ParkingType(String description) {
         this.description = description;
     }
 
-    public static Type find(String description) {
-        return descriptions.get(description);
+    public static ParkingType find(String description) {
+        return descriptions.getOrDefault(description, NO_INFO);
     }
 }
