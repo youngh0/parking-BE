@@ -17,4 +17,17 @@ public class FreePolicy {
         this.isSaturdayFree = isSaturdayFree;
         this.isHolidayFree = isHolidayFree;
     }
+
+    public boolean isNotFreeDay(DayParking dayParking) {
+        if (isFree) {
+            return false;
+        }
+        if (dayParking.getDay() == Day.WEEKDAY) {
+            return true;
+        }
+        if (dayParking.getDay() == Day.SATURDAY) {
+            return !isSaturdayFree;
+        }
+        return !isHolidayFree;
+    }
 }
