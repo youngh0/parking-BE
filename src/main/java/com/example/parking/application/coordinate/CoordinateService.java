@@ -29,11 +29,11 @@ public class CoordinateService {
         ResponseEntity<CoordinateResponse> result = connect(uriComponents);
 
         if (isEmptyResultData(result)) {
-            return new Location(longitude, latitude);
+            return Location.of(latitude, longitude);
         }
 
         ExactLocation exactLocation = getExactLocation(result);
-        return new Location(exactLocation.getLongitude(), exactLocation.getLatitude());
+        return Location.of(latitude, longitude);
     }
 
     private ExactLocation getExactLocation(ResponseEntity<CoordinateResponse> result) {
