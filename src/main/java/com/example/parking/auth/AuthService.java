@@ -25,7 +25,7 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public MemberSession findSession(String sessionId) {
-        return memberSessionRepository.findBySessionIdAndExpiredAtGreaterThanEqual(sessionId,
+        return memberSessionRepository.findBySessionIdAndExpiredAtIsGreaterThanEqual(sessionId,
                         LocalDateTime.now())
                 .orElseThrow(() -> new UnAuthorizationException("존재하지 않는 sessionId 입니다.", sessionId));
     }

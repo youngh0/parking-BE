@@ -22,7 +22,7 @@ class MemberSessionRepositoryTest {
         memberSessionRepository.save(memberSession);
 
         // when, then
-        assertThat(memberSessionRepository.findBySessionIdAndExpiredAtGreaterThanEqual(memberSession.getSessionId(), LocalDateTime.now().minusDays(1)))
+        assertThat(memberSessionRepository.findBySessionIdAndExpiredAtIsGreaterThanEqual(memberSession.getSessionId(), LocalDateTime.now().minusDays(1)))
                 .isPresent();
     }
 
@@ -33,7 +33,7 @@ class MemberSessionRepositoryTest {
         memberSessionRepository.save(memberSession);
 
         // when, then
-        assertThat(memberSessionRepository.findBySessionIdAndExpiredAtGreaterThanEqual(memberSession.getSessionId(), LocalDateTime.now()))
+        assertThat(memberSessionRepository.findBySessionIdAndExpiredAtIsGreaterThanEqual(memberSession.getSessionId(), LocalDateTime.now()))
                 .isEmpty();
     }
 }
