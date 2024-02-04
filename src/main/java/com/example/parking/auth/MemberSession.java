@@ -24,4 +24,8 @@ public class MemberSession {
         this.createdAt = createdAt;
         this.expiredAt = expiredAt;
     }
+
+    public void updateExpiredAt(LocalDateTime newExpiredAt) {
+        expiredAt = newExpiredAt;
+    }
 }

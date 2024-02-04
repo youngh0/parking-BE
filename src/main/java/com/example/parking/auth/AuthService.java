@@ -22,4 +22,17 @@ public class AuthService {
         memberSessionRepository.save(memberSession);
         return memberSession.getSessionId();
     }
+
+    @Transactional(readOnly = true)
+    public MemberSession findSession(String sessionId) {
+        return memberSessionRepository.findBySessionIdAndExpiredAtGreaterThanEqual(sessionId,
+                        LocalDateTime.now())
+                .orElseThrow(() -> new UnAuthorizationException("존재하지 않는 sessionId 입니다.", sessionId));
+    }
+
+    @Transactional
+    public void updateSessionExpiredAt(MemberSession session) {
+        session.updateExpiredAt(LocalDateTime.now().plusMinutes(DURATION_MINUTE));
+        memberSessionRepository.save(session);
+    }
 }
