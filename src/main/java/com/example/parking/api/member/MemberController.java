@@ -3,22 +3,24 @@ package com.example.parking.api.member;
 import com.example.parking.application.member.MemberService;
 import com.example.parking.application.member.dto.MemberLoginRequest;
 import com.example.parking.application.member.dto.MemberSignupRequest;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import com.example.parking.auth.AuthService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequiredArgsConstructor
 @RestController
 public class MemberController {
 
-    private final MemberService memberService;
+    private static final String JSESSIONID = "JSESSIONID";
 
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
+    private final MemberService memberService;
+    private final AuthService authService;
 
     @PostMapping("/users")
     public ResponseEntity<Void> signup(@RequestBody MemberSignupRequest request) {
@@ -26,10 +28,13 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("login")
-    public ResponseEntity<Void> login(HttpServletRequest httpServletRequest, @RequestBody MemberLoginRequest request) {
-        HttpSession session = httpServletRequest.getSession();
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(HttpServletResponse httpServletResponse,
+                                      @RequestBody MemberLoginRequest request) {
         Long memberId = memberService.login(request);
+        String sessionId = authService.createSession(memberId);
+        httpServletResponse.addCookie(new Cookie(JSESSIONID, sessionId));
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
