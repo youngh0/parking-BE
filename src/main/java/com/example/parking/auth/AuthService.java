@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -12,6 +13,7 @@ public class AuthService {
     private static final Long DURATION_MINUTE = 30L;
     private final MemberSessionRepository memberSessionRepository;
 
+    @Transactional
     public String createSession(Long memberId) {
         LocalDateTime current = LocalDateTime.now();
         String uuid = UUID.randomUUID().toString();
