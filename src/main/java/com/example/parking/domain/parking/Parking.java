@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,6 +17,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @ToString(of = {"id", "baseInformation", "location"})
+@Builder
 @NoArgsConstructor(access = PROTECTED)
 public class Parking extends AuditingEntity {
 
@@ -40,6 +42,17 @@ public class Parking extends AuditingEntity {
 
     @Embedded
     private FeePolicy feePolicy;
+
+    private Parking(Long id, BaseInformation baseInformation, Location location, Space space,
+                    FreeOperatingTime freeOperatingTime, OperatingTime operatingTime, FeePolicy feePolicy) {
+        this.id = id;
+        this.baseInformation = baseInformation;
+        this.location = location;
+        this.space = space;
+        this.freeOperatingTime = freeOperatingTime;
+        this.operatingTime = operatingTime;
+        this.feePolicy = feePolicy;
+    }
 
     public Parking(BaseInformation baseInformation, Location location, Space space,
                    FreeOperatingTime freeOperatingTime, OperatingTime operatingTime, FeePolicy feePolicy) {
