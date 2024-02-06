@@ -1,7 +1,6 @@
 package com.example.parking.config.argumentresolver.parking;
 
 import com.example.parking.application.parking.dto.ParkingQueryRequest;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -20,7 +19,6 @@ public class ParkingQueryArgumentResolver implements HandlerMethodArgumentResolv
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
         return new ParkingQueryRequest(
                 webRequest.getParameter("operationType"),
                 webRequest.getParameter("parkingType"),
