@@ -15,26 +15,32 @@ import org.springframework.stereotype.Service;
 @Service
 public class ParkingService {
 
+    public static final String DISTANCE_ORDER_CONDITION = "가까운 순";
     private final ParkingRepository parkingRepository;
+    private final ParkingDomainService parkingDomainService;
 
     public ParkingLotsResponse findParkingLots(ParkingQueryRequest parkingQueryRequest) {
         Location middlLocation = Location.of(parkingQueryRequest.getLatitude(), parkingQueryRequest.getLongitude());
 
         List<Parking> parkingLots = findParkingLotsByOrderCondition(parkingQueryRequest, middlLocation);
-        ParkingQueryCondition queryCondition = parkingQueryRequest.toQueryCondition();
-
-        List<ParkingResponse> parkingLotsResponse = parkingLots.stream()
-                .filter(parking -> parking.isMatchOperationType(queryCondition.getOperationType()))
-                .filter(parking -> parking.isMatchParkingType(queryCondition.getParkingType()))
-                .map(this::toParkingResponse)
-                .toList();
+        List<ParkingResponse> parkingLotsResponse = filteringByCondition(parkingQueryRequest, parkingLots);
 
         return new ParkingLotsResponse(parkingLotsResponse);
     }
 
+    private List<ParkingResponse> filteringByCondition(ParkingQueryRequest parkingQueryRequest,
+                                                       List<Parking> parkingLots) {
+        ParkingQueryCondition queryCondition = parkingQueryRequest.toQueryCondition();
+
+        List<Parking> filteredParkingLots = parkingDomainService.filterByCondition(parkingLots, queryCondition);
+        return filteredParkingLots.stream()
+                .map(this::toParkingResponse)
+                .toList();
+    }
+
     private List<Parking> findParkingLotsByOrderCondition(ParkingQueryRequest parkingQueryRequest,
                                                           Location middleLocation) {
-        if (parkingQueryRequest.getPriority().equals("가까운 순")) {
+        if (parkingQueryRequest.getPriority().equals(DISTANCE_ORDER_CONDITION)) {
             return parkingRepository.findAroundParkingLotsOrderByDistance(middleLocation.getPoint(),
                     parkingQueryRequest.getRadius());
         }
