@@ -9,9 +9,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.List;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
+@Getter
+@ToString(of = {"id", "baseInformation", "location"})
 @NoArgsConstructor(access = PROTECTED)
 public class Parking extends AuditingEntity {
 
@@ -54,5 +58,13 @@ public class Parking extends AuditingEntity {
                 .map(minutes -> feePolicy.calculateFee(minutes))
                 .reduce(Fee::plus)
                 .orElse(Fee.ZERO);
+    }
+
+    public boolean isMatchOperationType(OperationType operationType) {
+        return baseInformation.isMatchOperationType(operationType);
+    }
+
+    public boolean isMatchParkingType(ParkingType parkingType) {
+        return baseInformation.isMatchParkingType(parkingType);
     }
 }

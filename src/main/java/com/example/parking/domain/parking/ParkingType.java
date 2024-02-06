@@ -27,4 +27,8 @@ public enum ParkingType {
     public static ParkingType find(String description) {
         return descriptions.getOrDefault(description, NO_INFO);
     }
+
+    public String getDescription() {
+        return description;
+    }
 }

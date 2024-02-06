@@ -1,5 +1,7 @@
 package com.example.parking.domain.parking;
 
+import java.util.Arrays;
+
 public enum OperationType {
 
     PUBLIC("공영"),
@@ -10,5 +12,12 @@ public enum OperationType {
 
     OperationType(String description) {
         this.description = description;
+    }
+
+    public static OperationType find(String description) {
+        return Arrays.stream(OperationType.values())
+                .filter(operationType -> operationType.description.equals(description))
+                .findAny()
+                .orElse(NO_INFO);
     }
 }

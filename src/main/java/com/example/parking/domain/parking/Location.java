@@ -5,6 +5,7 @@ import static lombok.AccessLevel.PROTECTED;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -12,6 +13,7 @@ import org.locationtech.jts.geom.PrecisionModel;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
+@ToString
 @Embeddable
 public class Location {
 
