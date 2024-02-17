@@ -1,7 +1,5 @@
 package com.example.parking.domain.parking;
 
-import static lombok.AccessLevel.PROTECTED;
-
 import com.example.parking.domain.AuditingEntity;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -9,10 +7,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = PROTECTED)
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Parking extends AuditingEntity {
 
     @Id
@@ -54,5 +55,16 @@ public class Parking extends AuditingEntity {
                 .map(minutes -> feePolicy.calculateFee(minutes))
                 .reduce(Fee::plus)
                 .orElse(Fee.ZERO);
+    }
+
+    public void update(Parking updated) {
+        this.space = updated.space;
+        this.freeOperatingTime = updated.freeOperatingTime;
+        this.operatingTime = updated.operatingTime;
+        this.feePolicy = updated.feePolicy;
+    }
+
+    public void update(Location location) {
+        this.location = location;
     }
 }

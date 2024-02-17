@@ -1,16 +1,17 @@
 package com.example.parking.domain.parking;
 
-import static lombok.AccessLevel.*;
-
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class OperatingTime {
+
+    public static final OperatingTime ALWAYS_OPEN = new OperatingTime(TimeInfo.ALL_DAY, TimeInfo.ALL_DAY, TimeInfo.ALL_DAY);
 
     @AttributeOverride(name = "beginTime", column = @Column(name = "weekday_begin_time"))
     @AttributeOverride(name = "endTime", column = @Column(name = "weekday_end_time"))

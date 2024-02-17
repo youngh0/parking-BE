@@ -25,9 +25,20 @@ public enum ParkingType implements SearchConditionAvailable {
         this.description = description;
     }
 
+    private static boolean isSame(String input, String description) {
+        if (input.isBlank()) {
+            return false;
+        }
+        input = removeSpace(input);
+        description = removeSpace(description);
+        return description.startsWith(input);
+    }
+
+    private static String removeSpace(String description) {
+        return description.replace(" ", "");
+
     @Override
     public ParkingType getDefault() {
         return NO_INFO;
     }
 }
-
