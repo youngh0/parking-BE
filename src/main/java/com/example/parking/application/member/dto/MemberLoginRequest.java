@@ -1,12 +1,17 @@
 package com.example.parking.application.member.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class MemberLoginRequest {
 
     private String email;
     private String password;
+
+    public MemberLoginRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
