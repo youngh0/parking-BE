@@ -1,5 +1,6 @@
 package com.example.parking.domain.parking;
 
+import com.example.parking.domain.searchcondition.SearchConditionAvailable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
@@ -8,10 +9,10 @@ import java.util.stream.Stream;
 import lombok.Getter;
 
 @Getter
-public enum ParkingType {
-    OFF_STREET("노외 주차장"),
-    ON_STREET("노상 주차장"),
-    MECHANICAL("기계식 주차장"),
+public enum ParkingType implements SearchConditionAvailable {
+    OFF_STREET("노외"),
+    ON_STREET("노상"),
+    MECHANICAL("기계식"),
     NO_INFO("정보 없음");
 
     private static final Map<String, ParkingType> descriptions =
@@ -24,7 +25,9 @@ public enum ParkingType {
         this.description = description;
     }
 
-    public static ParkingType find(String description) {
-        return descriptions.getOrDefault(description, NO_INFO);
+    @Override
+    public ParkingType getDefault() {
+        return NO_INFO;
     }
 }
+
