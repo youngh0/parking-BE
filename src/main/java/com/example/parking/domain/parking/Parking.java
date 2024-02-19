@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,13 +47,8 @@ public class Parking extends AuditingEntity {
         this.feePolicy = feePolicy;
     }
 
-    public Fee calculateParkingFee(List<DayParking> dayParkings) {
-        return dayParkings.stream()
-//                .filter(freePolicy::isNotFreeDay)
-                .map(DayParking::getMinutes)
-                .map(minutes -> feePolicy.calculateFee(minutes))
-                .reduce(Fee::plus)
-                .orElse(Fee.ZERO);
+    public int calculatePayOfChargeMinutes(DayParking dayParking) {
+        return freeOperatingTime.calculatePayOfChargeMinutes(dayParking);
     }
 
     public void update(Parking updated) {
