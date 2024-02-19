@@ -55,4 +55,9 @@ public class MemberService {
             throw new MemberLoginException("비밀번호가 틀립니다.");
         }
     }
+
+    @Transactional
+    public void deleteMember(Long memberId) {
+        memberRepository.deleteById(memberId);
+    }
 }
