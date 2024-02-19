@@ -1,5 +1,6 @@
 package com.example.parking.application.member;
 
+import com.example.parking.application.member.dto.MemberInfoResult;
 import com.example.parking.application.member.dto.MemberLoginRequest;
 import com.example.parking.application.member.dto.MemberSignupRequest;
 import com.example.parking.application.member.exception.MemberLoginException;
@@ -54,5 +55,13 @@ public class MemberService {
         if (!member.checkPassword(password)) {
             throw new MemberLoginException("비밀번호가 틀립니다.");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public MemberInfoResult findMemberInfo(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 memberId 입니다."));
+
+        return new MemberInfoResult(member.getName(), member.getEmail());
     }
 }
