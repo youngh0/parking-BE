@@ -40,6 +40,9 @@ public class FeePolicy {
     }
 
     public Fee calculateFee(int minutes) {
+        if (minutes == 0) {
+            return Fee.ZERO;
+        }
         if (baseTimeUnit.isEqualOrGreaterThan(minutes)) {
             return baseFee;
         }
