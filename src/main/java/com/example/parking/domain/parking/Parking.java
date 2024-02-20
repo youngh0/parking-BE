@@ -51,6 +51,10 @@ public class Parking extends AuditingEntity {
         return freeOperatingTime.calculatePayOfChargeMinutes(dayParking);
     }
 
+    public Fee calculateParkingFee(int payOfChargeMinutes) {
+        return feePolicy.calculateFee(payOfChargeMinutes);
+    }
+
     public void update(Parking updated) {
         this.space = updated.space;
         this.freeOperatingTime = updated.freeOperatingTime;

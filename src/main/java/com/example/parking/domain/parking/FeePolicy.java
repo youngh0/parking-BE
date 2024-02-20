@@ -39,12 +39,12 @@ public class FeePolicy {
         this.dayMaximumFee = dayMaximumFee;
     }
 
-    public Fee calculateFee(int oneDayMinutes) {
-        if (baseTimeUnit.isEqualOrGreaterThan(oneDayMinutes)) {
+    public Fee calculateFee(int minutes) {
+        if (baseTimeUnit.isEqualOrGreaterThan(minutes)) {
             return baseFee;
         }
-        oneDayMinutes = oneDayMinutes - baseTimeUnit.getTimeUnit();
-        int time = extraTimUnit.calculateQuotient(oneDayMinutes);
+        minutes = minutes - baseTimeUnit.getTimeUnit();
+        int time = extraTimUnit.calculateQuotient(minutes);
         return Fee.min(extraFee.multiply(time).plus(baseFee), dayMaximumFee);
     }
 }
