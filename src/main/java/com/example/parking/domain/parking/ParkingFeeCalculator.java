@@ -8,6 +8,10 @@ import java.util.List;
 public class ParkingFeeCalculator {
 
     public Fee calculateParkingFee(Parking parking, LocalDateTime beginTime, LocalDateTime endTime) {
+        if (!parking.supportCalculateParkingFee()) {
+            return Fee.NO_INFO;
+        }
+
         List<DayParking> dayParkingDates = separateDate(beginTime, endTime);
         List<Integer> payOfChargeMinutesPerDay = dayParkingDates.stream()
                 .map(parking::calculatePayOfChargeMinutes)

@@ -40,6 +40,21 @@ public class FeePolicy {
     }
 
     public Fee calculateFee(int minutes) {
+        if (supportBase()) {
+            return calculateFeeWithBase(minutes);
+        }
+        return calculateFeeWithoutBase(minutes);
+    }
+
+    public boolean supportBase() {
+        return baseFee.isValidFee() && baseTimeUnit.isValidTimeUnit();
+    }
+
+    public boolean supportExtra() {
+        return extraFee.isValidFee() && extraTimUnit.isValidTimeUnit();
+    }
+
+    private Fee calculateFeeWithBase(int minutes) {
         if (minutes == 0) {
             return Fee.ZERO;
         }
@@ -49,5 +64,16 @@ public class FeePolicy {
         minutes = minutes - baseTimeUnit.getTimeUnit();
         int time = extraTimUnit.calculateQuotient(minutes);
         return Fee.min(extraFee.multiply(time).plus(baseFee), dayMaximumFee);
+    }
+
+    private Fee calculateFeeWithoutBase(int minutes) {
+        if (minutes == 0) {
+            return Fee.ZERO;
+        }
+        if (supportExtra()) {
+            int time = extraTimUnit.calculateQuotient(minutes);
+            return Fee.min(extraFee.multiply(time), dayMaximumFee);
+        }
+        return Fee.NO_INFO;
     }
 }
