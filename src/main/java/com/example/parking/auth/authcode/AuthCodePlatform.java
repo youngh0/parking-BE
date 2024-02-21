@@ -18,4 +18,8 @@ public enum AuthCodePlatform {
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 인증 형식"));
     }
+
+    public String getPlatform() {
+        return platform;
+    }
 }
