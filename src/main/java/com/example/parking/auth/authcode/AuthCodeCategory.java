@@ -17,7 +17,7 @@ public enum AuthCodeCategory {
         return Arrays.stream(AuthCodeCategory.values())
                 .filter(category -> category.categoryName.equals(authCodeCategory))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 인증 코드 종류"));
+                .orElseThrow(() -> new InValidAuthCodeException("존재하지 않는 인증 코드 발급 행위입니다."));
     }
 
     public String getCategoryName() {

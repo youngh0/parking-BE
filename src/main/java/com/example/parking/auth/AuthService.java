@@ -4,6 +4,7 @@ import com.example.parking.auth.authcode.AuthCode;
 import com.example.parking.auth.authcode.AuthCodeCategory;
 import com.example.parking.auth.authcode.AuthCodePlatform;
 import com.example.parking.auth.authcode.AuthCodeRepository;
+import com.example.parking.auth.authcode.InValidAuthCodeException;
 import com.example.parking.auth.authcode.application.dto.AuthCodeCertificateRequest;
 import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
 import com.example.parking.auth.authcode.event.AuthCodeSendEvent;
@@ -72,7 +73,7 @@ public class AuthService {
         AuthCodeCategory authCodeCategory = AuthCodeCategory.find(authCodeCertificateRequest.getAuthCodeCategory());
 
         AuthCode authCode = authCodeRepository.findRecentlyAuthCodeBy(destination, authCodePlatform, authCodeCategory)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 인증 요청"));
+                .orElseThrow(() -> new InValidAuthCodeException("해당 형식의 인증코드가 존재하지 않습니다."));
         authCode.certificate(authCodeCertificateRequest.getAuthCode());
     }
 }

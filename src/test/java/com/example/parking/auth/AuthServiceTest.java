@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.example.parking.auth.authcode.AuthCodeCategory;
 import com.example.parking.auth.authcode.AuthCodePlatform;
+import com.example.parking.auth.authcode.InValidAuthCodeException;
 import com.example.parking.auth.authcode.application.dto.AuthCodeCertificateRequest;
 import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
 import com.example.parking.auth.session.MemberSession;
@@ -126,7 +127,7 @@ class AuthServiceTest {
 
         // then (인증받은 인증코드로 인증 다시 시도)
         assertThatThrownBy(() -> authService.certificateAuthCode(authCodeCertificateRequest))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InValidAuthCodeException.class);
     }
 
     @Test
@@ -156,6 +157,6 @@ class AuthServiceTest {
 
         // then (예전 인증코드(oldAuthCode)로 인증 시도)
         assertThatThrownBy(() -> authService.certificateAuthCode(authCodeCertificateRequest))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InValidAuthCodeException.class);
     }
 }
