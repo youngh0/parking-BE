@@ -1,5 +1,6 @@
 package com.example.parking.auth;
 
+import com.example.parking.application.member.dto.AuthCodeRequest;
 import com.example.parking.auth.authcode.AuthCode;
 import com.example.parking.auth.authcode.AuthCodeRepository;
 import com.example.parking.auth.authcode.AuthCodeType;
@@ -46,9 +47,11 @@ public class AuthService {
     }
 
     @Transactional
-    public void createAuthCode(String authCodeType, String destination) {
+    public void createAuthCode(AuthCodeRequest authCodeRequest) {
         String randomAuthCode = authCodeGenerator.generateAuthCode();
-        AuthCode authCode = new AuthCode(destination, randomAuthCode, AuthCodeType.find(authCodeType));
+        String destination = authCodeRequest.getDestination();
+        String authType = authCodeRequest.getAuthType();
+        AuthCode authCode = new AuthCode(destination, randomAuthCode, AuthCodeType.find(authType));
         authCodeRepository.save(authCode);
     }
 }
