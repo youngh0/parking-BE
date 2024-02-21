@@ -1,5 +1,6 @@
 package com.example.parking.auth;
 
+import com.example.parking.util.authcode.AuthCodeGenerator;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private static final Long DURATION_MINUTE = 30L;
+
     private final MemberSessionRepository memberSessionRepository;
+    private final AuthCodeRepository authCodeRepository;
+    private final AuthCodeGenerator authCodeGenerator;
 
     @Transactional
     public String createSession(Long memberId) {
@@ -34,5 +38,12 @@ public class AuthService {
     public void updateSessionExpiredAt(MemberSession session) {
         session.updateExpiredAt(LocalDateTime.now().plusMinutes(DURATION_MINUTE));
         memberSessionRepository.save(session);
+    }
+
+    @Transactional
+    public void createAuthCode(String authCodeType, String destination) {
+        String randomAuthCode = authCodeGenerator.generateAuthCode();
+        AuthCode authCode = new AuthCode(destination, randomAuthCode, AuthCodeType.find(authCodeType));
+        authCodeRepository.save(authCode);
     }
 }
