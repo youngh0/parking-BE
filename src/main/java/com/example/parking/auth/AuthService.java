@@ -1,8 +1,8 @@
 package com.example.parking.auth;
 
 import com.example.parking.auth.authcode.AuthCode;
+import com.example.parking.auth.authcode.AuthCodePlatform;
 import com.example.parking.auth.authcode.AuthCodeRepository;
-import com.example.parking.auth.authcode.AuthCodeType;
 import com.example.parking.auth.authcode.application.dto.AuthCodeCertificateRequest;
 import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
 import com.example.parking.auth.authcode.event.AuthCodeSendEvent;
@@ -54,10 +54,10 @@ public class AuthService {
     public void createAuthCode(AuthCodeRequest authCodeRequest) {
         String destination = authCodeRequest.getDestination();
         String authType = authCodeRequest.getAuthType();
-        AuthCodeType authCodeType = AuthCodeType.find(authType);
+        AuthCodePlatform authCodePlatform = AuthCodePlatform.find(authType);
 
         String randomAuthCode = authCodeGenerator.generateAuthCode();
-        AuthCode authCode = new AuthCode(destination, randomAuthCode, authCodeType);
+        AuthCode authCode = new AuthCode(destination, randomAuthCode, authCodePlatform);
         authCodeRepository.save(authCode);
         applicationEventPublisher.publishEvent(new AuthCodeSendEvent(destination, randomAuthCode));
     }
@@ -65,10 +65,10 @@ public class AuthService {
     @Transactional
     public void certificateAuthCode(AuthCodeCertificateRequest authCodeCertificateRequest) {
         String destination = authCodeCertificateRequest.getDestination();
-        AuthCodeType authCodeType = AuthCodeType.find(authCodeCertificateRequest.getAuthType());
+        AuthCodePlatform authCodePlatform = AuthCodePlatform.find(authCodeCertificateRequest.getAuthType());
         String requestAuthCode = authCodeCertificateRequest.getAuthCode();
 
-        AuthCode authCode = authCodeRepository.findUsableAuthCode(destination, requestAuthCode, authCodeType)
+        AuthCode authCode = authCodeRepository.findUsableAuthCode(destination, requestAuthCode, authCodePlatform)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 인증 요청"));
         authCode.certificate();
     }
