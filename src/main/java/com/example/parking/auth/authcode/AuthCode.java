@@ -8,9 +8,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class AuthCode extends AuditingEntity {
 
@@ -23,14 +25,18 @@ public class AuthCode extends AuditingEntity {
     private String authCode;
 
     @Enumerated(EnumType.STRING)
-    private AuthCodeType authCodeType;
+    private AuthCodePlatform authCodePlatform;
 
     private Boolean isUsed = Boolean.FALSE;
 
-    public AuthCode(String destination, String authCode, AuthCodeType authCodeType) {
+    public AuthCode(String destination, String authCode, AuthCodePlatform authCodePlatform) {
         this.destination = destination;
         this.authCode = authCode;
-        this.authCodeType = authCodeType;
+        this.authCodePlatform = authCodePlatform;
+    }
+
+    public boolean isMatchAuthCode(String authCode) {
+        return this.authCode.equals(authCode);
     }
 
     public void certificate() {

@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.example.parking.auth.authcode.AuthCode;
+import com.example.parking.auth.authcode.AuthCodePlatform;
 import com.example.parking.auth.authcode.AuthCodeRepository;
-import com.example.parking.auth.authcode.AuthCodeType;
 import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
 import com.example.parking.auth.session.MemberSession;
 import com.example.parking.auth.session.MemberSessionRepository;
@@ -84,7 +84,7 @@ class AuthServiceTest {
         // when
         authService.createAuthCode(new AuthCodeRequest(authCodeDestination, authCodeType));
         Optional<AuthCode> result = authCodeRepository.findUsableAuthCode(
-                authCodeDestination, AUTH_CODE, AuthCodeType.find(authCodeType));
+                authCodeDestination, AUTH_CODE, AuthCodePlatform.find(authCodeType));
 
         // then
         assertThat(result).isNotEmpty();
