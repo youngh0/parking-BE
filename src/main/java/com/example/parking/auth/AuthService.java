@@ -52,7 +52,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void createAuthCode(AuthCodeRequest authCodeRequest) {
+    public String createAuthCode(AuthCodeRequest authCodeRequest) {
         String destination = authCodeRequest.getDestination();
         AuthCodePlatform authCodePlatform = AuthCodePlatform.find(authCodeRequest.getAuthType());
         AuthCodeCategory authCodeCategory = AuthCodeCategory.find(authCodeRequest.getAuthCodeCategory());
@@ -61,12 +61,14 @@ public class AuthService {
         AuthCode authCode = new AuthCode(destination, randomAuthCode, authCodePlatform, authCodeCategory);
         authCodeRepository.save(authCode);
         applicationEventPublisher.publishEvent(new AuthCodeSendEvent(destination, randomAuthCode));
+
+        return authCode.getAuthCode();
     }
 
     @Transactional
     public void certificateAuthCode(AuthCodeCertificateRequest authCodeCertificateRequest) {
         String destination = authCodeCertificateRequest.getDestination();
-        AuthCodePlatform authCodePlatform = AuthCodePlatform.find(authCodeCertificateRequest.getAuthType());
+        AuthCodePlatform authCodePlatform = AuthCodePlatform.find(authCodeCertificateRequest.getAuthCodePlatform());
         AuthCodeCategory authCodeCategory = AuthCodeCategory.find(authCodeCertificateRequest.getAuthCodeCategory());
 
         AuthCode authCode = authCodeRepository.findRecentlyAuthCodeBy(destination, authCodePlatform, authCodeCategory)
