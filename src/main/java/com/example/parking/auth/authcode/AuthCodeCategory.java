@@ -19,4 +19,8 @@ public enum AuthCodeCategory {
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 인증 코드 종류"));
     }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
 }
