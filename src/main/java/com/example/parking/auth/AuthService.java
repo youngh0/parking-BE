@@ -4,6 +4,7 @@ import com.example.parking.application.member.dto.AuthCodeRequest;
 import com.example.parking.auth.authcode.AuthCode;
 import com.example.parking.auth.authcode.AuthCodeRepository;
 import com.example.parking.auth.authcode.AuthCodeType;
+import com.example.parking.auth.authcode.event.AuthCodeSendEvent;
 import com.example.parking.auth.session.MemberSession;
 import com.example.parking.auth.session.MemberSessionRepository;
 import com.example.parking.util.authcode.AuthCodeGenerator;
@@ -52,9 +53,11 @@ public class AuthService {
     public void createAuthCode(AuthCodeRequest authCodeRequest) {
         String destination = authCodeRequest.getDestination();
         String authType = authCodeRequest.getAuthType();
+        AuthCodeType authCodeType = AuthCodeType.find(authType);
 
         String randomAuthCode = authCodeGenerator.generateAuthCode();
-        AuthCode authCode = new AuthCode(destination, randomAuthCode, AuthCodeType.find(authType));
+        AuthCode authCode = new AuthCode(destination, randomAuthCode, authCodeType);
         authCodeRepository.save(authCode);
+        applicationEventPublisher.publishEvent(new AuthCodeSendEvent(destination, randomAuthCode));
     }
 }
