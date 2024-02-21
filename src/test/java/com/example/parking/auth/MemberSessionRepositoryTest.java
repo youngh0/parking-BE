@@ -2,6 +2,8 @@ package com.example.parking.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.parking.auth.session.MemberSession;
+import com.example.parking.auth.session.MemberSessionRepository;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
