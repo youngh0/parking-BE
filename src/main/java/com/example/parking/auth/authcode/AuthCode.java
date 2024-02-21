@@ -27,12 +27,17 @@ public class AuthCode extends AuditingEntity {
     @Enumerated(EnumType.STRING)
     private AuthCodePlatform authCodePlatform;
 
+    @Enumerated(EnumType.STRING)
+    private AuthCodeCategory authCodeCategory;
+
     private Boolean isUsed = Boolean.FALSE;
 
-    public AuthCode(String destination, String authCode, AuthCodePlatform authCodePlatform) {
+    public AuthCode(String destination, String authCode, AuthCodePlatform authCodePlatform,
+                    AuthCodeCategory authCodeCategory) {
         this.destination = destination;
         this.authCode = authCode;
         this.authCodePlatform = authCodePlatform;
+        this.authCodeCategory = authCodeCategory;
     }
 
     public boolean isMatchAuthCode(String authCode) {

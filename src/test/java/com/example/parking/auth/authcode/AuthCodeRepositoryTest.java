@@ -15,18 +15,24 @@ class AuthCodeRepositoryTest {
 
     @Test
     void 인증코드가_여러개인_경우_가장_최근에_생성된_인증코드를_반환한다() {
+        // given
         String destination = "destination";
+        String oldAuthCode = "000000";
+        String newAuthCode = "123456";
 
-        String authCode = "000000";
-        AuthCode savedAuthCode = authCodeRepository.save(
-                new AuthCode(destination, authCode, AuthCodePlatform.MAIL));
+        // when
+        AuthCode savedOldAuthCode = authCodeRepository.save(
+                new AuthCode(destination, oldAuthCode, AuthCodePlatform.MAIL, AuthCodeCategory.SIGN_UP));
+        AuthCode savedNewAuthCode = authCodeRepository.save(
+                new AuthCode(destination, newAuthCode, AuthCodePlatform.MAIL, AuthCodeCategory.SIGN_UP));
 
-        AuthCode findAuthCode = authCodeRepository.findUsableAuthCode(destination, authCode,
-                AuthCodePlatform.MAIL).get();
+        AuthCode findAuthCode = authCodeRepository.findRecentlyAuthCodeBy(destination, AuthCodePlatform.MAIL,
+                AuthCodeCategory.SIGN_UP).get();
 
+        // then
         assertAll(
-                () -> assertThat(findAuthCode.getId()).isEqualTo(savedAuthCode.getId()),
-                () -> assertThat(findAuthCode.getAuthCode()).isEqualTo(savedAuthCode.getAuthCode())
+                () -> assertThat(findAuthCode.getId()).isEqualTo(savedNewAuthCode.getId()),
+                () -> assertThat(findAuthCode.getAuthCode()).isEqualTo(savedNewAuthCode.getAuthCode())
         );
     }
 }
