@@ -9,14 +9,15 @@ import lombok.NoArgsConstructor;
 public class AuthCodeCertificateRequest {
 
     private String destination;
-    private String authType;
-    private String authCode;
+    private String authCodePlatform;
     private String authCodeCategory;
+    private String authCode;
 
-    public AuthCodeCertificateRequest(String destination, String authType, String authCode, String authCodeCategory) {
+    public AuthCodeCertificateRequest(String destination, String authCodePlatform, String authCodeCategory,
+                                      String authCode) {
         this.destination = destination;
-        this.authType = authType;
-        this.authCode = authCode;
+        this.authCodePlatform = authCodePlatform;
         this.authCodeCategory = authCodeCategory;
+        this.authCode = authCode;
     }
 }
