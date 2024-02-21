@@ -71,6 +71,6 @@ public class AuthService {
 
         AuthCode authCode = authCodeRepository.findRecentlyAuthCodeBy(destination, authCodePlatform, authCodeCategory)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 인증 요청"));
-        authCode.certificate();
+        authCode.certificate(authCodeCertificateRequest.getAuthCode());
     }
 }

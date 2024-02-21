@@ -44,7 +44,10 @@ public class AuthCode extends AuditingEntity {
         return this.authCode.equals(authCode);
     }
 
-    public void certificate() {
+    public void certificate(String authCode) {
+        if (!this.authCode.equals(authCode) || this.isUsed) {
+            throw new IllegalArgumentException("");
+        }
         this.isUsed = Boolean.TRUE;
     }
 }
