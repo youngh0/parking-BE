@@ -1,20 +1,18 @@
 package com.example.parking.external.config;
 
 import com.example.parking.external.config.argumentresolver.AuthArgumentResolver;
-import com.example.parking.external.config.interceptor.AuthInterceptor;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    private final AuthInterceptor authInterceptor;
+    private final com.example.parking.config.interceptor.AuthInterceptor authInterceptor;
     private final AuthArgumentResolver authArgumentResolver;
 
     @Override
