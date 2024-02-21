@@ -16,7 +16,7 @@ public enum AuthCodePlatform {
         return Arrays.stream(AuthCodePlatform.values())
                 .filter(authCodeType -> authCodeType.platform.equals(authType))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 인증 형식"));
+                .orElseThrow(() -> new InValidAuthCodeException("존재하지 않는 인증 코드 전송 플랫폼입니다."));
     }
 
     public String getPlatform() {

@@ -32,7 +32,7 @@ class AuthCodeTest {
         authCode.certificate(authCodeString);
 
         assertThatThrownBy(() -> authCode.certificate(authCodeString))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InValidAuthCodeException.class);
     }
 
     @Test
@@ -45,6 +45,6 @@ class AuthCodeTest {
         // when
         String wrongAuthCode = "111111";
         assertThatThrownBy(() -> authCode.certificate(wrongAuthCode))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InValidAuthCodeException.class);
     }
 }

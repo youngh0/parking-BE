@@ -40,13 +40,12 @@ public class AuthCode extends AuditingEntity {
         this.authCodeCategory = authCodeCategory;
     }
 
-    public boolean isMatchAuthCode(String authCode) {
-        return this.authCode.equals(authCode);
-    }
-
     public void certificate(String authCode) {
-        if (!this.authCode.equals(authCode) || this.isUsed) {
-            throw new IllegalArgumentException("");
+        if (!this.authCode.equals(authCode)) {
+            throw new InValidAuthCodeException("인증번호가 일치하지 않습니다.");
+        }
+        if (this.isUsed) {
+            throw new InValidAuthCodeException("이미 사용된 인증번호 입니다.");
         }
         this.isUsed = Boolean.TRUE;
     }
