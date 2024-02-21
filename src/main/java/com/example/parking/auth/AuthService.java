@@ -1,5 +1,10 @@
 package com.example.parking.auth;
 
+import com.example.parking.auth.authcode.AuthCode;
+import com.example.parking.auth.authcode.AuthCodeRepository;
+import com.example.parking.auth.authcode.AuthCodeType;
+import com.example.parking.auth.session.MemberSession;
+import com.example.parking.auth.session.MemberSessionRepository;
 import com.example.parking.util.authcode.AuthCodeGenerator;
 import java.time.LocalDateTime;
 import java.util.UUID;

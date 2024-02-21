@@ -1,4 +1,4 @@
-package com.example.parking.auth;
+package com.example.parking.auth.authcode;
 
 import com.example.parking.domain.AuditingEntity;
 import jakarta.persistence.Entity;

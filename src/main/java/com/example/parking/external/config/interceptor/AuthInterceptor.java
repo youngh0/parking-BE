@@ -1,7 +1,7 @@
 package com.example.parking.external.config.interceptor;
 
 import com.example.parking.auth.AuthService;
-import com.example.parking.auth.MemberSession;
+import com.example.parking.auth.session.MemberSession;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.parking.auth;
+package com.example.parking.auth.session;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
