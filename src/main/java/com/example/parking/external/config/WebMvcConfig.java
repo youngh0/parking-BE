@@ -1,14 +1,13 @@
-package com.example.parking.config;
+package com.example.parking.external.config;
 
-import com.example.parking.config.argumentresolver.AuthArgumentResolver;
 import com.example.parking.config.interceptor.AuthInterceptor;
+import com.example.parking.external.config.argumentresolver.AuthArgumentResolver;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
