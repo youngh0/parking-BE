@@ -10,6 +10,7 @@ import com.example.parking.util.authcode.AuthCodeGenerator;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class AuthService {
     private final MemberSessionRepository memberSessionRepository;
     private final AuthCodeRepository authCodeRepository;
     private final AuthCodeGenerator authCodeGenerator;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional
     public String createSession(Long memberId) {
@@ -48,9 +50,10 @@ public class AuthService {
 
     @Transactional
     public void createAuthCode(AuthCodeRequest authCodeRequest) {
-        String randomAuthCode = authCodeGenerator.generateAuthCode();
         String destination = authCodeRequest.getDestination();
         String authType = authCodeRequest.getAuthType();
+
+        String randomAuthCode = authCodeGenerator.generateAuthCode();
         AuthCode authCode = new AuthCode(destination, randomAuthCode, AuthCodeType.find(authType));
         authCodeRepository.save(authCode);
     }
