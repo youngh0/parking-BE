@@ -32,4 +32,8 @@ public class AuthCode extends AuditingEntity {
         this.authCode = authCode;
         this.authCodeType = authCodeType;
     }
+
+    public void certificate() {
+        this.isUsed = Boolean.TRUE;
+    }
 }

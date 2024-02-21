@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.example.parking.application.member.dto.AuthCodeRequest;
 import com.example.parking.auth.authcode.AuthCode;
 import com.example.parking.auth.authcode.AuthCodeRepository;
 import com.example.parking.auth.authcode.AuthCodeType;
+import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
 import com.example.parking.auth.session.MemberSession;
 import com.example.parking.auth.session.MemberSessionRepository;
 import com.example.parking.util.authcode.AuthCodeGenerator;
@@ -83,7 +83,7 @@ class AuthServiceTest {
 
         // when
         authService.createAuthCode(new AuthCodeRequest(authCodeDestination, authCodeType));
-        Optional<AuthCode> result = authCodeRepository.existsUsableAuthCode(
+        Optional<AuthCode> result = authCodeRepository.findUsableAuthCode(
                 authCodeDestination, AUTH_CODE, AuthCodeType.find(authCodeType));
 
         // then

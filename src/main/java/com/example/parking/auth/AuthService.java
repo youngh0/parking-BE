@@ -1,9 +1,10 @@
 package com.example.parking.auth;
 
-import com.example.parking.application.member.dto.AuthCodeRequest;
 import com.example.parking.auth.authcode.AuthCode;
 import com.example.parking.auth.authcode.AuthCodeRepository;
 import com.example.parking.auth.authcode.AuthCodeType;
+import com.example.parking.auth.authcode.application.dto.AuthCodeCertificateRequest;
+import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
 import com.example.parking.auth.authcode.event.AuthCodeSendEvent;
 import com.example.parking.auth.session.MemberSession;
 import com.example.parking.auth.session.MemberSessionRepository;
@@ -59,5 +60,16 @@ public class AuthService {
         AuthCode authCode = new AuthCode(destination, randomAuthCode, authCodeType);
         authCodeRepository.save(authCode);
         applicationEventPublisher.publishEvent(new AuthCodeSendEvent(destination, randomAuthCode));
+    }
+
+    @Transactional
+    public void certificateAuthCode(AuthCodeCertificateRequest authCodeCertificateRequest) {
+        String destination = authCodeCertificateRequest.getDestination();
+        AuthCodeType authCodeType = AuthCodeType.find(authCodeCertificateRequest.getAuthType());
+        String requestAuthCode = authCodeCertificateRequest.getAuthCode();
+
+        AuthCode authCode = authCodeRepository.findUsableAuthCode(destination, requestAuthCode, authCodeType)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 인증 요청"));
+        authCode.certificate();
     }
 }

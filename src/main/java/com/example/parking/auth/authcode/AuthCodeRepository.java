@@ -17,7 +17,7 @@ public interface AuthCodeRepository extends Repository<AuthCode, Long> {
                      and ac.authCodeType = :authCodeType 
                      and ac.isUsed = false 
             """)
-    Optional<AuthCode> existsUsableAuthCode(@Param("destination") String destination,
-                                            @Param("authCode") String authCode,
-                                            @Param("authCodeType") AuthCodeType authCodeType);
+    Optional<AuthCode> findUsableAuthCode(@Param("destination") String destination,
+                                          @Param("authCode") String authCode,
+                                          @Param("authCodeType") AuthCodeType authCodeType);
 }
