@@ -83,8 +83,8 @@ class AuthServiceTest {
 
         // when
         authService.createAuthCode(new AuthCodeRequest(authCodeDestination, authCodeType));
-        Optional<AuthCode> result = authCodeRepository.findByAuthCodeAndDestinationAndAuthCodeTypeAndIsUsedIsFalse(
-                AUTH_CODE, authCodeDestination, AuthCodeType.find(authCodeType));
+        Optional<AuthCode> result = authCodeRepository.existsUsableAuthCode(
+                authCodeDestination, AUTH_CODE, AuthCodeType.find(authCodeType));
 
         // then
         assertThat(result).isNotEmpty();
