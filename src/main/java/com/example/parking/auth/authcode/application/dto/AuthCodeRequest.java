@@ -1,4 +1,4 @@
-package com.example.parking.application.member.dto;
+package com.example.parking.auth.authcode.application.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
