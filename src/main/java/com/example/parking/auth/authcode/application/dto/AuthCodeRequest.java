@@ -9,9 +9,11 @@ public class AuthCodeRequest {
 
     private String destination;
     private String authType;
+    private String authCodeCategory;
 
-    public AuthCodeRequest(String destination, String authType) {
+    public AuthCodeRequest(String destination, String authType, String authCodeCategory) {
         this.destination = destination;
         this.authType = authType;
+        this.authCodeCategory = authCodeCategory;
     }
 }

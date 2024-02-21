@@ -13,13 +13,13 @@ public interface AuthCodeRepository extends Repository<AuthCode, Long> {
                 select ac 
                 from AuthCode ac 
                 where ac.destination = :destination 
-                     and ac.authCode = :authCode 
                      and ac.authCodePlatform = :authCodePlatform 
-                     and ac.isUsed = false 
+                     and ac.authCodeCategory = :authCodeCategory 
                 order by ac.createdAt desc  
                 limit 1 
             """)
-    Optional<AuthCode> findUsableAuthCode(@Param("destination") String destination,
-                                          @Param("authCode") String authCode,
-                                          @Param("authCodePlatform") AuthCodePlatform authCodePlatform);
+    Optional<AuthCode> findRecentlyAuthCodeBy(@Param("destination") String destination,
+                                              @Param("authCodePlatform") AuthCodePlatform authCodePlatform,
+                                              @Param("authCodeCategory") AuthCodeCategory authCodeCategory
+    );
 }

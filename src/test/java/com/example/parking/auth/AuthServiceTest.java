@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.example.parking.auth.authcode.AuthCode;
+import com.example.parking.auth.authcode.AuthCodeCategory;
 import com.example.parking.auth.authcode.AuthCodePlatform;
 import com.example.parking.auth.authcode.AuthCodeRepository;
 import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
@@ -79,12 +80,13 @@ class AuthServiceTest {
     void 인증_코드를_저장한다() {
         // given
         String authCodeDestination = "destination";
-        String authCodeType = "mail";
+        String authCodePlatform = "mail";
+        String authCodeCategory = "signUp";
 
         // when
-        authService.createAuthCode(new AuthCodeRequest(authCodeDestination, authCodeType));
-        Optional<AuthCode> result = authCodeRepository.findUsableAuthCode(
-                authCodeDestination, AUTH_CODE, AuthCodePlatform.find(authCodeType));
+        authService.createAuthCode(new AuthCodeRequest(authCodeDestination, authCodePlatform, authCodeCategory));
+        Optional<AuthCode> result = authCodeRepository.findRecentlyAuthCodeBy(
+                authCodeDestination, AuthCodePlatform.find(authCodePlatform), AuthCodeCategory.find(authCodeCategory));
 
         // then
         assertThat(result).isNotEmpty();
