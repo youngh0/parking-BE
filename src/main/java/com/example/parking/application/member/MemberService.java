@@ -1,5 +1,6 @@
 package com.example.parking.application.member;
 
+import com.example.parking.application.member.dto.MemberInfoResponse;
 import com.example.parking.application.member.dto.MemberLoginRequest;
 import com.example.parking.application.member.dto.MemberSignupRequest;
 import com.example.parking.application.member.dto.PasswordChangeRequest;
@@ -56,6 +57,12 @@ public class MemberService {
             throw new MemberLoginException("비밀번호가 틀립니다.");
         }
     }
+
+    @Transactional(readOnly = true)
+    public MemberInfoResponse findMemberInfo(Long memberId) {
+        Member member = memberRepository.getById(memberId);
+
+        return new MemberInfoResponse(member.getName(), member.getEmail());
 
     @Transactional
     public void changePassword(Long memberId, PasswordChangeRequest dto) {
