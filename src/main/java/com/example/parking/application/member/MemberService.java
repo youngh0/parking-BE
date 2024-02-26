@@ -2,6 +2,7 @@ package com.example.parking.application.member;
 
 import com.example.parking.application.member.dto.MemberLoginRequest;
 import com.example.parking.application.member.dto.MemberSignupRequest;
+import com.example.parking.application.member.dto.PasswordChangeRequest;
 import com.example.parking.application.member.exception.MemberLoginException;
 import com.example.parking.application.member.exception.MemberSignupException;
 import com.example.parking.domain.member.Member;
@@ -47,12 +48,20 @@ public class MemberService {
 
     private Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberLoginException("회원가입되지 않은 유저아이디입니다."));
+                .orElseThrow(() -> new MemberLoginException("회원가입되지 않은 유저입니다."));
     }
 
     private void validatePassword(Member member, String password) {
         if (!member.checkPassword(password)) {
             throw new MemberLoginException("비밀번호가 틀립니다.");
         }
+    }
+
+    @Transactional
+    public void changePassword(Long memberId, PasswordChangeRequest dto) {
+        Member member = memberRepository.getById(memberId);
+        String previousPassword = dto.getPreviousPassword();
+        String newPassword = dto.getNewPassword();
+        member.changePassword(previousPassword, newPassword);
     }
 }
