@@ -46,6 +46,14 @@ public class Member {
 
     public void delete() {
         deleted = Boolean.TRUE;
+
+    public void changePassword(String previousPassword, String newPassword) {
+        if (checkPassword(previousPassword)) {
+            this.password = new Password(newPassword);
+            return;
+        }
+        throw new PasswordNotMatchedException("비밀번호가 맞지 않습니다.");
+
     }
 
     @Override
