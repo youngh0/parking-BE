@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+//@SQLRestriction(value = "deleted = false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
@@ -41,6 +42,10 @@ public class Member {
 
     public boolean checkPassword(String password) {
         return this.password.isMatch(password);
+    }
+
+    public void delete() {
+        deleted = Boolean.TRUE;
     }
 
     @Override
