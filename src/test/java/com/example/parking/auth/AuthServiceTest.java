@@ -25,16 +25,6 @@ class AuthServiceTest {
 
     @Autowired
     private AuthService authService;
-//    private AuthCodeRepository authCodeRepository;
-
-//    @Autowired
-//    public AuthServiceTest(MemberSessionRepository memberSessionRepository, AuthCodeRepository authCodeRepository,
-//                           ApplicationEventPublisher applicationEventPublisher) {
-//        AuthCodeGenerator fixAuthCodeGenerator = () -> AUTH_CODE;
-//        this.authCodeRepository = authCodeRepository;
-//        this.authService = new AuthService(memberSessionRepository, authCodeRepository, fixAuthCodeGenerator,
-//                applicationEventPublisher);
-//    }
 
     @Test
     void 세션_아이디에_해당하는_세션을_찾는다() {
