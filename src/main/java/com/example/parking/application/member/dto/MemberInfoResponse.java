@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MemberInfoResult {
+public class MemberInfoResponse {
 
     private String name;
     private String email;
 
-    public MemberInfoResult(String name, String email) {
+    public MemberInfoResponse(String name, String email) {
         this.name = name;
         this.email = email;
     }
