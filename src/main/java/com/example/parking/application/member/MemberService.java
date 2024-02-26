@@ -59,8 +59,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MemberInfoResponse findMemberInfo(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 memberId 입니다."));
+        Member member = memberRepository.getById(memberId);
 
         return new MemberInfoResponse(member.getName(), member.getEmail());
     }
