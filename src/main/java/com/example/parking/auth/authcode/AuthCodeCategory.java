@@ -1,7 +1,9 @@
 package com.example.parking.auth.authcode;
 
 import java.util.Arrays;
+import lombok.Getter;
 
+@Getter
 public enum AuthCodeCategory {
 
     SIGN_UP("signUp"),
@@ -18,9 +20,5 @@ public enum AuthCodeCategory {
                 .filter(category -> category.categoryName.equals(authCodeCategory))
                 .findAny()
                 .orElseThrow(() -> new InValidAuthCodeException("존재하지 않는 인증 코드 발급 행위입니다."));
-    }
-
-    public String getCategoryName() {
-        return categoryName;
     }
 }
