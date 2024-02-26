@@ -48,7 +48,7 @@ public class Parking extends AuditingEntity {
     }
 
     public int calculatePayOfChargeMinutes(DayParking dayParking) {
-        return freeOperatingTime.calculatePayOfChargeMinutes(dayParking);
+        return freeOperatingTime.calculateNonFreeUsageMinutes(dayParking);
     }
 
     public Fee calculateParkingFee(int payOfChargeMinutes) {

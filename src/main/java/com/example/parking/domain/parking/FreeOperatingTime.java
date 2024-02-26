@@ -39,7 +39,7 @@ public class FreeOperatingTime {
         this.holiday = holiday;
     }
 
-    public int calculatePayOfChargeMinutes(DayParking dayParking) {
+    public int calculateNonFreeUsageMinutes(DayParking dayParking) {
         TimeInfo today = getTodayTimeInfo(dayParking);
         if (isFreeDay(today)) {
             return 0;

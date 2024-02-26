@@ -14,7 +14,7 @@ class FreeOperatingTimeTest {
     @MethodSource("getFreeOperatingTime")
     void 돈을_지불_해야_할_시간을_계산한다(FreeOperatingTime freeOperatingTime, DayParking dayParking, int expected) {
         // given, when, then
-        Assertions.assertThat(freeOperatingTime.calculatePayOfChargeMinutes(dayParking))
+        Assertions.assertThat(freeOperatingTime.calculateNonFreeUsageMinutes(dayParking))
                 .isEqualTo(expected);
     }
 
