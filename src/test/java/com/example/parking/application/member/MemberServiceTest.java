@@ -1,22 +1,41 @@
 package com.example.parking.application.member;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.example.parking.domain.member.Member;
+import com.example.parking.domain.member.MemberRepository;
+
 import com.example.parking.application.member.dto.MemberLoginRequest;
 import com.example.parking.application.member.dto.MemberNotFoundException;
 import com.example.parking.application.member.dto.MemberSignupRequest;
 import com.example.parking.application.member.dto.PasswordChangeRequest;
 import com.example.parking.application.member.exception.MemberLoginException;
 import org.assertj.core.api.Assertions;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
+
 @Transactional
+@SpringBootTest
 class MemberServiceTest {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Test
+    void 회원탈퇴() {
+        Long memberId = memberService.signup(new MemberSignupRequest("name", "email", "nickname", "password"));
+        memberService.deleteMember(memberId);
+
+        Member member = memberRepository.getById(memberId);
+        assertThat(member.getDeleted()).isTrue();
+    }
 
     @Test
     void 비밀번호를_바꾸면_바꾼_비밀번호로_로그인이_가능하다() {

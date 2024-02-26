@@ -58,6 +58,11 @@ public class MemberService {
         }
     }
 
+    @Transactional
+    public void deleteMember(Long memberId) {
+        Member member = memberRepository.getById(memberId);
+        member.delete();
+
     @Transactional(readOnly = true)
     public MemberInfoResponse findMemberInfo(Long memberId) {
         Member member = memberRepository.getById(memberId);

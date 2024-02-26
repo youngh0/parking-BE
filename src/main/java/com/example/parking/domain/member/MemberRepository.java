@@ -1,9 +1,9 @@
 package com.example.parking.domain.member;
 
 import com.example.parking.application.member.dto.MemberNotFoundException;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
