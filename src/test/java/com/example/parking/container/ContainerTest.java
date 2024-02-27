@@ -12,7 +12,6 @@ import org.testcontainers.utility.DockerImageName;
 public abstract class ContainerTest {
 
     private static final GenericContainer<?> REDIS_CONTAINER;
-//    private static final MySQLContainer MYSQL_CONTAINER;
 
     static {
         REDIS_CONTAINER = new GenericContainer<>(DockerImageName.parse("redis:latest"))
