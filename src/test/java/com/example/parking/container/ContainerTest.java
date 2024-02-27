@@ -18,8 +18,6 @@ public abstract class ContainerTest {
         REDIS_CONTAINER = new GenericContainer<>(DockerImageName.parse("redis:latest"))
                 .withExposedPorts(6379);
         REDIS_CONTAINER.start();
-        System.setProperty("spring.data.redis.host", REDIS_CONTAINER.getHost());
-        System.setProperty("spring.data.redis.port", REDIS_CONTAINER.getMappedPort(6379).toString());
     }
 
     @Autowired
@@ -33,10 +31,4 @@ public abstract class ContainerTest {
         redisDataCleaner.delete();
         mySQLDataCleaner.delete();
     }
-
-//    @DynamicPropertySource
-//    public static void overrideProps(DynamicPropertyRegistry registry) {
-//        registry.add("redis.host", REDIS_CONTAINER::getHost);
-//        registry.add("redis.port", () -> "" + REDIS_CONTAINER.getMappedPort(6379));
-//    }
 }
