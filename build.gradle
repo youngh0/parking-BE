@@ -32,6 +32,15 @@ dependencies {
 
     // 메일
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // redis
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
+    // testcontainer
+    testImplementation "org.testcontainers:testcontainers:1.19.6"
+    testImplementation "org.testcontainers:junit-jupiter:1.19.6"
+    testImplementation "com.redis:testcontainers-redis:2.1.0"
+    testImplementation "org.testcontainers:mysql:1.19.6"
 }
 
 tasks.named('test') {
