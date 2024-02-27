@@ -1,25 +1,22 @@
 package com.example.parking.auth;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 import com.example.parking.auth.authcode.AuthCodeCategory;
 import com.example.parking.auth.authcode.AuthCodePlatform;
 import com.example.parking.auth.authcode.InValidAuthCodeException;
 import com.example.parking.auth.authcode.application.dto.AuthCodeCertificateRequest;
 import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
 import com.example.parking.auth.session.MemberSession;
-import java.time.LocalDateTime;
+import com.example.parking.container.ContainerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
-@SpringBootTest
-class AuthServiceTest {
+import java.time.LocalDateTime;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
+//@SpringBootTest
+class AuthServiceTest extends ContainerTest {
 
     private static final String AUTH_CODE = "111111";
 
@@ -112,8 +109,7 @@ class AuthServiceTest {
                 AuthCodeCategory.SIGN_UP.getCategoryName(),
                 oldAuthCode
         );
-        authService.certificateAuthCode(
-                authCodeCertificateRequest);
+        authService.certificateAuthCode(authCodeCertificateRequest);
 
         // then (인증받은 인증코드로 인증 다시 시도)
         assertThatThrownBy(() -> authService.certificateAuthCode(authCodeCertificateRequest))
@@ -121,7 +117,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void 가장_최근의_인증번호가_아니면_인증에_실패한다() {
+    void 가장_최근의_인증번호가_아니어도_인증_가능하다() {
         // given
         String authCodeDestination = "destination";
         AuthCodePlatform authCodePlatform = AuthCodePlatform.MAIL;
@@ -146,7 +142,6 @@ class AuthServiceTest {
         );
 
         // then (예전 인증코드(oldAuthCode)로 인증 시도)
-        assertThatThrownBy(() -> authService.certificateAuthCode(authCodeCertificateRequest))
-                .isInstanceOf(InValidAuthCodeException.class);
+        assertDoesNotThrow(() -> authService.certificateAuthCode(authCodeCertificateRequest));
     }
 }

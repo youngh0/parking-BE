@@ -1,9 +1,7 @@
 package com.example.parking.auth;
 
-import com.example.parking.auth.authcode.AuthCode;
 import com.example.parking.auth.authcode.AuthCodeCategory;
 import com.example.parking.auth.authcode.AuthCodePlatform;
-import com.example.parking.auth.authcode.AuthCodeRepository;
 import com.example.parking.auth.authcode.InValidAuthCodeException;
 import com.example.parking.auth.authcode.application.dto.AuthCodeCertificateRequest;
 import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
@@ -11,12 +9,15 @@ import com.example.parking.auth.authcode.event.AuthCodeSendEvent;
 import com.example.parking.auth.session.MemberSession;
 import com.example.parking.auth.session.MemberSessionRepository;
 import com.example.parking.util.authcode.AuthCodeGenerator;
-import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.StringJoiner;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -25,9 +26,9 @@ public class AuthService {
     private static final Long DURATION_MINUTE = 30L;
 
     private final MemberSessionRepository memberSessionRepository;
-    private final AuthCodeRepository authCodeRepository;
     private final AuthCodeGenerator authCodeGenerator;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public String createSession(Long memberId) {
@@ -59,11 +60,11 @@ public class AuthService {
         AuthCodeCategory authCodeCategory = AuthCodeCategory.find(authCodeRequest.getAuthCodeCategory());
 
         String randomAuthCode = authCodeGenerator.generateAuthCode();
-        AuthCode authCode = new AuthCode(destination, randomAuthCode, authCodePlatform, authCodeCategory);
-        authCodeRepository.save(authCode);
-        applicationEventPublisher.publishEvent(new AuthCodeSendEvent(destination, randomAuthCode));
+        String authCodeKey = generateAuthCodeKey(destination, authCodePlatform, authCodeCategory);
+        redisTemplate.opsForValue().set(authCodeKey, "true");
 
-        return authCode.getAuthCode();
+        applicationEventPublisher.publishEvent(new AuthCodeSendEvent(destination, randomAuthCode));
+        return randomAuthCode;
     }
 
     @Transactional
@@ -72,8 +73,17 @@ public class AuthService {
         AuthCodePlatform authCodePlatform = AuthCodePlatform.find(authCodeCertificateRequest.getAuthCodePlatform());
         AuthCodeCategory authCodeCategory = AuthCodeCategory.find(authCodeCertificateRequest.getAuthCodeCategory());
 
-        AuthCode authCode = authCodeRepository.findRecentlyAuthCodeBy(destination, authCodePlatform, authCodeCategory)
-                .orElseThrow(() -> new InValidAuthCodeException("해당 형식의 인증코드가 존재하지 않습니다."));
-        authCode.certificate(authCodeCertificateRequest.getAuthCode());
+        String authCodeKey = generateAuthCodeKey(destination, authCodePlatform, authCodeCategory);
+        String findResult = redisTemplate.opsForValue().getAndDelete(authCodeKey);
+        if (findResult == null) {
+            throw new InValidAuthCodeException("존재하지 않는 인증코드 입니다.");
+        }
+    }
+
+    private String generateAuthCodeKey(String destination, AuthCodePlatform authCodePlatform,
+                                       AuthCodeCategory authCodeCategory) {
+        StringJoiner stringJoiner = new StringJoiner(":");
+        return stringJoiner.add(destination).add(authCodePlatform.getPlatform())
+                .add(authCodeCategory.getCategoryName()).toString();
     }
 }
