@@ -55,14 +55,21 @@ public class AuthService {
     @Transactional
     public String createAuthCode(AuthCodeRequest authCodeRequest) {
         String destination = authCodeRequest.getDestination();
-        AuthCodePlatform authCodePlatform = AuthCodePlatform.find(authCodeRequest.getAuthType());
+        AuthCodePlatform authCodePlatform = AuthCodePlatform.find(authCodeRequest.getAuthPlatform());
         AuthCodeCategory authCodeCategory = AuthCodeCategory.find(authCodeRequest.getAuthCodeCategory());
 
         String randomAuthCode = authCodeGenerator.generateAuthCode();
         String authCodeKey = generateAuthCodeKey(destination, authCodePlatform, authCodeCategory);
         redisTemplate.opsForValue().set(authCodeKey, "true");
 
-        applicationEventPublisher.publishEvent(new AuthCodeCreateEvent(destination, randomAuthCode));
+        applicationEventPublisher.publishEvent(
+                new AuthCodeCreateEvent(
+                        destination,
+                        randomAuthCode,
+                        authCodePlatform.getPlatform(),
+                        authCodeCategory.getCategoryName()
+                )
+        );
         return randomAuthCode;
     }
 
