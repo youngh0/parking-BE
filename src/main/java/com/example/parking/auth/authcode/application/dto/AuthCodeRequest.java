@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 public class AuthCodeRequest {
 
     private String destination;
-    private String authType;
+    private String authPlatform;
     private String authCodeCategory;
 
-    public AuthCodeRequest(String destination, String authType, String authCodeCategory) {
+    public AuthCodeRequest(String destination, String authPlatform, String authCodeCategory) {
         this.destination = destination;
-        this.authType = authType;
+        this.authPlatform = authPlatform;
         this.authCodeCategory = authCodeCategory;
     }
 }
