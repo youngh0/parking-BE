@@ -1,5 +1,10 @@
 package com.example.parking.auth;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import com.example.parking.auth.authcode.AuthCodeCategory;
 import com.example.parking.auth.authcode.AuthCodePlatform;
 import com.example.parking.auth.authcode.InValidAuthCodeException;
@@ -7,13 +12,9 @@ import com.example.parking.auth.authcode.application.dto.AuthCodeCertificateRequ
 import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
 import com.example.parking.auth.session.MemberSession;
 import com.example.parking.container.ContainerTest;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.LocalDateTime;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 //@SpringBootTest
 class AuthServiceTest extends ContainerTest {
@@ -64,7 +65,7 @@ class AuthServiceTest extends ContainerTest {
     @Test
     void 가장_최근에_발급받은_인증번호는_검증가능하다() {
         // given
-        String authCodeDestination = "destination";
+        String authCodeDestination = "destination@gmail.com";
         AuthCodePlatform authCodePlatform = AuthCodePlatform.MAIL;
         AuthCodeCategory authCodeCategory = AuthCodeCategory.SIGN_UP;
 
@@ -93,7 +94,7 @@ class AuthServiceTest extends ContainerTest {
     @Test
     void 이미_인증받은_인증번호는_다시_사용할_수_없다() {
         // given
-        String authCodeDestination = "destination";
+        String authCodeDestination = "destination@gmail.com";
         AuthCodePlatform authCodePlatform = AuthCodePlatform.MAIL;
         AuthCodeCategory authCodeCategory = AuthCodeCategory.SIGN_UP;
 
@@ -119,7 +120,7 @@ class AuthServiceTest extends ContainerTest {
     @Test
     void 가장_최근의_인증번호가_아니어도_인증_가능하다() {
         // given
-        String authCodeDestination = "destination";
+        String authCodeDestination = "destination@gmail.com";
         AuthCodePlatform authCodePlatform = AuthCodePlatform.MAIL;
         AuthCodeCategory authCodeCategory = AuthCodeCategory.SIGN_UP;
 
