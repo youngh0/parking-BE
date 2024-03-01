@@ -3,14 +3,15 @@ package com.example.parking.auth;
 import com.example.parking.auth.authcode.AuthCodeCategory;
 import com.example.parking.auth.authcode.AuthCodePlatform;
 import com.example.parking.auth.authcode.InValidAuthCodeException;
+import com.example.parking.auth.authcode.application.AuthCodeValidator;
 import com.example.parking.auth.authcode.application.dto.AuthCodeCertificateRequest;
 import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
 import com.example.parking.auth.authcode.event.AuthCodeCreateEvent;
+import com.example.parking.auth.authcode.util.AuthCodeKeyConverter;
 import com.example.parking.auth.session.MemberSession;
 import com.example.parking.auth.session.MemberSessionRepository;
 import com.example.parking.util.authcode.AuthCodeGenerator;
 import java.time.LocalDateTime;
-import java.util.StringJoiner;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -26,6 +27,7 @@ public class AuthService {
 
     private final MemberSessionRepository memberSessionRepository;
     private final AuthCodeGenerator authCodeGenerator;
+    private final AuthCodeValidator authCodeValidator;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final RedisTemplate<String, String> redisTemplate;
 
@@ -58,10 +60,18 @@ public class AuthService {
         AuthCodePlatform authCodePlatform = AuthCodePlatform.find(authCodeRequest.getAuthPlatform());
         AuthCodeCategory authCodeCategory = AuthCodeCategory.find(authCodeRequest.getAuthCodeCategory());
 
+        authCodeValidator.validate(authCodePlatform, destination);
         String randomAuthCode = authCodeGenerator.generateAuthCode();
-        String authCodeKey = generateAuthCodeKey(destination, authCodePlatform, authCodeCategory);
+        String authCodeKey = AuthCodeKeyConverter.combinate(randomAuthCode, destination, authCodePlatform.getPlatform(),
+                authCodeCategory.getCategoryName());
         redisTemplate.opsForValue().set(authCodeKey, "true");
 
+        publishAuthCodeCreateEvent(destination, authCodePlatform, authCodeCategory, randomAuthCode);
+        return randomAuthCode;
+    }
+
+    private void publishAuthCodeCreateEvent(String destination, AuthCodePlatform authCodePlatform,
+                                            AuthCodeCategory authCodeCategory, String randomAuthCode) {
         applicationEventPublisher.publishEvent(
                 new AuthCodeCreateEvent(
                         destination,
@@ -70,26 +80,20 @@ public class AuthService {
                         authCodeCategory.getCategoryName()
                 )
         );
-        return randomAuthCode;
     }
 
     @Transactional
     public void certificateAuthCode(AuthCodeCertificateRequest authCodeCertificateRequest) {
+        String authCode = authCodeCertificateRequest.getAuthCode();
         String destination = authCodeCertificateRequest.getDestination();
         AuthCodePlatform authCodePlatform = AuthCodePlatform.find(authCodeCertificateRequest.getAuthCodePlatform());
         AuthCodeCategory authCodeCategory = AuthCodeCategory.find(authCodeCertificateRequest.getAuthCodeCategory());
 
-        String authCodeKey = generateAuthCodeKey(destination, authCodePlatform, authCodeCategory);
+        String authCodeKey = AuthCodeKeyConverter.combinate(authCode, destination, authCodePlatform.getPlatform(),
+                authCodeCategory.getCategoryName());
         String findResult = redisTemplate.opsForValue().getAndDelete(authCodeKey);
         if (findResult == null) {
             throw new InValidAuthCodeException("존재하지 않는 인증코드 입니다.");
         }
-    }
-
-    private String generateAuthCodeKey(String destination, AuthCodePlatform authCodePlatform,
-                                       AuthCodeCategory authCodeCategory) {
-        StringJoiner stringJoiner = new StringJoiner(":");
-        return stringJoiner.add(destination).add(authCodePlatform.getPlatform())
-                .add(authCodeCategory.getCategoryName()).toString();
     }
 }

@@ -3,8 +3,8 @@ package com.example.parking.auth.authcode.application;
 
 import com.example.parking.auth.authcode.event.AuthCodeCreateEvent;
 import com.example.parking.auth.authcode.infrastructure.AuthCodeSender;
+import com.example.parking.auth.authcode.util.AuthCodeKeyConverter;
 import java.time.Instant;
-import java.util.StringJoiner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -33,21 +33,12 @@ public class AuthCodeEventListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void scheduledAuthCodeRemove(AuthCodeCreateEvent authCodeCreateEvent) {
+        String authCode = authCodeCreateEvent.getAuthCode();
         String destination = authCodeCreateEvent.getDestination();
         String authCodePlatform = authCodeCreateEvent.getAuthCodePlatform();
         String authCodeCategory = authCodeCreateEvent.getAuthCodeCategory();
 
-        String authCodeKey = generateAuthCodeKey(destination, authCodePlatform, authCodeCategory);
+        String authCodeKey = AuthCodeKeyConverter.combinate(authCode, destination, authCodePlatform, authCodeCategory);
         taskScheduler.schedule(() -> redisTemplate.delete(authCodeKey), Instant.now().plusSeconds(authCodeExpired));
-    }
-
-    private String generateAuthCodeKey(String destination, String authCodePlatform,
-                                       String authCodeCategory) {
-        StringJoiner stringJoiner = new StringJoiner(":");
-        return stringJoiner
-                .add(destination)
-                .add(authCodePlatform)
-                .add(authCodeCategory)
-                .toString();
     }
 }
