@@ -1,11 +1,11 @@
 package com.example.parking.auth.authcode.event;
 
-public class AuthCodeSendEvent {
+public class AuthCodeCreateEvent {
 
     private final String destination;
     private final String authCode;
 
-    public AuthCodeSendEvent(String destination, String authCode) {
+    public AuthCodeCreateEvent(String destination, String authCode) {
         this.destination = destination;
         this.authCode = authCode;
     }

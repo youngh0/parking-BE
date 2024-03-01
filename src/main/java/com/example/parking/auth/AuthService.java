@@ -5,19 +5,18 @@ import com.example.parking.auth.authcode.AuthCodePlatform;
 import com.example.parking.auth.authcode.InValidAuthCodeException;
 import com.example.parking.auth.authcode.application.dto.AuthCodeCertificateRequest;
 import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
-import com.example.parking.auth.authcode.event.AuthCodeSendEvent;
+import com.example.parking.auth.authcode.event.AuthCodeCreateEvent;
 import com.example.parking.auth.session.MemberSession;
 import com.example.parking.auth.session.MemberSessionRepository;
 import com.example.parking.util.authcode.AuthCodeGenerator;
+import java.time.LocalDateTime;
+import java.util.StringJoiner;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.StringJoiner;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -63,7 +62,7 @@ public class AuthService {
         String authCodeKey = generateAuthCodeKey(destination, authCodePlatform, authCodeCategory);
         redisTemplate.opsForValue().set(authCodeKey, "true");
 
-        applicationEventPublisher.publishEvent(new AuthCodeSendEvent(destination, randomAuthCode));
+        applicationEventPublisher.publishEvent(new AuthCodeCreateEvent(destination, randomAuthCode));
         return randomAuthCode;
     }
 
