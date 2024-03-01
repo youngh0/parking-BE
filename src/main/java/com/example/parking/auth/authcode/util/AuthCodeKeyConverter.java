@@ -4,8 +4,8 @@ import java.util.StringJoiner;
 
 public class AuthCodeKeyConverter {
 
-    public static String combinate(String randomAuthCode, String destination, String authCodePlatform,
-                                   String authCodeCategory) {
+    public static String convert(String randomAuthCode, String destination, String authCodePlatform,
+                                 String authCodeCategory) {
         StringJoiner stringJoiner = new StringJoiner(":");
         return stringJoiner
                 .add(randomAuthCode)

@@ -62,7 +62,7 @@ public class AuthService {
 
         authCodeValidator.validate(authCodePlatform, destination);
         String randomAuthCode = authCodeGenerator.generateAuthCode();
-        String authCodeKey = AuthCodeKeyConverter.combinate(randomAuthCode, destination, authCodePlatform.getPlatform(),
+        String authCodeKey = AuthCodeKeyConverter.convert(randomAuthCode, destination, authCodePlatform.getPlatform(),
                 authCodeCategory.getCategoryName());
         redisTemplate.opsForValue().set(authCodeKey, "true");
 
@@ -89,7 +89,7 @@ public class AuthService {
         AuthCodePlatform authCodePlatform = AuthCodePlatform.find(authCodeCertificateRequest.getAuthCodePlatform());
         AuthCodeCategory authCodeCategory = AuthCodeCategory.find(authCodeCertificateRequest.getAuthCodeCategory());
 
-        String authCodeKey = AuthCodeKeyConverter.combinate(authCode, destination, authCodePlatform.getPlatform(),
+        String authCodeKey = AuthCodeKeyConverter.convert(authCode, destination, authCodePlatform.getPlatform(),
                 authCodeCategory.getCategoryName());
         String findResult = redisTemplate.opsForValue().getAndDelete(authCodeKey);
         if (findResult == null) {

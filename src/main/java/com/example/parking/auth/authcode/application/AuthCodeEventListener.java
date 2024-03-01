@@ -38,7 +38,7 @@ public class AuthCodeEventListener {
         String authCodePlatform = authCodeCreateEvent.getAuthCodePlatform();
         String authCodeCategory = authCodeCreateEvent.getAuthCodeCategory();
 
-        String authCodeKey = AuthCodeKeyConverter.combinate(authCode, destination, authCodePlatform, authCodeCategory);
+        String authCodeKey = AuthCodeKeyConverter.convert(authCode, destination, authCodePlatform, authCodeCategory);
         taskScheduler.schedule(() -> redisTemplate.delete(authCodeKey), Instant.now().plusSeconds(authCodeExpired));
     }
 }
