@@ -46,6 +46,7 @@ public class Member {
 
     public void delete() {
         deleted = Boolean.TRUE;
+    }
 
     public void changePassword(String previousPassword, String newPassword) {
         if (checkPassword(previousPassword)) {
