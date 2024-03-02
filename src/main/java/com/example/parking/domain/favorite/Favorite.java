@@ -1,6 +1,8 @@
 package com.example.parking.domain.favorite;
 
 import com.example.parking.domain.AuditingEntity;
+import com.example.parking.domain.member.MemberId;
+import com.example.parking.domain.parking.ParkingId;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,10 +24,13 @@ public class Favorite extends AuditingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long memberId;
-    private Long parkingId;
+    @Embedded
+    private MemberId memberId;
 
-    public Favorite(Long memberId, Long parkingId) {
+    @Embedded
+    private ParkingId parkingId;
+
+    public Favorite(MemberId memberId, ParkingId parkingId) {
         this.memberId = memberId;
         this.parkingId = parkingId;
     }

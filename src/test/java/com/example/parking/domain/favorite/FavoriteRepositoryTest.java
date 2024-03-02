@@ -1,5 +1,7 @@
 package com.example.parking.domain.favorite;
 
+import com.example.parking.domain.member.MemberId;
+import com.example.parking.domain.parking.ParkingId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -14,8 +16,8 @@ class FavoriteRepositoryTest {
 
     @Test
     void 멤버의_즐겨찾기_주차장을_삭제한다() {
-        Long memberId = 1L;
-        Long parkingId = 1L;
+        MemberId memberId = new MemberId(1L);
+        ParkingId parkingId = new ParkingId(1L);
         Favorite favorite = new Favorite(memberId, parkingId);
         favoriteRepository.save(favorite);
 
@@ -26,13 +28,13 @@ class FavoriteRepositoryTest {
     @Test
     void 멤버의_즐겨찾기_주차장을_조회한다() {
         // given
-        Long memberId = 1L;
-        Long memberId2 = 2L;
+        MemberId memberId = new MemberId(1L);
+        MemberId memberId2 = new MemberId(2L);
 
-        Long parkingId = 1L;
-        Long parkingId2 = 2L;
-        Long parkingId3 = 3L;
-        Long parkingId4 = 4L;
+        ParkingId parkingId = new ParkingId(1L);
+        ParkingId parkingId2 = new ParkingId(2L);
+        ParkingId parkingId3 = new ParkingId(3L);
+        ParkingId parkingId4 = new ParkingId(4L);
 
         // when
         favoriteRepository.save(new Favorite(memberId, parkingId));
@@ -43,6 +45,6 @@ class FavoriteRepositoryTest {
         favoriteRepository.save(new Favorite(memberId2, parkingId4));
 
         // then
-        assertThat(favoriteRepository.findByMemberId(1L)).hasSize(3);
+        assertThat(favoriteRepository.findByMemberId(memberId)).hasSize(3);
     }
 }
