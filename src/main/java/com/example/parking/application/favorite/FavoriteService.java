@@ -4,6 +4,8 @@ import com.example.parking.application.favorite.dto.FavoriteCreateRequest;
 import com.example.parking.application.favorite.dto.FavoriteDeleteRequest;
 import com.example.parking.domain.favorite.Favorite;
 import com.example.parking.domain.favorite.FavoriteRepository;
+import com.example.parking.domain.member.MemberId;
+import com.example.parking.domain.parking.ParkingId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,7 +24,7 @@ public class FavoriteService {
         Long memberId = favoriteCreateRequest.getMemberId();
         Long parkingId = favoriteCreateRequest.getParkingId();
 
-        Favorite favorite = new Favorite(memberId, parkingId);
+        Favorite favorite = new Favorite(new MemberId(memberId), new ParkingId(parkingId));
         saveFavorite(favorite);
 
     }
@@ -39,6 +41,6 @@ public class FavoriteService {
         Long memberId = favoriteDeleteRequest.getMemberId();
         Long parkingId = favoriteDeleteRequest.getParkingId();
 
-        favoriteRepository.deleteByMemberIdAndParkingId(memberId, parkingId);
+        favoriteRepository.deleteByMemberIdAndParkingId(new MemberId(memberId), new ParkingId(parkingId));
     }
 }
