@@ -21,7 +21,7 @@ jobs:
           distribution: 'corretto'
           
       - name: Install redis
-        run: sudo apt-get install -y redis-tools redis-server
+        run: apt-get update && apt-get install -y redis-tools redis-server
         
       - name: Verify that redis is up
         run: redis-cli ping
@@ -45,11 +45,10 @@ jobs:
           token: ${{ github.token }}
 
       - name: build 실패 시 Slack으로 알립니다
-        uses: 8398a7/action-slack@v3
+        uses: rtCamp/action-slack-notify@v2
+        if: failure()
         with:
           status: ${{ job.status }}
           author_name: 백엔드 빌드 실패 알림
           fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: failure()
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
