@@ -62,12 +62,14 @@ public class MemberService {
     public void deleteMember(Long memberId) {
         Member member = memberRepository.getById(memberId);
         member.delete();
+    }
 
     @Transactional(readOnly = true)
     public MemberInfoResponse findMemberInfo(Long memberId) {
         Member member = memberRepository.getById(memberId);
 
         return new MemberInfoResponse(member.getName(), member.getEmail());
+    }
 
     @Transactional
     public void changePassword(Long memberId, PasswordChangeRequest dto) {
