@@ -1,0 +1,38 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: weqrewfd
+    password: asdfasdf
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mysql:8://test
+    username: root
+    password: test
+
+kakao:
+  key: asdfdsa
+
+seoul-public-parking-key: fdsbhgsdfv
+pusan-public-parking-key: hrtwhytwr4sgre
+
+authcode:
+  expired-time: 60
