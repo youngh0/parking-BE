@@ -47,7 +47,7 @@ class AuthServiceTest extends ContainerTest {
 
     @Test
     void 세션_만료시간을_갱신한다() {
-        
+
         // given
         Long memberId = 1L;
         String sessionId = authService.createSession(memberId);
