@@ -144,5 +144,6 @@ class AuthServiceTest extends ContainerTest {
 
         // then (예전 인증코드(oldAuthCode)로 인증 시도)
         assertDoesNotThrow(() -> authService.certificateAuthCode(authCodeCertificateRequest));
+
     }
 }

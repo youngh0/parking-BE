@@ -24,11 +24,6 @@ public class MySQLDataCleaner {
                 .map(table -> CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, table.getName()))
                 .toList();
 
-//        jdbcTemplate.execute("TRUNCATE TABLE auth_code");
-//        jdbcTemplate.execute("TRUNCATE TABLE parking");
-//        jdbcTemplate.execute("TRUNCATE TABLE member_session");
-//        jdbcTemplate.execute("TRUNCATE TABLE search_condition");
-//        jdbcTemplate.execute("TRUNCATE TABLE member");
         setForeignKeyEnabled(false);
         tableNames.forEach(table -> jdbcTemplate.execute("TRUNCATE table " + table));
         setForeignKeyEnabled(true);
