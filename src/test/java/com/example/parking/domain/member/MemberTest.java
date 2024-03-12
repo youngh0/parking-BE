@@ -1,5 +1,8 @@
 package com.example.parking.domain.member;
 
+import static com.example.parking.support.exception.ExceptionInformation.INVALID_PASSWORD;
+
+import com.example.parking.support.exception.DomainException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -55,7 +58,7 @@ class MemberTest {
 
         // when, then
         Assertions.assertThatThrownBy(() -> member.changePassword(wrongPreviousPassword, newPassword))
-                .isInstanceOf(PasswordNotMatchedException.class)
-                .hasMessage("비밀번호가 맞지 않습니다.");
+                .isInstanceOf(DomainException.class)
+                .hasMessage(INVALID_PASSWORD.getMessage());
     }
 }

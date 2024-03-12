@@ -1,5 +1,7 @@
 package com.example.parking.domain.searchcondition;
 
+import com.example.parking.support.exception.DomainException;
+import com.example.parking.support.exception.ExceptionInformation;
 import java.util.Optional;
 import org.springframework.data.repository.Repository;
 
@@ -9,7 +11,7 @@ public interface SearchConditionRepository extends Repository<SearchCondition, L
 
     default SearchCondition getByMemberId(Long memberId) {
         return findByMemberId(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원의 검색 조건이 존재하지 않습니다."));
+                .orElseThrow(() -> new DomainException(ExceptionInformation.INVALID_SEARCH_CONDITION));
     }
 
     void save(SearchCondition searchCondition);

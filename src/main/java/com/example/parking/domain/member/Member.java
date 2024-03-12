@@ -1,5 +1,7 @@
 package com.example.parking.domain.member;
 
+import com.example.parking.support.exception.DomainException;
+import com.example.parking.support.exception.ExceptionInformation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -49,8 +51,7 @@ public class Member {
             this.password = new Password(newPassword);
             return;
         }
-        throw new PasswordNotMatchedException("비밀번호가 맞지 않습니다.");
-
+        throw new DomainException(ExceptionInformation.INVALID_PASSWORD);
     }
 
     @Override

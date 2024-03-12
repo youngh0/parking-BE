@@ -4,6 +4,8 @@ import com.example.parking.infra.converter.ContentConverter;
 import com.example.parking.support.Association;
 import com.example.parking.domain.member.Member;
 import com.example.parking.domain.parking.Parking;
+import com.example.parking.support.exception.DomainException;
+import com.example.parking.support.exception.ExceptionInformation;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -53,7 +55,7 @@ public class Review {
 
     private static void validate(List<Content> contents) {
         if (contents == null || contents.isEmpty() || contents.size() > MAX_CONTENTS_SIZE) {
-            throw new IllegalArgumentException("리뷰 내용은 1개에서 3개까지 선택가능합니다.");
+            throw new DomainException(ExceptionInformation.INVALID_CONTENTS_SIZE);
         }
     }
 }
