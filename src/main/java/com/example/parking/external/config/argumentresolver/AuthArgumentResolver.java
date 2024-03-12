@@ -14,6 +14,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
+
     private static final String JSESSIONID = "JSESSIONID";
 
     private final AuthService authService;
