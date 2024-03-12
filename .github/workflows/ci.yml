@@ -2,9 +2,9 @@ name: Backend CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 permissions:
   checks: write
@@ -24,10 +24,9 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
-          
       - name: Install redis
         run: sudo apt-get install -y redis-tools redis-server
-        
+
       - name: Verify that redis is up
         run: redis-cli ping
 

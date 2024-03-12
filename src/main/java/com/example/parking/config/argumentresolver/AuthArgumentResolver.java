@@ -1,7 +1,7 @@
 package com.example.parking.config.argumentresolver;
 
 import com.example.parking.auth.AuthService;
-import com.example.parking.auth.MemberSession;
+import com.example.parking.auth.session.MemberSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -13,6 +13,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 @Component
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
+
 
     private static final String JSESSIONID = "JSESSIONID";
 

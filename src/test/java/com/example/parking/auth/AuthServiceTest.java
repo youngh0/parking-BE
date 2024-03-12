@@ -1,19 +1,27 @@
 package com.example.parking.auth;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@Transactional
-@SpringBootTest
-class AuthServiceTest {
+import com.example.parking.auth.authcode.AuthCodeCategory;
+import com.example.parking.auth.authcode.AuthCodePlatform;
+import com.example.parking.auth.authcode.InValidAuthCodeException;
+import com.example.parking.auth.authcode.application.dto.AuthCodeCertificateRequest;
+import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
+import com.example.parking.auth.session.MemberSession;
+import com.example.parking.config.TestConfig;
+import com.example.parking.container.ContainerTest;
+import java.time.LocalDateTime;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
+
+@Import({TestConfig.class})
+class AuthServiceTest extends ContainerTest {
+
+    private static final String AUTH_CODE = "111111";
 
     @Autowired
     private AuthService authService;
@@ -54,5 +62,89 @@ class AuthServiceTest {
 
         // then
         assertThat(updatedExpiredAt).isAfter(originExpiredAt);
+    }
+
+    @Test
+    void 가장_최근에_발급받은_인증번호는_검증가능하다() {
+        // given
+        String authCodeDestination = "destination@gmail.com";
+        AuthCodePlatform authCodePlatform = AuthCodePlatform.MAIL;
+        AuthCodeCategory authCodeCategory = AuthCodeCategory.SIGN_UP;
+
+        String oldAuthCode = authService.createAuthCode(
+                new AuthCodeRequest(authCodeDestination, authCodePlatform.getPlatform(),
+                        authCodeCategory.getCategoryName())
+        );
+
+        String newAuthCode = authService.createAuthCode(
+                new AuthCodeRequest(authCodeDestination, authCodePlatform.getPlatform(),
+                        authCodeCategory.getCategoryName())
+        );
+
+        // when
+        AuthCodeCertificateRequest authCodeCertificateRequest = new AuthCodeCertificateRequest(
+                authCodeDestination,
+                authCodePlatform.getPlatform(),
+                AuthCodeCategory.SIGN_UP.getCategoryName(),
+                newAuthCode
+        );
+
+        // then
+        assertDoesNotThrow(() -> authService.certificateAuthCode(authCodeCertificateRequest));
+    }
+
+    @Test
+    void 이미_인증받은_인증번호는_다시_사용할_수_없다() {
+        // given
+        String authCodeDestination = "destination@gmail.com";
+        AuthCodePlatform authCodePlatform = AuthCodePlatform.MAIL;
+        AuthCodeCategory authCodeCategory = AuthCodeCategory.SIGN_UP;
+
+        String oldAuthCode = authService.createAuthCode(
+                new AuthCodeRequest(authCodeDestination, authCodePlatform.getPlatform(),
+                        authCodeCategory.getCategoryName())
+        );
+
+        // when
+        AuthCodeCertificateRequest authCodeCertificateRequest = new AuthCodeCertificateRequest(
+                authCodeDestination,
+                authCodePlatform.getPlatform(),
+                AuthCodeCategory.SIGN_UP.getCategoryName(),
+                oldAuthCode
+        );
+        authService.certificateAuthCode(authCodeCertificateRequest);
+
+        // then (인증받은 인증코드로 인증 다시 시도)
+        assertThatThrownBy(() -> authService.certificateAuthCode(authCodeCertificateRequest))
+                .isInstanceOf(InValidAuthCodeException.class);
+    }
+
+    @Test
+    void 가장_최근의_인증번호가_아니어도_인증_가능하다() {
+        // given
+        String authCodeDestination = "destination@gmail.com";
+        AuthCodePlatform authCodePlatform = AuthCodePlatform.MAIL;
+        AuthCodeCategory authCodeCategory = AuthCodeCategory.SIGN_UP;
+
+        String oldAuthCode = authService.createAuthCode(
+                new AuthCodeRequest(authCodeDestination, authCodePlatform.getPlatform(),
+                        authCodeCategory.getCategoryName())
+        );
+
+        String newAuthCode = authService.createAuthCode(
+                new AuthCodeRequest(authCodeDestination, authCodePlatform.getPlatform(),
+                        authCodeCategory.getCategoryName())
+        );
+
+        // when
+        AuthCodeCertificateRequest authCodeCertificateRequest = new AuthCodeCertificateRequest(
+                authCodeDestination,
+                authCodePlatform.getPlatform(),
+                AuthCodeCategory.SIGN_UP.getCategoryName(),
+                oldAuthCode
+        );
+
+        // then (예전 인증코드(oldAuthCode)로 인증 시도)
+        assertDoesNotThrow(() -> authService.certificateAuthCode(authCodeCertificateRequest));
     }
 }
