@@ -19,13 +19,11 @@ public class FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
 
-    public void createFavorite(FavoriteCreateRequest favoriteCreateRequest) {
-        Long memberId = favoriteCreateRequest.getMemberId();
+    public void createFavorite(FavoriteCreateRequest favoriteCreateRequest, Long memberId) {
         Long parkingId = favoriteCreateRequest.getParkingId();
 
         Favorite favorite = new Favorite(Association.from(memberId), Association.from(parkingId));
         saveFavorite(favorite);
-
     }
 
     private void saveFavorite(Favorite favorite) {
