@@ -13,6 +13,7 @@ import com.example.parking.auth.session.MemberSessionRepository;
 import com.example.parking.util.authcode.AuthCodeGenerator;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -64,7 +65,7 @@ public class AuthService {
         String randomAuthCode = authCodeGenerator.generateAuthCode();
         String authCodeKey = AuthCodeKeyConverter.convert(randomAuthCode, destination, authCodePlatform.getPlatform(),
                 authCodeCategory.getCategoryName());
-        redisTemplate.opsForValue().set(authCodeKey, "true");
+        redisTemplate.opsForValue().set(authCodeKey, randomAuthCode, 300L, TimeUnit.SECONDS);
 
         publishAuthCodeCreateEvent(destination, authCodePlatform, authCodeCategory, randomAuthCode);
         return randomAuthCode;
