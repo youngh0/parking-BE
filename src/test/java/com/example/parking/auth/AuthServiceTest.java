@@ -11,12 +11,14 @@ import com.example.parking.auth.authcode.InValidAuthCodeException;
 import com.example.parking.auth.authcode.application.dto.AuthCodeCertificateRequest;
 import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
 import com.example.parking.auth.session.MemberSession;
+import com.example.parking.config.TestConfig;
 import com.example.parking.container.ContainerTest;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 
-//@SpringBootTest
+@Import({TestConfig.class})
 class AuthServiceTest extends ContainerTest {
 
     private static final String AUTH_CODE = "111111";
