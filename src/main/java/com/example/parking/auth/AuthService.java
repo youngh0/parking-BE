@@ -1,5 +1,7 @@
 package com.example.parking.auth;
 
+import com.example.parking.support.exception.ClientException;
+import com.example.parking.support.exception.ExceptionInformation;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,7 @@ public class AuthService {
     public MemberSession findSession(String sessionId) {
         return memberSessionRepository.findBySessionIdAndExpiredAtIsGreaterThanEqual(sessionId,
                         LocalDateTime.now())
-                .orElseThrow(() -> new UnAuthorizationException("존재하지 않는 sessionId 입니다.", sessionId));
+                .orElseThrow(() -> new ClientException(ExceptionInformation.UNAUTHORIZED));
     }
 
     @Transactional

@@ -1,5 +1,7 @@
 package com.example.parking.domain.review;
 
+import com.example.parking.support.exception.DomainException;
+import com.example.parking.support.exception.ExceptionInformation;
 import java.util.Arrays;
 import lombok.Getter;
 
@@ -27,6 +29,6 @@ public enum Content {
         return Arrays.stream(values())
                 .filter(content -> content.getDescription().startsWith(description))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리뷰 내용입니다."));
+                .orElseThrow(() -> new DomainException(ExceptionInformation.INVALID_CONTENT));
     }
 }

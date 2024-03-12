@@ -1,7 +1,9 @@
 package com.example.parking.domain.searchcondition;
 
+import static com.example.parking.support.exception.ExceptionInformation.INVALID_HOURS;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import com.example.parking.support.exception.DomainException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -14,7 +16,8 @@ class HoursTest {
         //given, when, then
         if (hasException) {
             Assertions.assertThatThrownBy(() -> Hours.from(hours))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(DomainException.class)
+                    .hasMessage(INVALID_HOURS.getMessage());
             return;
         }
         assertDoesNotThrow(() -> Hours.from(hours));

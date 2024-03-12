@@ -1,5 +1,7 @@
 package com.example.parking.domain.searchcondition;
 
+import com.example.parking.support.exception.DomainException;
+import com.example.parking.support.exception.ExceptionInformation;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,6 +22,6 @@ public class Hours {
         if ((hours >= 1 && hours <= 12) || hours == 24) {
             return new Hours(hours);
         }
-        throw new IllegalArgumentException("이용 시간은 1~12, 24 시간까지만 선택할 수 있습니다.");
+        throw new DomainException(ExceptionInformation.INVALID_HOURS);
     }
 }

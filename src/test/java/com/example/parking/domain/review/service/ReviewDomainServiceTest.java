@@ -1,5 +1,6 @@
 package com.example.parking.domain.review.service;
 
+import static com.example.parking.support.exception.ExceptionInformation.DUPLICATE_REVIEW;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -10,6 +11,7 @@ import com.example.parking.domain.parking.Parking;
 import com.example.parking.domain.review.Content;
 import com.example.parking.domain.review.Review;
 import com.example.parking.fake.BasicReviewRepository;
+import com.example.parking.support.exception.DomainException;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -28,7 +30,8 @@ class ReviewDomainServiceTest {
 
         //when, then
         assertThatThrownBy(() -> reviewDomainService.validateDuplicateReview(parkingId, reviewerId))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(DomainException.class)
+                .hasMessage(DUPLICATE_REVIEW.getMessage());
     }
 
     @Test

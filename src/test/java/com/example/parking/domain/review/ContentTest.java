@@ -1,9 +1,11 @@
 package com.example.parking.domain.review;
 
+import static com.example.parking.support.exception.ExceptionInformation.INVALID_CONTENT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
+import com.example.parking.support.exception.DomainException;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,6 +35,7 @@ class ContentTest {
     void 설명에_맞는_Content가_없으면_예외처리한다() {
         //given, when, then
         assertThatThrownBy(() -> Content.find("없는 설명"))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(DomainException.class)
+                .hasMessage(INVALID_CONTENT.getMessage());
     }
 }

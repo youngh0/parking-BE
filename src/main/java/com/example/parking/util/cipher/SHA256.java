@@ -1,5 +1,7 @@
 package com.example.parking.util.cipher;
 
+import com.example.parking.support.exception.DomainException;
+import com.example.parking.support.exception.ExceptionInformation;
 import java.security.MessageDigest;
 
 public class SHA256 {
@@ -12,7 +14,7 @@ public class SHA256 {
             md.update(plainText.getBytes());
             return bytesToHex(md.digest());
         } catch (Exception e) {
-            throw new EncryptionException("암호화에 실패했습니다.");
+            throw new DomainException(ExceptionInformation.ENCRYPT_EXCEPTION);
         }
     }
 

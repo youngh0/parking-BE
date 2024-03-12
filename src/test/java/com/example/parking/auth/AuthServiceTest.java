@@ -1,5 +1,7 @@
 package com.example.parking.auth;
 
+import com.example.parking.support.exception.ClientException;
+import com.example.parking.support.exception.ExceptionInformation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -7,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+import static com.example.parking.support.exception.ExceptionInformation.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -36,7 +39,8 @@ class AuthServiceTest {
 
         // when, then
         assertThatThrownBy(() -> authService.findSession(wrongSessionId))
-                .isInstanceOf(UnAuthorizationException.class);
+                .isInstanceOf(ClientException.class)
+                .hasMessage(UNAUTHORIZED.getMessage());
     }
 
     @Test
