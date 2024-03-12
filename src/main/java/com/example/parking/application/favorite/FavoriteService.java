@@ -33,12 +33,12 @@ public class FavoriteService {
         try {
             favoriteRepository.save(favorite);
         } catch (DataIntegrityViolationException e) {
-            log.warn("memberId: {}, parkingId: {} request duplicate favorite create", favorite.getMemberId(), favorite.getParkingId());
+            log.warn("memberId: {}, parkingId: {} request duplicate favorite create", favorite.getMemberId(),
+                    favorite.getParkingId());
         }
     }
 
-    public void deleteFavorite(FavoriteDeleteRequest favoriteDeleteRequest) {
-        Long memberId = favoriteDeleteRequest.getMemberId();
+    public void deleteFavorite(FavoriteDeleteRequest favoriteDeleteRequest, Long memberId) {
         Long parkingId = favoriteDeleteRequest.getParkingId();
 
         favoriteRepository.deleteByMemberIdAndParkingId(new MemberId(memberId), new ParkingId(parkingId));

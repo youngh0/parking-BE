@@ -7,11 +7,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FavoriteDeleteRequest {
 
-    private Long memberId;
     private Long parkingId;
 
-    public FavoriteDeleteRequest(Long memberId, Long parkingId) {
-        this.memberId = memberId;
+    public FavoriteDeleteRequest(Long parkingId) {
         this.parkingId = parkingId;
     }
 }

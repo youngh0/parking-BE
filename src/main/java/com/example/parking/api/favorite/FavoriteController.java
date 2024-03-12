@@ -3,6 +3,7 @@ package com.example.parking.api.favorite;
 import com.example.parking.application.favorite.FavoriteService;
 import com.example.parking.application.favorite.dto.FavoriteCreateRequest;
 import com.example.parking.application.favorite.dto.FavoriteDeleteRequest;
+import com.example.parking.external.config.argumentresolver.MemberAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +18,16 @@ public class FavoriteController {
 
     private final FavoriteService favoriteService;
 
-    @PostMapping("/favorite")
+    @PostMapping("/favorites")
     public ResponseEntity<Void> create(@RequestBody FavoriteCreateRequest favoriteCreateRequest) {
         favoriteService.createFavorite(favoriteCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/favorite")
-    public ResponseEntity<Void> delete(@RequestBody FavoriteDeleteRequest favoriteDeleteRequest) {
-        favoriteService.deleteFavorite(favoriteDeleteRequest);
+    @DeleteMapping("/favorites")
+    public ResponseEntity<Void> delete(@RequestBody FavoriteDeleteRequest favoriteDeleteRequest,
+                                       @MemberAuth Long memberId) {
+        favoriteService.deleteFavorite(favoriteDeleteRequest, memberId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
