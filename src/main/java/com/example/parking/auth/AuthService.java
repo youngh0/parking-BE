@@ -1,10 +1,7 @@
 package com.example.parking.auth;
 
-import com.example.parking.support.exception.ClientException;
-import com.example.parking.support.exception.ExceptionInformation;
 import com.example.parking.auth.authcode.AuthCodeCategory;
 import com.example.parking.auth.authcode.AuthCodePlatform;
-import com.example.parking.auth.authcode.InValidAuthCodeException;
 import com.example.parking.auth.authcode.application.AuthCodeValidator;
 import com.example.parking.auth.authcode.application.dto.AuthCodeCertificateRequest;
 import com.example.parking.auth.authcode.application.dto.AuthCodeRequest;
@@ -12,6 +9,8 @@ import com.example.parking.auth.authcode.event.AuthCodeCreateEvent;
 import com.example.parking.auth.authcode.util.AuthCodeKeyConverter;
 import com.example.parking.auth.session.MemberSession;
 import com.example.parking.auth.session.MemberSessionRepository;
+import com.example.parking.support.exception.ClientException;
+import com.example.parking.support.exception.ExceptionInformation;
 import com.example.parking.util.authcode.AuthCodeGenerator;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -27,7 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private static final Long DURATION_MINUTE = 30L;
+
     private final MemberSessionRepository memberSessionRepository;
+    private final AuthCodeGenerator authCodeGenerator;
+    private final AuthCodeValidator authCodeValidator;
+    private final ApplicationEventPublisher applicationEventPublisher;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public String createSession(Long memberId) {
@@ -91,7 +95,7 @@ public class AuthService {
                 authCodeCategory.getCategoryName());
         String findResult = redisTemplate.opsForValue().getAndDelete(authCodeKey);
         if (findResult == null) {
-            throw new InValidAuthCodeException("존재하지 않는 인증코드 입니다.");
+            throw new ClientException(ExceptionInformation.INVALID_AUTH_CODE);
         }
     }
 }

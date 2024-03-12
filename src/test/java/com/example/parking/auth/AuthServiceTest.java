@@ -127,7 +127,8 @@ class AuthServiceTest extends ContainerTest {
 
         // then (인증받은 인증코드로 인증 다시 시도)
         assertThatThrownBy(() -> authService.certificateAuthCode(authCodeCertificateRequest))
-                .isInstanceOf(InValidAuthCodeException.class);
+                .isInstanceOf(ClientException.class)
+                .hasMessage(INVALID_AUTH_CODE.getMessage());
     }
 
     @Test

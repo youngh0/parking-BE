@@ -21,7 +21,8 @@ public enum ExceptionInformation {
     ENCRYPT_EXCEPTION("암호화에 실패했습니다."),
 
     INVALID_CONNECT("주차장 API 연결 중 예외 발생"),
-    COORDINATE_EXCEPTION("좌표 변환 중 예외 발생");
+    COORDINATE_EXCEPTION("좌표 변환 중 예외 발생"),
+    INVALID_AUTH_CODE("존재하지 않는 인증코드 입니다.");
 
     private final String message;
 
