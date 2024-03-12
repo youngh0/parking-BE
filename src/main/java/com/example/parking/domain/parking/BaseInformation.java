@@ -1,18 +1,15 @@
 package com.example.parking.domain.parking;
 
 import static jakarta.persistence.EnumType.STRING;
-import static lombok.AccessLevel.PROTECTED;
-
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Enumerated;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(of = "name")
 @Embeddable
 public class BaseInformation {
 

@@ -3,6 +3,7 @@ package com.example.parking.application.parking.dto;
 import com.example.parking.domain.parking.OperationType;
 import com.example.parking.domain.parking.ParkingType;
 import com.example.parking.domain.parking.dto.ParkingQueryCondition;
+import com.example.parking.domain.searchcondition.SearchConditionAvailable;
 import lombok.Getter;
 
 @Getter
@@ -34,7 +35,7 @@ public class ParkingQueryRequest {
 
     public ParkingQueryCondition toQueryCondition() {
         return new ParkingQueryCondition(
-                OperationType.find(this.operationType),
+                SearchConditionAvailable.find(this.operationType, OperationType.values()),
                 ParkingType.find(this.parkingType),
                 this.cardEnabled
         );

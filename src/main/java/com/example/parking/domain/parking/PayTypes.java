@@ -1,13 +1,16 @@
 package com.example.parking.domain.parking;
 
-import static lombok.AccessLevel.PROTECTED;
-
 import jakarta.persistence.Embeddable;
 import java.util.Collection;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = PROTECTED)
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode
 @Embeddable
 public class PayTypes {
 
@@ -20,7 +23,7 @@ public class PayTypes {
         this.description = description;
     }
 
-    public PayTypes from(Collection<PayType> payTypes) {
+    public static PayTypes from(Collection<PayType> payTypes) {
         if (payTypes.contains(PayType.NO_INFO)) {
             return DEFAULT;
         }

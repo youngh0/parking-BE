@@ -1,8 +1,10 @@
 package com.example.parking.domain.parking;
 
-import java.util.Arrays;
+import com.example.parking.domain.searchcondition.SearchConditionAvailable;
+import lombok.Getter;
 
-public enum OperationType {
+@Getter
+public enum OperationType implements SearchConditionAvailable {
 
     PUBLIC("공영"),
     PRIVATE("민영"),
@@ -14,10 +16,8 @@ public enum OperationType {
         this.description = description;
     }
 
-    public static OperationType find(String description) {
-        return Arrays.stream(OperationType.values())
-                .filter(operationType -> operationType.description.equals(description))
-                .findAny()
-                .orElse(NO_INFO);
+    @Override
+    public OperationType getDefault() {
+        return NO_INFO;
     }
 }

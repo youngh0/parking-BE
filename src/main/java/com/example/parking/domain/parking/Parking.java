@@ -1,24 +1,20 @@
 package com.example.parking.domain.parking;
 
-import static lombok.AccessLevel.PROTECTED;
-
 import com.example.parking.domain.AuditingEntity;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.util.List;
+import java.util.Objects;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @Getter
-@ToString(of = {"id", "baseInformation", "location"})
-@Builder
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Parking extends AuditingEntity {
 
     @Id
@@ -43,6 +39,7 @@ public class Parking extends AuditingEntity {
     @Embedded
     private FeePolicy feePolicy;
 
+    @Builder
     private Parking(Long id, BaseInformation baseInformation, Location location, Space space,
                     FreeOperatingTime freeOperatingTime, OperatingTime operatingTime, FeePolicy feePolicy) {
         this.id = id;
@@ -64,13 +61,44 @@ public class Parking extends AuditingEntity {
         this.feePolicy = feePolicy;
     }
 
-    public Fee calculateParkingFee(List<DayParking> dayParkings) {
-        return dayParkings.stream()
-//                .filter(freePolicy::isNotFreeDay)
-                .map(DayParking::getMinutes)
-                .map(minutes -> feePolicy.calculateFee(minutes))
-                .reduce(Fee::plus)
-                .orElse(Fee.ZERO);
+    public int calculatePayOfChargeMinutes(DayParking dayParking) {
+        return freeOperatingTime.calculateNonFreeUsageMinutes(dayParking);
+    }
+
+    public Fee calculateParkingFee(int payOfChargeMinutes) {
+        return feePolicy.calculateFee(payOfChargeMinutes);
+    }
+
+    public boolean supportCalculateParkingFee() {
+        return feePolicy.supportBase() && feePolicy.supportExtra();
+    }
+
+    public void update(Parking updated) {
+        this.space = updated.space;
+        this.freeOperatingTime = updated.freeOperatingTime;
+        this.operatingTime = updated.operatingTime;
+        this.feePolicy = updated.feePolicy;
+    }
+
+    public void update(Location location) {
+        this.location = location;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Parking parking = (Parking) o;
+        return Objects.equals(id, parking.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public boolean isMatchOperationType(OperationType operationType) {
