@@ -16,7 +16,7 @@ public class AuthCodeValidator {
 
     public void validate(AuthCodePlatform authCodePlatform, String destination) {
         PlatformValidator platformValidator = validators.get(authCodePlatform);
-        if (platformValidator.inInvalidForm(destination)) {
+        if (platformValidator.isInvalidForm(destination)) {
             throw new InValidAuthCodeException("인증 코드 플랫폼과 수신지 형식이 일치하지 않습니다.");
         }
     }

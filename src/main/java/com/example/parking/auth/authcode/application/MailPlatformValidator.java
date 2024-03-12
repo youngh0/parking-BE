@@ -10,7 +10,7 @@ public class MailPlatformValidator implements PlatformValidator {
     private static final Pattern PATTERN = Pattern.compile(EMAIL_PATTERN);
 
     @Override
-    public boolean inInvalidForm(String destination) {
+    public boolean isInvalidForm(String destination) {
         Matcher matcher = PATTERN.matcher(destination);
         return !matcher.matches();
     }
