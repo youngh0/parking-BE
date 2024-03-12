@@ -3,7 +3,7 @@ package com.example.parking.api.favorite;
 import com.example.parking.application.favorite.FavoriteService;
 import com.example.parking.application.favorite.dto.FavoriteCreateRequest;
 import com.example.parking.application.favorite.dto.FavoriteDeleteRequest;
-import com.example.parking.external.config.argumentresolver.MemberAuth;
+import com.example.parking.config.argumentresolver.MemberAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

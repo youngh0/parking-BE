@@ -1,12 +1,11 @@
 package com.example.parking.domain.favorite;
 
-import com.example.parking.domain.member.MemberId;
-import com.example.parking.domain.parking.ParkingId;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.example.parking.support.Association;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 class FavoriteRepositoryTest {
@@ -16,35 +15,35 @@ class FavoriteRepositoryTest {
 
     @Test
     void 멤버의_즐겨찾기_주차장을_삭제한다() {
-        MemberId memberId = new MemberId(1L);
-        ParkingId parkingId = new ParkingId(1L);
-        Favorite favorite = new Favorite(memberId, parkingId);
+        Long memberId = 1L;
+        Long parkingId = 1L;
+        Favorite favorite = new Favorite(Association.from(memberId), Association.from(parkingId));
         favoriteRepository.save(favorite);
 
-        favoriteRepository.deleteByMemberIdAndParkingId(memberId, parkingId);
-        assertThat(favoriteRepository.findByMemberId(memberId)).isEmpty();
+        favoriteRepository.deleteByMemberIdAndParkingId(Association.from(memberId), Association.from(parkingId));
+        assertThat(favoriteRepository.findByMemberId(Association.from(memberId))).isEmpty();
     }
 
     @Test
     void 멤버의_즐겨찾기_주차장을_조회한다() {
         // given
-        MemberId memberId = new MemberId(1L);
-        MemberId memberId2 = new MemberId(2L);
+        Long memberId = 1L;
+        Long memberId2 = 2L;
 
-        ParkingId parkingId = new ParkingId(1L);
-        ParkingId parkingId2 = new ParkingId(2L);
-        ParkingId parkingId3 = new ParkingId(3L);
-        ParkingId parkingId4 = new ParkingId(4L);
+        Long parkingId = 1L;
+        Long parkingId2 = 2L;
+        Long parkingId3 = 3L;
+        Long parkingId4 = 4L;
 
         // when
-        favoriteRepository.save(new Favorite(memberId, parkingId));
-        favoriteRepository.save(new Favorite(memberId, parkingId2));
-        favoriteRepository.save(new Favorite(memberId, parkingId3));
+        favoriteRepository.save(new Favorite(Association.from(memberId), Association.from(parkingId)));
+        favoriteRepository.save(new Favorite(Association.from(memberId), Association.from(parkingId2)));
+        favoriteRepository.save(new Favorite(Association.from(memberId), Association.from(parkingId3)));
 
-        favoriteRepository.save(new Favorite(memberId2, parkingId3));
-        favoriteRepository.save(new Favorite(memberId2, parkingId4));
+        favoriteRepository.save(new Favorite(Association.from(memberId2), Association.from(parkingId3)));
+        favoriteRepository.save(new Favorite(Association.from(memberId2), Association.from(parkingId4)));
 
         // then
-        assertThat(favoriteRepository.findByMemberId(memberId)).hasSize(3);
+        assertThat(favoriteRepository.findByMemberId(Association.from(memberId))).hasSize(3);
     }
 }

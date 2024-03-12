@@ -1,9 +1,18 @@
 package com.example.parking.domain.favorite;
 
 import com.example.parking.domain.AuditingEntity;
-import com.example.parking.domain.member.MemberId;
-import com.example.parking.domain.parking.ParkingId;
-import jakarta.persistence.*;
+import com.example.parking.domain.member.Member;
+import com.example.parking.domain.parking.Parking;
+import com.example.parking.support.Association;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,12 +34,14 @@ public class Favorite extends AuditingEntity {
     private Long id;
 
     @Embedded
-    private MemberId memberId;
+    @AttributeOverride(name = "id", column = @Column(name = "member_id"))
+    private Association<Member> memberId;
 
     @Embedded
-    private ParkingId parkingId;
+    @AttributeOverride(name = "id", column = @Column(name = "parking_id"))
+    private Association<Parking> parkingId;
 
-    public Favorite(MemberId memberId, ParkingId parkingId) {
+    public Favorite(Association<Member> memberId, Association<Parking> parkingId) {
         this.memberId = memberId;
         this.parkingId = parkingId;
     }
