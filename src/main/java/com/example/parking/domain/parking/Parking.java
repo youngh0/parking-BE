@@ -18,6 +18,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Parking extends AuditingEntity {
 
+    private static final int AVERAGE_WALKING_SPEED = 5;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -97,33 +99,31 @@ public class Parking extends AuditingEntity {
         return baseInformation.containsPayType(memberPayTypes);
     }
 
-    public int calculateWalkingTime(Double destinationLatitude, Double destinationLongitude) {
-        double distance = calculateDistanceToDestination(destinationLatitude, destinationLongitude);
-        double averageWalkingTime = distance / 5;
+    public int calculateWalkingTime(Location destination) {
+        double distance = calculateDistanceToDestination(destination);
+        double averageWalkingTime = distance / AVERAGE_WALKING_SPEED;
         return (int) Math.ceil(averageWalkingTime);
     }
 
-    private double calculateDistanceToDestination(Double destinationLatitude, Double destinationLongitude) {
-        double parkingLongitude = location.getLongitude();
-        double parkingLatitude = location.getLatitude();
+    private double calculateDistanceToDestination(Location destination) {
+        double parkingLongitude = this.location.getLongitude();
+        double parkingLatitude = this.location.getLatitude();
 
         double radius = 6371; // 지구 반지름(km)
         double toRadian = Math.PI / 180;
 
-        double deltaLatitude = Math.abs(parkingLatitude - destinationLatitude) * toRadian;
-        double deltaLongitude = Math.abs(parkingLongitude - destinationLongitude) * toRadian;
+        double deltaLatitude = Math.abs(parkingLatitude - destination.getLatitude()) * toRadian;
+        double deltaLongitude = Math.abs(parkingLongitude - destination.getLongitude()) * toRadian;
 
         double sinDeltaLat = Math.sin(deltaLatitude / 2);
         double sinDeltaLng = Math.sin(deltaLongitude / 2);
         double squareRoot = Math.sqrt(
                 sinDeltaLat * sinDeltaLat +
-                        Math.cos(parkingLatitude * toRadian) * Math.cos(destinationLatitude * toRadian) * sinDeltaLng
+                        Math.cos(parkingLatitude * toRadian) * Math.cos(destination.getLatitude() * toRadian)
+                                * sinDeltaLng
                                 * sinDeltaLng);
 
-        double distance = 2 * radius * Math.asin(squareRoot);
-
-        // meter 변환
-        return distance * 1000;
+        return 2 * radius * Math.asin(squareRoot);
     }
 
     @Override

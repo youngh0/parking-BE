@@ -48,7 +48,6 @@ public class ParkingService {
     }
 
     private List<Parking> filteringByCondition(List<Parking> parkingLots, Long memberId) {
-//        ParkingQueryCondition queryCondition = parkingQueryRequest.toQueryCondition();
         SearchCondition memberSearchCondition = findMemberSearchCondition(memberId);
         return parkingDomainService.filterByCondition(parkingLots, memberSearchCondition);
     }

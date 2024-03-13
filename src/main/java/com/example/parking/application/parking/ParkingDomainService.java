@@ -32,20 +32,27 @@ public class ParkingDomainService {
 
     public List<ParkingResponse> calculateParkingInfo(List<Parking> parkingLots, SearchCondition searchCondition,
                                                       Location destination, List<Favorite> memberFavorites) {
-        LocalDateTime now = LocalDateTime.now();
         int hours = searchCondition.getHours().getHours();
         Set<Long> favoriteParkingIds = extractFavoriteParkingIds(memberFavorites);
+
+        return extractParkingInfo(parkingLots, destination, hours, favoriteParkingIds);
+    }
+
+    private List<ParkingResponse> extractParkingInfo(List<Parking> parkingLots, Location destination, int hours,
+                                                     Set<Long> favoriteParkingIds) {
+        LocalDateTime now = LocalDateTime.now();
 
         List<ParkingResponse> parkingResponses = new ArrayList<>();
         for (Parking parking : parkingLots) {
             Fee fee = parkingFeeCalculator.calculateParkingFee(parking, now, now.plusHours(hours));
-            int walkingTime = parking.calculateWalkingTime(destination.getLatitude(),
-                    destination.getLongitude());
-            ParkingResponse parkingResponse = toParkingResponse(parking, fee, walkingTime,
+            int walkingTime = parking.calculateWalkingTime(destination);
+            ParkingResponse parkingResponse = toParkingResponse(
+                    parking,
+                    fee,
+                    walkingTime,
                     favoriteParkingIds.contains(parking.getId()));
             parkingResponses.add(parkingResponse);
         }
-
         return parkingResponses;
     }
 
