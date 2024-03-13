@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -84,6 +85,47 @@ public class Parking extends AuditingEntity {
         this.location = location;
     }
 
+    public boolean containsOperationType(List<OperationType> operationTypes) {
+        return baseInformation.containsOperationType(operationTypes);
+    }
+
+    public boolean containsParkingType(List<ParkingType> parkingTypes) {
+        return baseInformation.containsParkingType(parkingTypes);
+    }
+
+    public boolean containsPayType(List<PayType> memberPayTypes) {
+        return baseInformation.containsPayType(memberPayTypes);
+    }
+
+    public int calculateWalkingTime(Double destinationLatitude, Double destinationLongitude) {
+        double distance = calculateDistanceToDestination(destinationLatitude, destinationLongitude);
+        double averageWalkingTime = distance / 5;
+        return (int) Math.ceil(averageWalkingTime);
+    }
+
+    private double calculateDistanceToDestination(Double destinationLatitude, Double destinationLongitude) {
+        double parkingLongitude = location.getLongitude();
+        double parkingLatitude = location.getLatitude();
+
+        double radius = 6371; // 지구 반지름(km)
+        double toRadian = Math.PI / 180;
+
+        double deltaLatitude = Math.abs(parkingLatitude - destinationLatitude) * toRadian;
+        double deltaLongitude = Math.abs(parkingLongitude - destinationLongitude) * toRadian;
+
+        double sinDeltaLat = Math.sin(deltaLatitude / 2);
+        double sinDeltaLng = Math.sin(deltaLongitude / 2);
+        double squareRoot = Math.sqrt(
+                sinDeltaLat * sinDeltaLat +
+                        Math.cos(parkingLatitude * toRadian) * Math.cos(destinationLatitude * toRadian) * sinDeltaLng
+                                * sinDeltaLng);
+
+        double distance = 2 * radius * Math.asin(squareRoot);
+
+        // meter 변환
+        return distance * 1000;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -99,13 +141,5 @@ public class Parking extends AuditingEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public boolean isMatchOperationType(OperationType operationType) {
-        return baseInformation.isMatchOperationType(operationType);
-    }
-
-    public boolean isMatchParkingType(ParkingType parkingType) {
-        return baseInformation.isMatchParkingType(parkingType);
     }
 }

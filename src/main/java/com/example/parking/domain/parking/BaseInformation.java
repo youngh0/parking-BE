@@ -1,9 +1,11 @@
 package com.example.parking.domain.parking;
 
 import static jakarta.persistence.EnumType.STRING;
+
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Enumerated;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,11 +38,17 @@ public class BaseInformation {
         this.operationType = operationType;
     }
 
-    public boolean isMatchOperationType(OperationType operationType) {
-        return this.operationType == operationType;
+    public boolean containsOperationType(List<OperationType> operationTypes) {
+        return operationTypes.stream()
+                .anyMatch(operationType -> this.operationType == operationType);
     }
 
-    public boolean isMatchParkingType(ParkingType parkingType) {
-        return this.parkingType == parkingType;
+    public boolean containsParkingType(List<ParkingType> parkingTypes) {
+        return parkingTypes.stream()
+                .anyMatch(parkingType -> this.parkingType == parkingType);
+    }
+
+    public boolean containsPayType(List<PayType> memberPayTypes) {
+        return this.payTypes.contains(memberPayTypes);
     }
 }

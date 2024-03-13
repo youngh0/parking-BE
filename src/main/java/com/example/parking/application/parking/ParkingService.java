@@ -3,10 +3,16 @@ package com.example.parking.application.parking;
 import com.example.parking.application.parking.dto.ParkingLotsResponse;
 import com.example.parking.application.parking.dto.ParkingLotsResponse.ParkingResponse;
 import com.example.parking.application.parking.dto.ParkingQueryRequest;
+import com.example.parking.domain.favorite.Favorite;
+import com.example.parking.domain.favorite.FavoriteRepository;
 import com.example.parking.domain.parking.Location;
 import com.example.parking.domain.parking.Parking;
-import com.example.parking.domain.parking.dto.ParkingQueryCondition;
 import com.example.parking.domain.parking.repository.ParkingRepository;
+import com.example.parking.domain.searchcondition.SearchCondition;
+import com.example.parking.domain.searchcondition.SearchConditionRepository;
+import com.example.parking.support.Association;
+import com.example.parking.support.exception.ClientException;
+import com.example.parking.support.exception.ExceptionInformation;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -20,24 +26,31 @@ public class ParkingService {
     public static final String DISTANCE_ORDER_CONDITION = "가까운 순";
     private final ParkingRepository parkingRepository;
     private final ParkingDomainService parkingDomainService;
+    private final SearchConditionRepository searchConditionRepository;
+    private final FavoriteRepository favoriteRepository;
 
-    public ParkingLotsResponse findParkingLots(ParkingQueryRequest parkingQueryRequest) {
-        Location middlLocation = Location.of(parkingQueryRequest.getLatitude(), parkingQueryRequest.getLongitude());
+    public ParkingLotsResponse findParkingLots(ParkingQueryRequest parkingQueryRequest, Long memberId) {
+        Location destination = Location.of(parkingQueryRequest.getLongitude(), parkingQueryRequest.getLatitude());
+        SearchCondition searchCondition = findMemberSearchCondition(memberId);
+        List<Favorite> favorites = favoriteRepository.findByMemberId(Association.from(memberId));
+        List<Parking> parkingLots = findParkingLotsByOrderCondition(parkingQueryRequest, destination);
+        List<Parking> filteredParkingLots = filteringByCondition(parkingLots, memberId);
 
-        List<Parking> parkingLots = findParkingLotsByOrderCondition(parkingQueryRequest, middlLocation);
-        List<ParkingResponse> parkingLotsResponse = filteringByCondition(parkingQueryRequest, parkingLots);
+        List<ParkingResponse> parkingResponses = parkingDomainService.calculateParkingInfo(filteredParkingLots,
+                searchCondition, destination, favorites);
 
-        return new ParkingLotsResponse(parkingLotsResponse);
+        return new ParkingLotsResponse(parkingResponses);
     }
 
-    private List<ParkingResponse> filteringByCondition(ParkingQueryRequest parkingQueryRequest,
-                                                       List<Parking> parkingLots) {
-        ParkingQueryCondition queryCondition = parkingQueryRequest.toQueryCondition();
+    private SearchCondition findMemberSearchCondition(Long memberId) {
+        return searchConditionRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new ClientException(ExceptionInformation.INVALID_SEARCH_CONDITION));
+    }
 
-        List<Parking> filteredParkingLots = parkingDomainService.filterByCondition(parkingLots, queryCondition);
-        return filteredParkingLots.stream()
-                .map(this::toParkingResponse)
-                .toList();
+    private List<Parking> filteringByCondition(List<Parking> parkingLots, Long memberId) {
+//        ParkingQueryCondition queryCondition = parkingQueryRequest.toQueryCondition();
+        SearchCondition memberSearchCondition = findMemberSearchCondition(memberId);
+        return parkingDomainService.filterByCondition(parkingLots, memberSearchCondition);
     }
 
     private List<Parking> findParkingLotsByOrderCondition(ParkingQueryRequest parkingQueryRequest,
@@ -49,18 +62,6 @@ public class ParkingService {
         return parkingRepository.findAroundParkingLots(middleLocation.getPoint(), parkingQueryRequest.getRadius());
     }
 
-    private ParkingResponse toParkingResponse(Parking parking) {
-        return new ParkingResponse(
-                parking.getId(),
-                parking.getBaseInformation().getName(),
-                null,
-                null,
-                parking.getBaseInformation().getParkingType().getDescription(),
-                false,
-                parking.getLocation().getLatitude(),
-                parking.getLocation().getLongitude()
-        );
-    }
     @Transactional
     public void saveAll(List<Parking> parkingLots) {
         parkingRepository.saveAll(parkingLots);

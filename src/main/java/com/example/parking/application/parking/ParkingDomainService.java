@@ -1,9 +1,18 @@
 package com.example.parking.application.parking;
 
+import com.example.parking.application.parking.dto.ParkingLotsResponse.ParkingResponse;
+import com.example.parking.domain.favorite.Favorite;
+import com.example.parking.domain.parking.Fee;
+import com.example.parking.domain.parking.Location;
 import com.example.parking.domain.parking.Parking;
 import com.example.parking.domain.parking.ParkingFeeCalculator;
-import com.example.parking.domain.parking.dto.ParkingQueryCondition;
+import com.example.parking.domain.searchcondition.SearchCondition;
+import com.example.parking.support.Association;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +22,46 @@ public class ParkingDomainService {
 
     private final ParkingFeeCalculator parkingFeeCalculator;
 
-    public List<Parking> filterByCondition(List<Parking> parkingLots, ParkingQueryCondition parkingQueryCondition) {
+    public List<Parking> filterByCondition(List<Parking> parkingLots, SearchCondition searchCondition) {
         return parkingLots.stream()
-                .filter(parking -> parking.isMatchOperationType(parkingQueryCondition.getOperationType()))
-                .filter(parking -> parking.isMatchParkingType(parkingQueryCondition.getParkingType()))
+                .filter(parking -> parking.containsOperationType(searchCondition.getOperationTypes()))
+                .filter(parking -> parking.containsParkingType(searchCondition.getParkingTypes()))
+                .filter(parking -> parking.containsPayType(searchCondition.getPayTypes()))
                 .toList();
+    }
+
+    public List<ParkingResponse> calculateParkingInfo(List<Parking> parkingLots, SearchCondition searchCondition,
+                                                      Location destination, List<Favorite> memberFavorites) {
+        LocalDateTime now = LocalDateTime.now();
+        int hours = searchCondition.getHours().getHours();
+        Set<Long> favoriteParkingIds = memberFavorites.stream()
+                .map(Favorite::getParkingId)
+                .map(Association::getId)
+                .collect(Collectors.toSet());
+
+        List<ParkingResponse> parkingResponses = new ArrayList<>();
+        for (Parking parking : parkingLots) {
+            Fee fee = parkingFeeCalculator.calculateParkingFee(parking, now, now.plusHours(hours));
+            int walkingTime = parking.calculateWalkingTime(destination.getLatitude(),
+                    destination.getLongitude());
+            ParkingResponse parkingResponse = toParkingResponse(parking, fee, walkingTime,
+                    favoriteParkingIds.contains(parking.getId()));
+            parkingResponses.add(parkingResponse);
+        }
+
+        return parkingResponses;
+    }
+
+    private ParkingResponse toParkingResponse(Parking parking, Fee fee, int walkingTime, boolean isFavorite) {
+        return new ParkingResponse(
+                parking.getId(),
+                parking.getBaseInformation().getName(),
+                fee.getFee(),
+                walkingTime,
+                parking.getBaseInformation().getParkingType().getDescription(),
+                isFavorite,
+                parking.getLocation().getLatitude(),
+                parking.getLocation().getLongitude()
+        );
     }
 }

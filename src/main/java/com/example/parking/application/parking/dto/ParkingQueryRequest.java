@@ -1,9 +1,5 @@
 package com.example.parking.application.parking.dto;
 
-import com.example.parking.domain.parking.OperationType;
-import com.example.parking.domain.parking.ParkingType;
-import com.example.parking.domain.parking.dto.ParkingQueryCondition;
-import com.example.parking.domain.searchcondition.SearchConditionAvailable;
 import lombok.Getter;
 
 @Getter
@@ -31,13 +27,5 @@ public class ParkingQueryRequest {
         this.latitude = latitude;
         this.longitude = longitude;
         this.radius = radius;
-    }
-
-    public ParkingQueryCondition toQueryCondition() {
-        return new ParkingQueryCondition(
-                SearchConditionAvailable.find(this.operationType, OperationType.values()),
-                ParkingType.find(this.parkingType),
-                this.cardEnabled
-        );
     }
 }

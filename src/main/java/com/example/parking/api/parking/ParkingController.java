@@ -3,6 +3,7 @@ package com.example.parking.api.parking;
 import com.example.parking.application.parking.ParkingService;
 import com.example.parking.application.parking.dto.ParkingLotsResponse;
 import com.example.parking.application.parking.dto.ParkingQueryRequest;
+import com.example.parking.config.argumentresolver.MemberAuth;
 import com.example.parking.config.argumentresolver.parking.ParkingQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,9 @@ public class ParkingController {
     private final ParkingService parkingService;
 
     @GetMapping("/parkings")
-    public ResponseEntity<ParkingLotsResponse> find(@ParkingQuery ParkingQueryRequest parkingQueryRequest) {
-        ParkingLotsResponse parkingLots = parkingService.findParkingLots(parkingQueryRequest);
+    public ResponseEntity<ParkingLotsResponse> find(@ParkingQuery ParkingQueryRequest parkingQueryRequest,
+                                                    @MemberAuth Long memberId) {
+        ParkingLotsResponse parkingLots = parkingService.findParkingLots(parkingQueryRequest, memberId);
         return ResponseEntity.ok(parkingLots);
     }
 }

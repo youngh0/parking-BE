@@ -7,8 +7,12 @@ import com.example.parking.domain.parking.OperationType;
 import com.example.parking.domain.parking.Parking;
 import com.example.parking.domain.parking.ParkingFeeCalculator;
 import com.example.parking.domain.parking.ParkingType;
+import com.example.parking.domain.parking.PayType;
 import com.example.parking.domain.parking.PayTypes;
-import com.example.parking.domain.parking.dto.ParkingQueryCondition;
+import com.example.parking.domain.searchcondition.FeeType;
+import com.example.parking.domain.searchcondition.Hours;
+import com.example.parking.domain.searchcondition.Priority;
+import com.example.parking.domain.searchcondition.SearchCondition;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -21,10 +25,11 @@ class ParkingDomainServiceTest {
         // given
         ParkingType parkingTypeCondition = ParkingType.MECHANICAL;
         OperationType operationTypeCondition = OperationType.PUBLIC;
+        PayType wantPayType = PayType.CASH;
 
         Parking wantParking = Parking.builder()
                 .baseInformation(new BaseInformation("name", "tell", "address",
-                        PayTypes.DEFAULT,
+                        PayTypes.from(List.of(wantPayType)),
                         parkingTypeCondition,
                         operationTypeCondition))
                 .build();
@@ -44,9 +49,19 @@ class ParkingDomainServiceTest {
                 .build();
 
         // when
+        SearchCondition searchCondition = new SearchCondition(
+                null,
+                List.of(operationTypeCondition),
+                List.of(parkingTypeCondition),
+                List.of(FeeType.NO_INFO),
+                List.of(wantPayType),
+                Priority.PRICE,
+                Hours.from(10)
+        );
+
         List<Parking> filterList = parkingDomainService.filterByCondition(
                 List.of(wantParking, notWantParking1, notWantParking2),
-                new ParkingQueryCondition(OperationType.PUBLIC, ParkingType.OFF_STREET, false)
+                searchCondition
         );
 
         // then
@@ -56,34 +71,45 @@ class ParkingDomainServiceTest {
     @Test
     void 조회조건에_따라_주차장을_필터링한다2() {
         // given
-        ParkingType parkingTypeCondition = ParkingType.ON_STREET;
-        OperationType operationTypeCondition = OperationType.PUBLIC;
+        ParkingType wantParkingTypeCondition = ParkingType.ON_STREET;
+        OperationType wantOperationTypeCondition = OperationType.PUBLIC;
+        PayType wantPayType = PayType.CARD;
 
         Parking wantParking = Parking.builder()
                 .baseInformation(new BaseInformation("name", "tel", "address",
-                        PayTypes.DEFAULT,
-                        parkingTypeCondition,
-                        operationTypeCondition))
+                        PayTypes.from(List.of(wantPayType)),
+                        wantParkingTypeCondition,
+                        wantOperationTypeCondition))
                 .build();
 
         Parking notWantParking1 = Parking.builder()
                 .baseInformation(new BaseInformation("name", "tel", "address",
                         PayTypes.DEFAULT,
                         ParkingType.MECHANICAL,
-                        operationTypeCondition))
+                        wantOperationTypeCondition))
                 .build();
 
         Parking notWantParking2 = Parking.builder()
                 .baseInformation(new BaseInformation("name", "tel", "address",
                         PayTypes.DEFAULT,
                         ParkingType.NO_INFO,
-                        operationTypeCondition))
+                        wantOperationTypeCondition))
                 .build();
 
         // when
+        SearchCondition searchCondition = new SearchCondition(
+                null,
+                List.of(wantOperationTypeCondition),
+                List.of(wantParkingTypeCondition),
+                List.of(FeeType.NO_INFO),
+                List.of(wantPayType),
+                Priority.PRICE,
+                Hours.from(10)
+        );
+
         List<Parking> result = parkingDomainService.filterByCondition(
                 List.of(wantParking, notWantParking1, notWantParking2),
-                new ParkingQueryCondition(operationTypeCondition, parkingTypeCondition, false));
+                searchCondition);
 
         // then
         assertThat(result).hasSize(1);
