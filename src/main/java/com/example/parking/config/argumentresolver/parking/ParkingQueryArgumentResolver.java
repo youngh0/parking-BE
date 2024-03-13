@@ -20,12 +20,7 @@ public class ParkingQueryArgumentResolver implements HandlerMethodArgumentResolv
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         return new ParkingQueryRequest(
-                webRequest.getParameter("operationType"),
-                webRequest.getParameter("parkingType"),
-                webRequest.getParameter("feeType"),
-                Boolean.parseBoolean(webRequest.getParameter("cardEnabled")),
                 webRequest.getParameter("priority"),
-                Integer.parseInt(webRequest.getParameter("hours")),
                 Double.valueOf(webRequest.getParameter("latitude")),
                 Double.valueOf(webRequest.getParameter("longitude")),
                 Integer.parseInt(webRequest.getParameter("radius"))
