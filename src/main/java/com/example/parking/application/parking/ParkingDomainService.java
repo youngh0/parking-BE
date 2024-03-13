@@ -34,10 +34,7 @@ public class ParkingDomainService {
                                                       Location destination, List<Favorite> memberFavorites) {
         LocalDateTime now = LocalDateTime.now();
         int hours = searchCondition.getHours().getHours();
-        Set<Long> favoriteParkingIds = memberFavorites.stream()
-                .map(Favorite::getParkingId)
-                .map(Association::getId)
-                .collect(Collectors.toSet());
+        Set<Long> favoriteParkingIds = extractFavoriteParkingIds(memberFavorites);
 
         List<ParkingResponse> parkingResponses = new ArrayList<>();
         for (Parking parking : parkingLots) {
@@ -50,6 +47,13 @@ public class ParkingDomainService {
         }
 
         return parkingResponses;
+    }
+
+    private Set<Long> extractFavoriteParkingIds(List<Favorite> memberFavorites) {
+        return memberFavorites.stream()
+                .map(Favorite::getParkingId)
+                .map(Association::getId)
+                .collect(Collectors.toSet());
     }
 
     private ParkingResponse toParkingResponse(Parking parking, Fee fee, int walkingTime, boolean isFavorite) {
