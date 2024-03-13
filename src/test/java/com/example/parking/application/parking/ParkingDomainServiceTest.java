@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.example.parking.domain.parking.BaseInformation;
 import com.example.parking.domain.parking.OperationType;
 import com.example.parking.domain.parking.Parking;
+import com.example.parking.domain.parking.ParkingFeeCalculator;
 import com.example.parking.domain.parking.ParkingType;
 import com.example.parking.domain.parking.PayTypes;
 import com.example.parking.domain.parking.dto.ParkingQueryCondition;
@@ -13,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 class ParkingDomainServiceTest {
 
-    private final ParkingDomainService parkingDomainService = new ParkingDomainService();
+    private final ParkingDomainService parkingDomainService = new ParkingDomainService(new ParkingFeeCalculator());
 
     @Test
     void 조회조건에_따라_주차장을_필터링한다1() {
