@@ -1,4 +1,4 @@
-package com.example.parking.auth;
+package com.example.parking.auth.session;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

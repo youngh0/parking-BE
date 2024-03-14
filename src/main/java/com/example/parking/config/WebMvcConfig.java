@@ -2,6 +2,7 @@ package com.example.parking.config;
 
 import com.example.parking.config.argumentresolver.AuthArgumentResolver;
 import com.example.parking.config.interceptor.AuthInterceptor;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

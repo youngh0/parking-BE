@@ -1,22 +1,21 @@
 package com.example.parking.application.member;
 
+import static com.example.parking.support.exception.ExceptionInformation.INVALID_MEMBER;
+import static com.example.parking.support.exception.ExceptionInformation.INVALID_PASSWORD;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.parking.domain.member.Member;
-import com.example.parking.domain.member.MemberRepository;
-
 import com.example.parking.application.member.dto.MemberLoginRequest;
-import com.example.parking.application.member.dto.MemberNotFoundException;
 import com.example.parking.application.member.dto.MemberSignupRequest;
 import com.example.parking.application.member.dto.PasswordChangeRequest;
-import com.example.parking.application.member.exception.MemberLoginException;
+import com.example.parking.domain.member.Member;
+import com.example.parking.domain.member.MemberRepository;
+import com.example.parking.support.exception.ClientException;
+import com.example.parking.support.exception.DomainException;
 import org.assertj.core.api.Assertions;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
 
 @Transactional
 @SpringBootTest
@@ -70,8 +69,8 @@ class MemberServiceTest {
 
         // then
         Assertions.assertThatThrownBy(() -> memberService.login(new MemberLoginRequest(email, previousPassword)))
-                .isInstanceOf(MemberLoginException.class)
-                .hasMessage("비밀번호가 틀립니다.");
+                .isInstanceOf(ClientException.class)
+                .hasMessage(INVALID_PASSWORD.getMessage());
     }
 
     @Test
@@ -82,8 +81,9 @@ class MemberServiceTest {
         Long wrongMemberId = 12312541L;
 
         // when, then
-        Assertions.assertThatThrownBy(() -> memberService.changePassword(wrongMemberId, new PasswordChangeRequest(previousPassword, newPassword)))
-                .isInstanceOf(MemberNotFoundException.class)
-                .hasMessage("존재하지 않는 회원입니다.");
+        Assertions.assertThatThrownBy(() -> memberService.changePassword(wrongMemberId,
+                        new PasswordChangeRequest(previousPassword, newPassword)))
+                .isInstanceOf(DomainException.class)
+                .hasMessage(INVALID_MEMBER.getMessage());
     }
 }

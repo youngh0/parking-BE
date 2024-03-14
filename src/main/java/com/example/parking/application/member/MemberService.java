@@ -4,11 +4,11 @@ import com.example.parking.application.member.dto.MemberInfoResponse;
 import com.example.parking.application.member.dto.MemberLoginRequest;
 import com.example.parking.application.member.dto.MemberSignupRequest;
 import com.example.parking.application.member.dto.PasswordChangeRequest;
-import com.example.parking.application.member.exception.MemberLoginException;
-import com.example.parking.application.member.exception.MemberSignupException;
 import com.example.parking.domain.member.Member;
 import com.example.parking.domain.member.MemberRepository;
 import com.example.parking.domain.member.Password;
+import com.example.parking.support.exception.ClientException;
+import com.example.parking.support.exception.ExceptionInformation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +36,7 @@ public class MemberService {
 
     private void validateDuplicatedEmail(Member member) {
         if (memberRepository.existsByEmail(member.getEmail())) {
-            throw new MemberSignupException("중복된 이메일이라 회원가입이 불가능합니다.");
+            throw new ClientException(ExceptionInformation.DUPLICATE_MAIL);
         }
     }
 
@@ -49,12 +49,12 @@ public class MemberService {
 
     private Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberLoginException("회원가입되지 않은 유저입니다."));
+                .orElseThrow(() -> new ClientException(ExceptionInformation.INVALID_EMAIL));
     }
 
     private void validatePassword(Member member, String password) {
         if (!member.checkPassword(password)) {
-            throw new MemberLoginException("비밀번호가 틀립니다.");
+            throw new ClientException(ExceptionInformation.INVALID_PASSWORD);
         }
     }
 

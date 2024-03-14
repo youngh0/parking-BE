@@ -6,6 +6,8 @@ import com.example.parking.domain.parking.Parking;
 import com.example.parking.domain.review.Content;
 import com.example.parking.domain.review.Review;
 import com.example.parking.domain.review.ReviewRepository;
+import com.example.parking.support.exception.DomainException;
+import com.example.parking.support.exception.ExceptionInformation;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,7 @@ public class ReviewDomainService {
 
     public void validateDuplicateReview(Association<Parking> parkingId, Association<Member> reviewerId) {
         if (reviewRepository.existsByParkingIdAndReviewerId(parkingId, reviewerId)) {
-            throw new IllegalStateException("유저가 해당 주차장에 대해 이미 리뷰를 작성하였습니다.");
+            throw new DomainException(ExceptionInformation.DUPLICATE_REVIEW);
         }
     }
 
