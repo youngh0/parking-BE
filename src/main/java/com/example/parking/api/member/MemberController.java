@@ -30,16 +30,16 @@ public class MemberController {
     private final AuthService authService;
 
     @Operation(summary = "회원가입", description = "회원가입")
-    @PostMapping("/users")
+    @PostMapping("/signup")
     public ResponseEntity<Void> signup(@RequestBody MemberSignupRequest request) {
         memberService.signup(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(summary = "로그인", description = "로그인")
-    @PostMapping("/login")
-    public ResponseEntity<Void> login(HttpServletResponse httpServletResponse,
-                                      @RequestBody MemberLoginRequest request) {
+    @PostMapping("/signin")
+    public ResponseEntity<Void> signIn(HttpServletResponse httpServletResponse,
+                                       @RequestBody MemberLoginRequest request) {
         Long memberId = memberService.login(request);
         String sessionId = authService.createSession(memberId);
         httpServletResponse.addCookie(new Cookie(JSESSIONID, sessionId));
@@ -48,7 +48,7 @@ public class MemberController {
     }
 
     @Operation(summary = "비밀번호 변경", description = "비밀번호 변경")
-    @PatchMapping("/change-password")
+    @PatchMapping("/member/password")
     public ResponseEntity<Void> changePassword(@Parameter(hidden = true) @MemberAuth Long memberId,
                                                @RequestBody PasswordChangeRequest request) {
         memberService.changePassword(memberId, request);

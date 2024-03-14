@@ -21,12 +21,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(List.of(
-//                        "/v3/api-docs/swagger-config",
                         "/v3/api-docs/**",
                         "/swagger-resources/**",
                         "/swagger-ui/**",
-                        "/users",
-                        "/login"
+                        "/signup",
+                        "/signin"
                 ));
     }
 

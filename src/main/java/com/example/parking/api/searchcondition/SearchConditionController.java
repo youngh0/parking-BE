@@ -23,13 +23,13 @@ public class SearchConditionController {
     }
 
     @Operation(summary = "조회 조건 조회", description = "조회 조건 조회")
-    @GetMapping("/users/parkings/options")
+    @GetMapping("/search-condition")
     public ResponseEntity<SearchConditionDto> loadSearchCondition(@Parameter(hidden = true) @MemberAuth Long memberId) {
         return ResponseEntity.ok(searchConditionService.findSearchCondition(memberId));
     }
 
     @Operation(summary = "조회 조건 수정", description = "조회 조건 수정")
-    @PutMapping("/users/parkings/options")
+    @PutMapping("/search-condition")
     public ResponseEntity<Void> updateSearchCondition(@Parameter(hidden = true) @MemberAuth Long memberId,
                                                       SearchConditionDto request) {
         searchConditionService.updateSearchCondition(memberId, request);
