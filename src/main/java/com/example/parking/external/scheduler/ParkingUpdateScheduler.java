@@ -29,7 +29,7 @@ public class ParkingUpdateScheduler {
     private final CoordinateService coordinateService;
     private final ParkingService parkingService;
 
-    @Scheduled(fixedRate = 30, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(cron = "0 */30 * * * *")
     public void autoUpdateOfferCurrentParking() {
         Map<String, Parking> parkingLots = readBy(ParkingApiService::offerCurrentParking);
         Map<String, Parking> saved = findAllByName(parkingLots.keySet());
