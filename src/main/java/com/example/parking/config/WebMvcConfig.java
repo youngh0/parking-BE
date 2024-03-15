@@ -1,7 +1,8 @@
 package com.example.parking.config;
 
 import com.example.parking.config.argumentresolver.AuthArgumentResolver;
-import com.example.parking.external.config.interceptor.AuthInterceptor;
+import com.example.parking.config.interceptor.AuthInterceptor;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +22,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(List.of(
-                        "/users",
-                        "/login"
+                        "/v3/api-docs/**",
+                        "/swagger-resources/**",
+                        "/swagger-ui/**",
+                        "/signup",
+                        "/signin"
                 ));
     }
 
