@@ -1,11 +1,17 @@
 name: Backend CD
 
 on:
-  push:
-    branches: [ "main" ]
+  pull_request:
+    types: [labeled]
 
 jobs:
   build-and-push:
+    if: |
+      github.event_name == 'pull_request' && 
+      github.event.action == 'labeled' && 
+      github.event.label.name == '🎅🏼deploy' && 
+      github.event.pull_request.base.ref == 'main'
+      
     runs-on: ubuntu-latest  
 
     steps:
@@ -33,13 +39,13 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1  
 
-    - name: Login to Docker Hub
+    - name: 도커 로그인
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}  
         password: ${{ secrets.DOCKERHUB_TOKEN }}     
 
-    - name: Build and Push
+    - name: 도커 이미지 build 후 push
       uses: docker/build-push-action@v2
       with:
         context: .
@@ -55,7 +61,7 @@ jobs:
     - name: Install SSH
       run: sudo apt update && sudo apt install -y openssh-client
 
-    - name: SSH into EC2 and run Backend Container
+    - name: EC2 접속 및 배포 진행
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.EC2_HOST }}
@@ -63,4 +69,17 @@ jobs:
         key: ${{ secrets.EC2_PRIVATE_KEY }}
         script: |
           ./deploy.sh
-  
+
+  notify-slack:
+    runs-on: ubuntu-latest
+    needs: deploy-to-ec2
+
+    steps:
+      - name: 배포 성공시 Slack으로 알립니다
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          status: ${{ job.status }}
+          author_name: 백엔드 배포 성공!
+          fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          
