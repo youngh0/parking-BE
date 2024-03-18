@@ -1,14 +1,14 @@
 name: Backend CD
 
 on:
-  pull_request:
+  push:
     types: [labeled]
+    branches:
+      - main
 
 jobs:
   build-and-push:
     if: |
-      github.event_name == 'pull_request' && 
-      github.event.action == 'labeled' && 
       github.event.label.name == '🎅🏼deploy' && 
       github.event.pull_request.base.ref == 'main'
       
