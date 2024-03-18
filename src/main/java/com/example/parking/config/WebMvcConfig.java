@@ -6,6 +6,7 @@ import com.example.parking.config.interceptor.AuthInterceptor;
 import io.swagger.v3.oas.models.PathItem;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -18,6 +19,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final AuthInterceptor authInterceptor;
     private final AuthArgumentResolver authArgumentResolver;
+
+    @Value("${cors.allowedOrigins}")
+    private String[] allowedOrigins;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -40,8 +44,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                // todo 수정 필요
-                .allowedOrigins("*")
+                .allowedOrigins(allowedOrigins)
                 .allowedMethods(
                         PathItem.HttpMethod.OPTIONS.name(),
                         PathItem.HttpMethod.GET.name(),

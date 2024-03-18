@@ -38,3 +38,6 @@ pusan-public-parking-key: test
 
 authcode:
   expired-time: 60
+
+cors:
+  allowedOrigins: http://localhost:3000
