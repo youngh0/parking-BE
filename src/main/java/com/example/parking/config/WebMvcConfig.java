@@ -3,12 +3,10 @@ package com.example.parking.config;
 import com.example.parking.config.argumentresolver.AuthArgumentResolver;
 import com.example.parking.config.interceptor.AuthInterceptor;
 
-import io.swagger.v3.oas.models.PathItem;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -35,22 +33,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(authArgumentResolver);
-    }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                // todo 수정 필요
-                .allowedOrigins("*")
-                .allowedMethods(
-                        PathItem.HttpMethod.OPTIONS.name(),
-                        PathItem.HttpMethod.GET.name(),
-                        PathItem.HttpMethod.POST.name(),
-                        PathItem.HttpMethod.PUT.name(),
-                        PathItem.HttpMethod.DELETE.name(),
-                        PathItem.HttpMethod.PATCH.name()
-                )
-                .allowCredentials(true)
-                .exposedHeaders("*");
     }
 }
