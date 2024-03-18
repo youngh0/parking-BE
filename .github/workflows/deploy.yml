@@ -50,7 +50,7 @@ jobs:
         context: .
         file: Dockerfile  
         push: true  
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/pct-backend
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/pct-backend:${{ github.sha }}
         platforms: linux/amd64
     
   deploy-to-ec2:
