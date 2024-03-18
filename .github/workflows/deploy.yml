@@ -73,13 +73,15 @@ jobs:
   notify-slack:
     runs-on: ubuntu-latest
     needs: deploy-to-ec2
-
+    
     steps:
       - name: 배포 성공시 Slack으로 알립니다
-        uses: rtCamp/action-slack-notify@v2
+        uses: 8398a7/action-slack@v3
         with:
+          author_name: 배포 성공
           status: ${{ job.status }}
-          author_name: 백엔드 배포 성공!
-          fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow # selectable (default: repo,message)
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
           
