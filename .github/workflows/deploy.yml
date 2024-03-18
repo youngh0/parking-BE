@@ -1,17 +1,16 @@
 name: Backend CD
 
 on:
-  push:
-    types: [labeled]
-    branches:
-      - main
+  pull_request:
+    types: [closed]
 
 jobs:
   build-and-push:
     if: |
-      github.event.label.name == '🎅🏼deploy' && 
-      github.event.pull_request.base.ref == 'main'
-      
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'main' &&
+      contains(github.event.pull_request.labels.*.name, '🎅🏼deploy')
+
     runs-on: ubuntu-latest  
 
     steps:
@@ -51,7 +50,7 @@ jobs:
         context: .
         file: Dockerfile  
         push: true  
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/pct-backend
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/pct-backend:${{ github.sha }}
         platforms: linux/amd64
     
   deploy-to-ec2:
@@ -74,13 +73,15 @@ jobs:
   notify-slack:
     runs-on: ubuntu-latest
     needs: deploy-to-ec2
-
+    
     steps:
       - name: 배포 성공시 Slack으로 알립니다
-        uses: rtCamp/action-slack-notify@v2
+        uses: 8398a7/action-slack@v3
         with:
+          author_name: 배포 성공
           status: ${{ job.status }}
-          author_name: 백엔드 배포 성공!
-          fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
-          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow # selectable (default: repo,message)
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
           
