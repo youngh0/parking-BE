@@ -33,8 +33,8 @@ jobs:
       - name: Gradle 명령 실행을 위한 권한을 부여합니다
         run: chmod +x gradlew
 
-      - name: Gradle build를 수행합니다
-        run: ./gradlew build -i
+      - name: 테스트 수행
+        run: ./gradlew test -i
 
       - name: 테스트 결과를 PR에 코멘트로 등록합니다
         uses: EnricoMi/publish-unit-test-result-action@v2
