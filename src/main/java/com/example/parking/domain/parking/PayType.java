@@ -26,6 +26,25 @@ public enum PayType implements SearchConditionAvailable {
                 .toList();
     }
 
+    public static List<PayType> collectMatch(List<String> descriptions) {
+        return descriptions.stream()
+                .filter(PayType::contains)
+                .map(PayType::find)
+                .toList();
+    }
+
+    private static boolean contains(String description) {
+        return Arrays.stream(values())
+                .anyMatch(e -> description.startsWith(e.getDescription()));
+    }
+
+    public static PayType find(String description) {
+        return Arrays.stream(values())
+                .filter(e -> description.startsWith(e.getDescription()))
+                .findAny()
+                .orElse(NO_INFO);
+    }
+
     @Override
     public PayType getDefault() {
         return NO_INFO;

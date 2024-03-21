@@ -25,6 +25,18 @@ public enum ParkingType implements SearchConditionAvailable {
                 .toList();
     }
 
+    public static List<ParkingType> collectMatch(List<String> descriptions) {
+        return descriptions.stream()
+                .filter(ParkingType::contains)
+                .map(ParkingType::find)
+                .toList();
+    }
+
+    private static boolean contains(String description) {
+        return Arrays.stream(values())
+                .anyMatch(e -> description.startsWith(e.getDescription()));
+    }
+
     @Override
     public ParkingType getDefault() {
         return NO_INFO;

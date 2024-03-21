@@ -25,6 +25,25 @@ public enum OperationType implements SearchConditionAvailable {
                 .toList();
     }
 
+    public static List<OperationType> collectMatch(List<String> descriptions) {
+        return descriptions.stream()
+                .filter(OperationType::contains)
+                .map(OperationType::find)
+                .toList();
+    }
+
+    private static boolean contains(String description) {
+        return Arrays.stream(values())
+                .anyMatch(e -> description.startsWith(e.getDescription()));
+    }
+
+    public static OperationType find(String description) {
+        return Arrays.stream(values())
+                .filter(e -> description.startsWith(e.getDescription()))
+                .findAny()
+                .orElse(NO_INFO);
+    }
+
     @Override
     public OperationType getDefault() {
         return NO_INFO;
