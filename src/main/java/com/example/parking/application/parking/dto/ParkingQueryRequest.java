@@ -5,13 +5,11 @@ import lombok.Getter;
 @Getter
 public class ParkingQueryRequest {
 
-    private final String priority;
     private final Double latitude;
     private final Double longitude;
     private final Integer radius;
 
-    public ParkingQueryRequest(String priority, Double latitude, Double longitude, Integer radius) {
-        this.priority = priority;
+    public ParkingQueryRequest(Double latitude, Double longitude, Integer radius) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.radius = radius;

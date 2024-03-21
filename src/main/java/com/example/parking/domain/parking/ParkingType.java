@@ -2,6 +2,7 @@ package com.example.parking.domain.parking;
 
 import com.example.parking.domain.searchcondition.SearchConditionAvailable;
 import java.util.Arrays;
+import java.util.List;
 import lombok.Getter;
 
 @Getter
@@ -15,6 +16,13 @@ public enum ParkingType implements SearchConditionAvailable {
 
     ParkingType(String description) {
         this.description = description;
+    }
+
+    public static List<String> getAllValues() {
+        return Arrays.stream(ParkingType.values())
+                .filter(parkingType -> parkingType != ParkingType.NO_INFO)
+                .map(parkingType -> parkingType.description)
+                .toList();
     }
 
     @Override
