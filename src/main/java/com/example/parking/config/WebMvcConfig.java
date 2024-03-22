@@ -1,6 +1,7 @@
 package com.example.parking.config;
 
 import com.example.parking.config.argumentresolver.AuthArgumentResolver;
+import com.example.parking.config.argumentresolver.parking.ParkingMemberIdArgumentResolver;
 import com.example.parking.config.argumentresolver.parking.ParkingQueryArgumentResolver;
 import com.example.parking.config.argumentresolver.parking.ParkingSearchConditionArgumentResolver;
 import com.example.parking.external.config.interceptor.AuthInterceptor;
@@ -19,6 +20,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final AuthArgumentResolver authArgumentResolver;
     private final ParkingQueryArgumentResolver parkingQueryArgumentResolver;
     private final ParkingSearchConditionArgumentResolver parkingSearchConditionArgumentResolver;
+    private final ParkingMemberIdArgumentResolver parkingMemberIdArgumentResolver;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -36,5 +38,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         resolvers.add(authArgumentResolver);
         resolvers.add(parkingQueryArgumentResolver);
         resolvers.add(parkingSearchConditionArgumentResolver);
+        resolvers.add(parkingMemberIdArgumentResolver);
     }
 }

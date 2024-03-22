@@ -19,28 +19,25 @@ public class ParkingSearchConditionRequest {
     private final List<String> payTypes;
     private final Integer hours;
     private final String priority;
-    private final Long memberId;
 
     public ParkingSearchConditionRequest(List<String> operationTypes, List<String> parkingTypes, List<String> feeTypes,
-                                         List<String> payTypes, int hours, String priority, Long memberId) {
+                                         List<String> payTypes, int hours, String priority) {
         this.operationTypes = operationTypes;
         this.parkingTypes = parkingTypes;
         this.feeTypes = feeTypes;
         this.payTypes = payTypes;
         this.hours = hours;
         this.priority = priority;
-        this.memberId = memberId;
     }
 
-    public static ParkingSearchConditionRequest base(Long memberId) {
+    public static ParkingSearchConditionRequest base() {
         return new ParkingSearchConditionRequest(
                 OperationType.getAllValues(),
                 ParkingType.getAllValues(),
                 FeeType.getAllValues(),
                 PayType.getAllValues(),
                 BASE_HOURS,
-                RECOMMEND_ORDER_CONDITION,
-                memberId
+                RECOMMEND_ORDER_CONDITION
         );
     }
 }

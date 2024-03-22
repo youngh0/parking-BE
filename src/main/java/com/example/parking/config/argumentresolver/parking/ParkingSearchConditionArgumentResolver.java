@@ -28,10 +28,9 @@ public class ParkingSearchConditionArgumentResolver implements HandlerMethodArgu
         String[] payTypes = webRequest.getParameterValues("payTypes");
         Integer hours = Integer.parseInt(webRequest.getParameter("hours"));
         String priority = webRequest.getParameter("priority");
-        Long memberId = Long.parseLong(webRequest.getParameter("JSESSIONID"));
 
         if (containsNull(operationTypes, parkingTypes, feeTypes, payTypes, hours)) {
-            return ParkingSearchConditionRequest.base(memberId);
+            return ParkingSearchConditionRequest.base();
         }
 
         return new ParkingSearchConditionRequest(
@@ -40,8 +39,7 @@ public class ParkingSearchConditionArgumentResolver implements HandlerMethodArgu
                 toCollection(feeTypes),
                 toCollection(payTypes),
                 hours,
-                priority,
-                memberId
+                priority
         );
     }
 

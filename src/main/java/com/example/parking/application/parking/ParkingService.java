@@ -33,9 +33,9 @@ public class ParkingService {
 
     @Transactional(readOnly = true)
     public ParkingLotsResponse findParkingLots(ParkingQueryRequest parkingQueryRequest,
-                                               ParkingSearchConditionRequest parkingSearchConditionRequest) {
+                                               ParkingSearchConditionRequest parkingSearchConditionRequest,
+                                               Long memberId) {
         Location destination = Location.of(parkingQueryRequest.getLongitude(), parkingQueryRequest.getLatitude());
-        Long memberId = parkingSearchConditionRequest.getMemberId();
         FilterCondition filterCondition = toFilterCondition(parkingSearchConditionRequest);
 
         List<Favorite> favorites = findMemberFavorites(memberId);
