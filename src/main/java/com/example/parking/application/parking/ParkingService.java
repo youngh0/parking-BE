@@ -41,8 +41,8 @@ public class ParkingService {
         List<Favorite> favorites = findMemberFavorites(memberId);
         List<Parking> parkingLots = findParkingLotsByOrderCondition(parkingSearchConditionRequest.getPriority(),
                 parkingQueryRequest, destination);
-        List<Parking> filteredParkingLots = filteringByCondition(parkingLots, filterCondition);
 
+        List<Parking> filteredParkingLots = filteringByCondition(parkingLots, filterCondition);
         List<ParkingResponse> parkingResponses = parkingDomainService.calculateParkingInfo(filteredParkingLots,
                 parkingSearchConditionRequest.getHours(), destination, favorites);
 

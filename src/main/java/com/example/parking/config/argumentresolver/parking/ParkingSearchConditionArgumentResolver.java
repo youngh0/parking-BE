@@ -24,28 +24,28 @@ public class ParkingSearchConditionArgumentResolver implements HandlerMethodArgu
 
         String[] operationTypes = webRequest.getParameterValues("operationTypes");
         String[] parkingTypes = webRequest.getParameterValues("parkingTypes");
-        String[] feeTypes = webRequest.getParameterValues("feeTypes");
+        String feeType = webRequest.getParameter("feeTypes");
         String[] payTypes = webRequest.getParameterValues("payTypes");
         Integer hours = Integer.parseInt(webRequest.getParameter("hours"));
         String priority = webRequest.getParameter("priority");
 
-        if (containsNull(operationTypes, parkingTypes, feeTypes, payTypes, hours)) {
+        if (containsNull(operationTypes, parkingTypes, feeType, payTypes, hours)) {
             return ParkingSearchConditionRequest.base();
         }
 
         return new ParkingSearchConditionRequest(
                 toCollection(operationTypes),
                 toCollection(parkingTypes),
-                toCollection(feeTypes),
+                feeType,
                 toCollection(payTypes),
                 hours,
                 priority
         );
     }
 
-    private boolean containsNull(String[] operationTypes, String[] parkingTypes, String[] feeTypes,
+    private boolean containsNull(String[] operationTypes, String[] parkingTypes, String feeType,
                                  String[] payTypes, Integer hours) {
-        if (operationTypes == null || parkingTypes == null || feeTypes == null || payTypes == null || hours == null) {
+        if (operationTypes == null || parkingTypes == null || feeType == null || payTypes == null || hours == null) {
             return true;
         }
         return false;
