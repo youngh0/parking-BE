@@ -3,16 +3,13 @@ package com.example.parking.application.parking;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.parking.domain.parking.BaseInformation;
+import com.example.parking.domain.parking.FilterCondition;
 import com.example.parking.domain.parking.OperationType;
 import com.example.parking.domain.parking.Parking;
 import com.example.parking.domain.parking.ParkingFeeCalculator;
 import com.example.parking.domain.parking.ParkingType;
 import com.example.parking.domain.parking.PayType;
 import com.example.parking.domain.parking.PayTypes;
-import com.example.parking.domain.searchcondition.FeeType;
-import com.example.parking.domain.searchcondition.Hours;
-import com.example.parking.domain.searchcondition.Priority;
-import com.example.parking.domain.searchcondition.SearchCondition;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -49,19 +46,15 @@ class ParkingDomainServiceTest {
                 .build();
 
         // when
-        SearchCondition searchCondition = new SearchCondition(
-                null,
+        FilterCondition filterCondition = new FilterCondition(
                 List.of(operationTypeCondition),
                 List.of(parkingTypeCondition),
-                List.of(FeeType.NO_INFO),
-                List.of(wantPayType),
-                Priority.PRICE,
-                Hours.from(10)
+                List.of(wantPayType)
         );
 
         List<Parking> filterList = parkingDomainService.filterByCondition(
                 List.of(wantParking, notWantParking1, notWantParking2),
-                searchCondition
+                filterCondition
         );
 
         // then
@@ -97,19 +90,15 @@ class ParkingDomainServiceTest {
                 .build();
 
         // when
-        SearchCondition searchCondition = new SearchCondition(
-                null,
+        FilterCondition filterCondition = new FilterCondition(
                 List.of(wantOperationTypeCondition),
                 List.of(wantParkingTypeCondition),
-                List.of(FeeType.NO_INFO),
-                List.of(wantPayType),
-                Priority.PRICE,
-                Hours.from(10)
+                List.of(wantPayType)
         );
 
         List<Parking> result = parkingDomainService.filterByCondition(
                 List.of(wantParking, notWantParking1, notWantParking2),
-                searchCondition);
+                filterCondition);
 
         // then
         assertThat(result).hasSize(1);

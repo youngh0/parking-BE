@@ -3,10 +3,10 @@ package com.example.parking.application.parking;
 import com.example.parking.application.parking.dto.ParkingLotsResponse.ParkingResponse;
 import com.example.parking.domain.favorite.Favorite;
 import com.example.parking.domain.parking.Fee;
+import com.example.parking.domain.parking.FilterCondition;
 import com.example.parking.domain.parking.Location;
 import com.example.parking.domain.parking.Parking;
 import com.example.parking.domain.parking.ParkingFeeCalculator;
-import com.example.parking.domain.searchcondition.SearchCondition;
 import com.example.parking.support.Association;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,19 +22,17 @@ public class ParkingDomainService {
 
     private final ParkingFeeCalculator parkingFeeCalculator;
 
-    public List<Parking> filterByCondition(List<Parking> parkingLots, SearchCondition searchCondition) {
+    public List<Parking> filterByCondition(List<Parking> parkingLots, FilterCondition filterCondition) {
         return parkingLots.stream()
-                .filter(parking -> parking.containsOperationType(searchCondition.getOperationTypes()))
-                .filter(parking -> parking.containsParkingType(searchCondition.getParkingTypes()))
-                .filter(parking -> parking.containsPayType(searchCondition.getPayTypes()))
+                .filter(parking -> parking.containsOperationType(filterCondition.getOperationTypes()))
+                .filter(parking -> parking.containsParkingType(filterCondition.getParkingTypes()))
+                .filter(parking -> parking.containsPayType(filterCondition.getPayTypes()))
                 .toList();
     }
 
-    public List<ParkingResponse> calculateParkingInfo(List<Parking> parkingLots, SearchCondition searchCondition,
+    public List<ParkingResponse> calculateParkingInfo(List<Parking> parkingLots, int hours,
                                                       Location destination, List<Favorite> memberFavorites) {
-        int hours = searchCondition.getHours().getHours();
         Set<Long> favoriteParkingIds = extractFavoriteParkingIds(memberFavorites);
-
         return extractParkingInfo(parkingLots, destination, hours, favoriteParkingIds);
     }
 
@@ -50,7 +48,8 @@ public class ParkingDomainService {
                     parking,
                     fee,
                     walkingTime,
-                    favoriteParkingIds.contains(parking.getId()));
+                    favoriteParkingIds.contains(parking.getId())
+            );
             parkingResponses.add(parkingResponse);
         }
         return parkingResponses;
