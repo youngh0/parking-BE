@@ -34,10 +34,10 @@ public class ParkingSearchConditionArgumentResolver implements HandlerMethodArgu
         }
 
         return new ParkingSearchConditionRequest(
-                toCollection(operationTypes),
-                toCollection(parkingTypes),
+                toList(operationTypes),
+                toList(parkingTypes),
                 feeType,
-                toCollection(payTypes),
+                toList(payTypes),
                 hours,
                 priority
         );
@@ -51,7 +51,7 @@ public class ParkingSearchConditionArgumentResolver implements HandlerMethodArgu
         return false;
     }
 
-    private List<String> toCollection(String[] parameters) {
+    private List<String> toList(String[] parameters) {
         return Arrays.stream(parameters)
                 .toList();
     }
