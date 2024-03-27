@@ -1,6 +1,7 @@
 package com.example.parking.domain.searchcondition;
 
 import java.util.Arrays;
+import java.util.List;
 
 public interface SearchConditionAvailable {
 
@@ -13,5 +14,12 @@ public interface SearchConditionAvailable {
                 .filter(e -> description.startsWith(e.getDescription()))
                 .findAny()
                 .orElse(values[0].getDefault());
+    }
+
+    static <E extends SearchConditionAvailable> List<String> getAllValues(E... values) {
+        return Arrays.stream(values)
+                .filter(e -> e != e.getDefault())
+                .map(E::getDescription)
+                .toList();
     }
 }

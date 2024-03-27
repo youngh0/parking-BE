@@ -19,13 +19,6 @@ public enum PayType implements SearchConditionAvailable {
         this.description = description;
     }
 
-    public static List<String> getAllValues() {
-        return Arrays.stream(PayType.values())
-                .filter(payType -> payType != PayType.NO_INFO)
-                .map(payType -> payType.description)
-                .toList();
-    }
-
     public static List<PayType> collectMatch(List<String> descriptions) {
         return descriptions.stream()
                 .filter(PayType::contains)

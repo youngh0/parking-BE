@@ -18,13 +18,6 @@ public enum OperationType implements SearchConditionAvailable {
         this.description = description;
     }
 
-    public static List<String> getAllValues() {
-        return Arrays.stream(OperationType.values())
-                .filter(operationType -> operationType != OperationType.NO_INFO)
-                .map(operationType -> operationType.description)
-                .toList();
-    }
-
     public static List<OperationType> collectMatch(List<String> descriptions) {
         return descriptions.stream()
                 .filter(OperationType::contains)

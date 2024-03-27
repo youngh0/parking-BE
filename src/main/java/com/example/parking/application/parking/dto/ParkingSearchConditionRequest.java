@@ -3,6 +3,7 @@ package com.example.parking.application.parking.dto;
 import com.example.parking.domain.parking.OperationType;
 import com.example.parking.domain.parking.ParkingType;
 import com.example.parking.domain.parking.PayType;
+import com.example.parking.domain.searchcondition.SearchConditionAvailable;
 import java.util.List;
 import lombok.Getter;
 
@@ -32,10 +33,10 @@ public class ParkingSearchConditionRequest {
 
     public static ParkingSearchConditionRequest base() {
         return new ParkingSearchConditionRequest(
-                OperationType.getAllValues(),
-                ParkingType.getAllValues(),
+                SearchConditionAvailable.getAllValues(OperationType.values()),
+                SearchConditionAvailable.getAllValues(ParkingType.values()),
                 NOT_FREE,
-                PayType.getAllValues(),
+                SearchConditionAvailable.getAllValues(PayType.values()),
                 BASE_HOURS,
                 RECOMMEND_ORDER_CONDITION
         );

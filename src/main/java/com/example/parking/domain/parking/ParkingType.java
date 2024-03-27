@@ -18,13 +18,6 @@ public enum ParkingType implements SearchConditionAvailable {
         this.description = description;
     }
 
-    public static List<String> getAllValues() {
-        return Arrays.stream(ParkingType.values())
-                .filter(parkingType -> parkingType != ParkingType.NO_INFO)
-                .map(parkingType -> parkingType.description)
-                .toList();
-    }
-
     public static List<ParkingType> collectMatch(List<String> descriptions) {
         return descriptions.stream()
                 .filter(ParkingType::contains)
