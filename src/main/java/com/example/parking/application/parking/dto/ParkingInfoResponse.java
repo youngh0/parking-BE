@@ -1,8 +1,12 @@
 package com.example.parking.application.parking.dto;
 
 import com.example.parking.application.review.dto.ReviewInfoResponse;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ParkingInfoResponse {
 
     private String parkingName;
@@ -35,6 +39,7 @@ public class ParkingInfoResponse {
     }
 
     @Getter
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class FeeInfo {
         private Integer fee;
         private Integer time;
