@@ -7,6 +7,7 @@ import com.example.parking.application.parking.dto.ParkingSearchConditionRequest
 import com.example.parking.config.argumentresolver.parking.ParkingMemberId;
 import com.example.parking.config.argumentresolver.parking.ParkingQuery;
 import com.example.parking.config.argumentresolver.parking.ParkingSearchCondition;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class ParkingController {
             @ParkingMemberId Long parkingMemberId
     ) {
         ParkingLotsResponse parkingLots = parkingService.findParkingLots(parkingQueryRequest,
-                parkingSearchConditionRequest, parkingMemberId);
+                parkingSearchConditionRequest, parkingMemberId, LocalDateTime.now());
         return ResponseEntity.ok(parkingLots);
     }
 }

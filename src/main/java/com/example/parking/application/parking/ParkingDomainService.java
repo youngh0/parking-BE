@@ -7,6 +7,7 @@ import com.example.parking.domain.parking.FilterCondition;
 import com.example.parking.domain.parking.Location;
 import com.example.parking.domain.parking.Parking;
 import com.example.parking.domain.parking.ParkingFeeCalculator;
+import com.example.parking.domain.searchcondition.FeeType;
 import com.example.parking.support.Association;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,22 +23,35 @@ public class ParkingDomainService {
 
     private final ParkingFeeCalculator parkingFeeCalculator;
 
-    public List<Parking> filterByCondition(List<Parking> parkingLots, FilterCondition filterCondition) {
+    public List<Parking> filterByCondition(List<Parking> parkingLots, FilterCondition filterCondition, int hours,
+                                           LocalDateTime now) {
         return parkingLots.stream()
+                .filter(parking -> checkFeeTypeIsPaid(filterCondition) || checkFeeTypeAndFeeFree(filterCondition, now,
+                        hours, parking))
                 .filter(parking -> parking.containsOperationType(filterCondition.getOperationTypes()))
                 .filter(parking -> parking.containsParkingType(filterCondition.getParkingTypes()))
                 .filter(parking -> parking.containsPayType(filterCondition.getPayTypes()))
                 .toList();
     }
 
-    public List<ParkingResponse> calculateParkingInfo(List<Parking> parkingLots, int hours,
-                                                      Location destination, List<Favorite> memberFavorites) {
-        Set<Long> favoriteParkingIds = extractFavoriteParkingIds(memberFavorites);
-        return extractParkingInfo(parkingLots, destination, hours, favoriteParkingIds);
+    private boolean checkFeeTypeIsPaid(FilterCondition filterCondition) {
+        return filterCondition.getFeeType() == FeeType.PAID;
     }
 
-    private List<ParkingResponse> extractParkingInfo(List<Parking> parkingLots, Location destination, int hours,
-                                                     Set<Long> favoriteParkingIds) {
+    private boolean checkFeeTypeAndFeeFree(FilterCondition filterCondition, LocalDateTime now, int hours,
+                                           Parking parking) {
+        return filterCondition.getFeeType() == FeeType.FREE && parkingFeeCalculator.calculateParkingFee(parking, now,
+                now.plusHours(hours)).isFree();
+    }
+
+    public List<ParkingResponse> collectParkingInfo(List<Parking> parkingLots, int hours,
+                                                    Location destination, List<Favorite> memberFavorites) {
+        Set<Long> favoriteParkingIds = extractFavoriteParkingIds(memberFavorites);
+        return calculateParkingInfo(parkingLots, destination, hours, favoriteParkingIds);
+    }
+
+    private List<ParkingResponse> calculateParkingInfo(List<Parking> parkingLots, Location destination, int hours,
+                                                       Set<Long> favoriteParkingIds) {
         LocalDateTime now = LocalDateTime.now();
 
         List<ParkingResponse> parkingResponses = new ArrayList<>();

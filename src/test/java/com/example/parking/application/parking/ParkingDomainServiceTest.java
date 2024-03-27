@@ -10,12 +10,15 @@ import com.example.parking.domain.parking.ParkingFeeCalculator;
 import com.example.parking.domain.parking.ParkingType;
 import com.example.parking.domain.parking.PayType;
 import com.example.parking.domain.parking.PayTypes;
+import com.example.parking.domain.searchcondition.FeeType;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class ParkingDomainServiceTest {
 
-    private final ParkingDomainService parkingDomainService = new ParkingDomainService(new ParkingFeeCalculator());
+    private final ParkingDomainService parkingDomainService = new ParkingDomainService(
+            new ParkingFeeCalculator());
 
     @Test
     void 조회조건에_따라_주차장을_필터링한다1() {
@@ -49,12 +52,14 @@ class ParkingDomainServiceTest {
         FilterCondition filterCondition = new FilterCondition(
                 List.of(operationTypeCondition),
                 List.of(parkingTypeCondition),
-                List.of(wantPayType)
-        );
+                List.of(wantPayType),
+                FeeType.PAID);
 
         List<Parking> filterList = parkingDomainService.filterByCondition(
                 List.of(wantParking, notWantParking1, notWantParking2),
-                filterCondition
+                filterCondition,
+                3,
+                LocalDateTime.now()
         );
 
         // then
@@ -93,12 +98,15 @@ class ParkingDomainServiceTest {
         FilterCondition filterCondition = new FilterCondition(
                 List.of(wantOperationTypeCondition),
                 List.of(wantParkingTypeCondition),
-                List.of(wantPayType)
-        );
+                List.of(wantPayType),
+                FeeType.PAID);
 
         List<Parking> result = parkingDomainService.filterByCondition(
                 List.of(wantParking, notWantParking1, notWantParking2),
-                filterCondition);
+                filterCondition,
+                3,
+                LocalDateTime.now()
+        );
 
         // then
         assertThat(result).hasSize(1);

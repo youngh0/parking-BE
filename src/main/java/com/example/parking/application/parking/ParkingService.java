@@ -13,8 +13,10 @@ import com.example.parking.domain.parking.Parking;
 import com.example.parking.domain.parking.ParkingType;
 import com.example.parking.domain.parking.PayType;
 import com.example.parking.domain.parking.repository.ParkingRepository;
+import com.example.parking.domain.searchcondition.FeeType;
 import com.example.parking.domain.searchcondition.SearchConditionAvailable;
 import com.example.parking.support.Association;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +37,8 @@ public class ParkingService {
     @Transactional(readOnly = true)
     public ParkingLotsResponse findParkingLots(ParkingQueryRequest parkingQueryRequest,
                                                ParkingSearchConditionRequest parkingSearchConditionRequest,
-                                               Long memberId) {
+                                               Long memberId,
+                                               LocalDateTime now) {
         Location destination = Location.of(parkingQueryRequest.getLongitude(), parkingQueryRequest.getLatitude());
         FilterCondition filterCondition = toFilterCondition(parkingSearchConditionRequest);
 
@@ -43,8 +46,9 @@ public class ParkingService {
         List<Parking> parkingLots = findParkingLotsByOrderCondition(parkingSearchConditionRequest.getPriority(),
                 parkingQueryRequest, destination);
 
-        List<Parking> filteredParkingLots = filteringByCondition(parkingLots, filterCondition);
-        List<ParkingResponse> parkingResponses = parkingDomainService.calculateParkingInfo(filteredParkingLots,
+        List<Parking> filteredParkingLots = filteringByCondition(parkingLots, filterCondition,
+                parkingSearchConditionRequest.getHours(), now);
+        List<ParkingResponse> parkingResponses = parkingDomainService.collectParkingInfo(filteredParkingLots,
                 parkingSearchConditionRequest.getHours(), destination, favorites);
 
         return new ParkingLotsResponse(parkingResponses);
@@ -58,7 +62,8 @@ public class ParkingService {
         List<PayType> payTypes = SearchConditionAvailable.collectMatch(parkingSearchConditionRequest.getPayTypes(),
                 PayType.values());
 
-        return new FilterCondition(operationTypes, parkingTypes, payTypes);
+        return new FilterCondition(operationTypes, parkingTypes, payTypes,
+                FeeType.find(parkingSearchConditionRequest.getFeeType()));
     }
 
     private List<Favorite> findMemberFavorites(Long memberId) {
@@ -68,8 +73,9 @@ public class ParkingService {
         return favoriteRepository.findByMemberId(Association.from(memberId));
     }
 
-    private List<Parking> filteringByCondition(List<Parking> parkingLots, FilterCondition filterCondition) {
-        return parkingDomainService.filterByCondition(parkingLots, filterCondition);
+    private List<Parking> filteringByCondition(List<Parking> parkingLots, FilterCondition filterCondition, int hours,
+                                               LocalDateTime now) {
+        return parkingDomainService.filterByCondition(parkingLots, filterCondition, hours, now);
     }
 
     private List<Parking> findParkingLotsByOrderCondition(String priority, ParkingQueryRequest parkingQueryRequest,
