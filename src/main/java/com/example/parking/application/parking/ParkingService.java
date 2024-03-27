@@ -31,7 +31,7 @@ public class ParkingService {
     private static final String DISTANCE_ORDER_CONDITION = "가까운 순";
 
     private final ParkingRepository parkingRepository;
-    private final ParkingDomainService parkingDomainService;
+    private final ParkingApplicationService parkingApplicationService;
     private final FavoriteRepository favoriteRepository;
 
     @Transactional(readOnly = true)
@@ -48,7 +48,7 @@ public class ParkingService {
 
         List<Parking> filteredParkingLots = filteringByCondition(parkingLots, filterCondition,
                 parkingSearchConditionRequest.getHours(), now);
-        List<ParkingResponse> parkingResponses = parkingDomainService.collectParkingInfo(filteredParkingLots,
+        List<ParkingResponse> parkingResponses = parkingApplicationService.collectParkingInfo(filteredParkingLots,
                 parkingSearchConditionRequest.getHours(), destination, favorites);
 
         return new ParkingLotsResponse(parkingResponses);
@@ -75,7 +75,7 @@ public class ParkingService {
 
     private List<Parking> filteringByCondition(List<Parking> parkingLots, FilterCondition filterCondition, int hours,
                                                LocalDateTime now) {
-        return parkingDomainService.filterByCondition(parkingLots, filterCondition, hours, now);
+        return parkingApplicationService.filterByCondition(parkingLots, filterCondition, hours, now);
     }
 
     private List<Parking> findParkingLotsByOrderCondition(String priority, ParkingQueryRequest parkingQueryRequest,

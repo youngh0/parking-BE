@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-class ParkingDomainServiceTest {
+class ParkingApplicationServiceTest {
 
-    private final ParkingDomainService parkingDomainService = new ParkingDomainService(
+    private final ParkingApplicationService parkingApplicationService = new ParkingApplicationService(
             new ParkingFeeCalculator());
 
     @Test
@@ -55,7 +55,7 @@ class ParkingDomainServiceTest {
                 List.of(wantPayType),
                 FeeType.PAID);
 
-        List<Parking> filterList = parkingDomainService.filterByCondition(
+        List<Parking> filterList = parkingApplicationService.filterByCondition(
                 List.of(wantParking, notWantParking1, notWantParking2),
                 filterCondition,
                 3,
@@ -101,7 +101,7 @@ class ParkingDomainServiceTest {
                 List.of(wantPayType),
                 FeeType.PAID);
 
-        List<Parking> result = parkingDomainService.filterByCondition(
+        List<Parking> result = parkingApplicationService.filterByCondition(
                 List.of(wantParking, notWantParking1, notWantParking2),
                 filterCondition,
                 3,
