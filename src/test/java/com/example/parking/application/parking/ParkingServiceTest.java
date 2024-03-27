@@ -3,11 +3,9 @@ package com.example.parking.application.parking;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.example.parking.application.parking.dto.ParkingDetailInfoResponse;
-import com.example.parking.application.review.ReviewService;
 import com.example.parking.application.review.dto.ReviewCreateRequest;
 import com.example.parking.container.ContainerTest;
 import com.example.parking.domain.member.Member;
-import com.example.parking.domain.member.MemberRepository;
 import com.example.parking.domain.member.Password;
 import com.example.parking.domain.parking.BaseInformation;
 import com.example.parking.domain.parking.Fee;
@@ -30,18 +28,8 @@ import java.time.LocalTime;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 class ParkingServiceTest extends ContainerTest {
-
-    @Autowired
-    private ParkingService parkingService;
-
-    @Autowired
-    private ReviewService reviewService;
-
-    @Autowired
-    private MemberRepository memberRepository;
 
     @Test
     void 조회하려는_주차장이_없으면_예외() {
