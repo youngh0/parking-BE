@@ -1,7 +1,7 @@
 package com.example.parking.application.parking;
 
-import com.example.parking.application.parking.dto.ParkingInfoResponse;
-import com.example.parking.application.parking.dto.ParkingInfoResponse.FeeInfo;
+import com.example.parking.application.parking.dto.ParkingDetailInfoResponse;
+import com.example.parking.application.parking.dto.ParkingDetailInfoResponse.FeeInfo;
 import com.example.parking.application.review.ReviewService;
 import com.example.parking.application.review.dto.ReviewInfoResponse;
 import com.example.parking.domain.parking.Parking;
@@ -31,7 +31,7 @@ public class ParkingService {
     }
 
     @Transactional(readOnly = true)
-    public ParkingInfoResponse findParking(Long parkingId, LocalDateTime now) {
+    public ParkingDetailInfoResponse findParking(Long parkingId, LocalDateTime now) {
         ReviewInfoResponse reviews = reviewService.readReviews(parkingId);
         Parking parking = parkingRepository.getById(parkingId);
         int diffMinute = parking.calculateUpdatedDiff(now);
@@ -39,8 +39,8 @@ public class ParkingService {
         return toParkingResponse(reviews, parking, diffMinute);
     }
 
-    private ParkingInfoResponse toParkingResponse(ReviewInfoResponse reviews, Parking parking, int diffMinute) {
-        return new ParkingInfoResponse(
+    private ParkingDetailInfoResponse toParkingResponse(ReviewInfoResponse reviews, Parking parking, int diffMinute) {
+        return new ParkingDetailInfoResponse(
                 parking.getBaseInformation().getName(),
                 parking.getBaseInformation().getParkingType().getDescription(),
                 parking.getLocation().getLatitude(),

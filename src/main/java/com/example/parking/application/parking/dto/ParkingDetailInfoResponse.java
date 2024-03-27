@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ParkingInfoResponse {
+public class ParkingDetailInfoResponse {
 
     private String parkingName;
     private String parkingType;
@@ -21,10 +21,10 @@ public class ParkingInfoResponse {
     private String paymentType;
     private ReviewInfoResponse reviewInfo;
 
-    public ParkingInfoResponse(String parkingName, String parkingType, Double latitude, Double longitude,
-                               FeeInfo feeInfo,
-                               Integer currentParkingCount, Integer capacity, Integer lastUpdated, String tel,
-                               String paymentType, ReviewInfoResponse reviewInfo) {
+    public ParkingDetailInfoResponse(String parkingName, String parkingType, Double latitude, Double longitude,
+                                     FeeInfo feeInfo,
+                                     Integer currentParkingCount, Integer capacity, Integer lastUpdated, String tel,
+                                     String paymentType, ReviewInfoResponse reviewInfo) {
         this.parkingName = parkingName;
         this.parkingType = parkingType;
         this.latitude = latitude;

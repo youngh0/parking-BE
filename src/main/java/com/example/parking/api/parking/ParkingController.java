@@ -1,7 +1,7 @@
 package com.example.parking.api.parking;
 
 import com.example.parking.application.parking.ParkingService;
-import com.example.parking.application.parking.dto.ParkingInfoResponse;
+import com.example.parking.application.parking.dto.ParkingDetailInfoResponse;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,8 +17,9 @@ public class ParkingController {
     private final ParkingService parkingService;
 
     @GetMapping("/parkings/{parkingId}")
-    public ResponseEntity<ParkingInfoResponse> findParking(@PathVariable Long parkingId) {
-        ParkingInfoResponse parkingInfoResponse = parkingService.findParking(parkingId, LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.OK).body(parkingInfoResponse);
+    public ResponseEntity<ParkingDetailInfoResponse> findParking(@PathVariable Long parkingId) {
+        ParkingDetailInfoResponse parkingDetailInfoResponse = parkingService.findParking(parkingId,
+                LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.OK).body(parkingDetailInfoResponse);
     }
 }

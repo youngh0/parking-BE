@@ -2,7 +2,7 @@ package com.example.parking.application.parking;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.example.parking.application.parking.dto.ParkingInfoResponse;
+import com.example.parking.application.parking.dto.ParkingDetailInfoResponse;
 import com.example.parking.application.review.ReviewService;
 import com.example.parking.application.review.dto.ReviewCreateRequest;
 import com.example.parking.container.ContainerTest;
@@ -67,10 +67,11 @@ class ParkingServiceTest extends ContainerTest {
         reviewService.createReview(parking.getId(), member.getId(), reviewCreateRequest);
 
         // when, then
-        ParkingInfoResponse parkingInfoResponse = parkingService.findParking(parking.getId(), LocalDateTime.now());
+        ParkingDetailInfoResponse parkingDetailInfoResponse = parkingService.findParking(parking.getId(),
+                LocalDateTime.now());
         assertAll(
-                () -> Assertions.assertThat(parkingInfoResponse.getReviewInfo().reviews()).hasSize(2),
-                () -> Assertions.assertThat(parkingInfoResponse.getParkingName()).isEqualTo(parkingName)
+                () -> Assertions.assertThat(parkingDetailInfoResponse.getReviewInfo().reviews()).hasSize(2),
+                () -> Assertions.assertThat(parkingDetailInfoResponse.getParkingName()).isEqualTo(parkingName)
         );
     }
 
