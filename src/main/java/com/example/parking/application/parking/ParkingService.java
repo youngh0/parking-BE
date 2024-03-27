@@ -13,6 +13,7 @@ import com.example.parking.domain.parking.Parking;
 import com.example.parking.domain.parking.ParkingType;
 import com.example.parking.domain.parking.PayType;
 import com.example.parking.domain.parking.repository.ParkingRepository;
+import com.example.parking.domain.searchcondition.SearchConditionAvailable;
 import com.example.parking.support.Association;
 import java.util.Collections;
 import java.util.List;
@@ -50,10 +51,12 @@ public class ParkingService {
     }
 
     private FilterCondition toFilterCondition(ParkingSearchConditionRequest parkingSearchConditionRequest) {
-        List<ParkingType> parkingTypes = ParkingType.collectMatch(parkingSearchConditionRequest.getParkingTypes());
-        List<OperationType> operationTypes = OperationType.collectMatch(
-                parkingSearchConditionRequest.getOperationTypes());
-        List<PayType> payTypes = PayType.collectMatch(parkingSearchConditionRequest.getPayTypes());
+        List<ParkingType> parkingTypes = SearchConditionAvailable.collectMatch(
+                parkingSearchConditionRequest.getParkingTypes(), ParkingType.values());
+        List<OperationType> operationTypes = SearchConditionAvailable.collectMatch(
+                parkingSearchConditionRequest.getOperationTypes(), OperationType.values());
+        List<PayType> payTypes = SearchConditionAvailable.collectMatch(parkingSearchConditionRequest.getPayTypes(),
+                PayType.values());
 
         return new FilterCondition(operationTypes, parkingTypes, payTypes);
     }

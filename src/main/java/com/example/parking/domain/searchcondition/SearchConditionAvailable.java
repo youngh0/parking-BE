@@ -22,4 +22,10 @@ public interface SearchConditionAvailable {
                 .map(E::getDescription)
                 .toList();
     }
+
+    static <E extends SearchConditionAvailable> List<E> collectMatch(List<String> descriptions, E... values) {
+        return descriptions.stream()
+                .map(d -> (E) find(d))
+                .toList();
+    }
 }
