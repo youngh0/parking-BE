@@ -46,7 +46,7 @@ public class ParkingService {
         List<Parking> parkingLots = findParkingLotsByOrderCondition(parkingSearchConditionRequest.getPriority(),
                 parkingQueryRequest, destination);
 
-        List<Parking> filteredParkingLots = filteringByCondition(parkingLots, filterCondition,
+        List<Parking> filteredParkingLots = parkingApplicationService.filterByCondition(parkingLots, filterCondition,
                 parkingSearchConditionRequest.getHours(), now);
         List<ParkingResponse> parkingResponses = parkingApplicationService.collectParkingInfo(filteredParkingLots,
                 parkingSearchConditionRequest.getHours(), destination, favorites);
@@ -71,11 +71,6 @@ public class ParkingService {
             return Collections.emptyList();
         }
         return favoriteRepository.findByMemberId(Association.from(memberId));
-    }
-
-    private List<Parking> filteringByCondition(List<Parking> parkingLots, FilterCondition filterCondition, int hours,
-                                               LocalDateTime now) {
-        return parkingApplicationService.filterByCondition(parkingLots, filterCondition, hours, now);
     }
 
     private List<Parking> findParkingLotsByOrderCondition(String priority, ParkingQueryRequest parkingQueryRequest,
