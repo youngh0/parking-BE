@@ -27,7 +27,11 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+        MemberAuth memberAuth = parameter.getParameterAnnotation(MemberAuth.class);
         String sessionId = webRequest.getHeader(JSESSIONID);
+        if (memberAuth.nullable() && sessionId == null) {
+            return null;
+        }
         MemberSession session = authService.findSession(sessionId);
         return session.getMemberId();
     }

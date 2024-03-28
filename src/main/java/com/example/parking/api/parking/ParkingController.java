@@ -4,7 +4,7 @@ import com.example.parking.application.parking.ParkingService;
 import com.example.parking.application.parking.dto.ParkingLotsResponse;
 import com.example.parking.application.parking.dto.ParkingQueryRequest;
 import com.example.parking.application.parking.dto.ParkingSearchConditionRequest;
-import com.example.parking.config.argumentresolver.parking.ParkingMemberId;
+import com.example.parking.config.argumentresolver.MemberAuth;
 import com.example.parking.config.argumentresolver.parking.ParkingQuery;
 import com.example.parking.config.argumentresolver.parking.ParkingSearchCondition;
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ public class ParkingController {
     public ResponseEntity<ParkingLotsResponse> find(
             @ParkingQuery ParkingQueryRequest parkingQueryRequest,
             @ParkingSearchCondition ParkingSearchConditionRequest parkingSearchConditionRequest,
-            @ParkingMemberId Long parkingMemberId
+            @MemberAuth(nullable = true) Long parkingMemberId
     ) {
         ParkingLotsResponse parkingLots = parkingService.findParkingLots(parkingQueryRequest,
                 parkingSearchConditionRequest, parkingMemberId, LocalDateTime.now());
