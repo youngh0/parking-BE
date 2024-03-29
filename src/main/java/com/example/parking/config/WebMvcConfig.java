@@ -1,12 +1,10 @@
 package com.example.parking.config;
 
 import com.example.parking.config.argumentresolver.AuthArgumentResolver;
-import com.example.parking.config.interceptor.AuthInterceptor;
-
-import io.swagger.v3.oas.models.PathItem;
 import com.example.parking.config.argumentresolver.parking.ParkingQueryArgumentResolver;
 import com.example.parking.config.argumentresolver.parking.ParkingSearchConditionArgumentResolver;
-import com.example.parking.external.config.interceptor.AuthInterceptor;
+import com.example.parking.config.interceptor.AuthInterceptor;
+import io.swagger.v3.oas.models.PathItem;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,9 +35,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/swagger-resources/**",
                         "/swagger-ui/**",
                         "/signup",
-                        "/signin"
-                        "/users",
-                        "/login",
+                        "/signin",
                         "/parkings"
                 ));
     }
