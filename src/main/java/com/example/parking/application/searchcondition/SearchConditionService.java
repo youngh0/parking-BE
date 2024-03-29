@@ -1,17 +1,16 @@
 package com.example.parking.application.searchcondition;
 
 import com.example.parking.application.searchcondition.dto.SearchConditionDto;
-import com.example.parking.domain.member.Member;
-import com.example.parking.domain.member.MemberRepository;
 import com.example.parking.domain.parking.OperationType;
 import com.example.parking.domain.parking.ParkingType;
 import com.example.parking.domain.parking.PayType;
-import com.example.parking.domain.searchcondition.SearchConditionAvailable;
 import com.example.parking.domain.searchcondition.FeeType;
 import com.example.parking.domain.searchcondition.Hours;
 import com.example.parking.domain.searchcondition.Priority;
 import com.example.parking.domain.searchcondition.SearchCondition;
+import com.example.parking.domain.searchcondition.SearchConditionAvailable;
 import com.example.parking.domain.searchcondition.SearchConditionRepository;
+import com.example.parking.support.Association;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class SearchConditionService {
 
     private final SearchConditionRepository searchConditionRepository;
-    private final MemberRepository memberRepository;
 
     public SearchConditionDto findSearchCondition(Long memberId) {
         SearchCondition searchCondition = searchConditionRepository.getByMemberId(memberId);
@@ -58,9 +56,8 @@ public class SearchConditionService {
     }
 
     private SearchCondition createSearchCondition(Long memberId, SearchConditionDto searchConditionDto) {
-        Member member = memberRepository.getById(memberId);
         return new SearchCondition(
-                member,
+                Association.from(memberId),
                 toEnums(searchConditionDto.getOperationType(), OperationType.values()),
                 toEnums(searchConditionDto.getParkingType(), ParkingType.values()),
                 toEnums(searchConditionDto.getFeeType(), FeeType.values()),

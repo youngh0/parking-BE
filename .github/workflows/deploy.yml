@@ -1,0 +1,87 @@
+name: Backend CD
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  build-and-push:
+    if: |
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'main' &&
+      contains(github.event.pull_request.labels.*.name, '🎅🏼deploy')
+
+    runs-on: ubuntu-latest  
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2  
+
+    - name: JDK 17을 설치합니다
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'corretto'
+
+    - name: Install redis
+      run: sudo apt-get install -y redis-tools redis-server
+
+    - name: Verify that redis is up
+      run: redis-cli ping
+
+    - name: Gradle 명령 실행을 위한 권한을 부여합니다
+      run: chmod +x gradlew
+
+    - name: Gradle build를 수행합니다
+      run: ./gradlew build
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1  
+
+    - name: 도커 로그인
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}  
+        password: ${{ secrets.DOCKERHUB_TOKEN }}     
+
+    - name: 도커 이미지 build 후 push
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: Dockerfile  
+        push: true  
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/pct-backend:${{ github.sha }}
+        platforms: linux/amd64
+    
+  deploy-to-ec2:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+    - name: Install SSH
+      run: sudo apt update && sudo apt install -y openssh-client
+
+    - name: EC2 접속 및 배포 진행
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_PRIVATE_KEY }}
+        script: |
+          export COMMIT_VERSION=${{ github.sha }} &&
+          ./deploy.sh
+
+  notify-slack:
+    runs-on: ubuntu-latest
+    needs: deploy-to-ec2
+    
+    steps:
+      - name: 배포 성공시 Slack으로 알립니다
+        uses: 8398a7/action-slack@v3
+        with:
+          author_name: 배포 성공
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow # selectable (default: repo,message)
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
+          

@@ -1,17 +1,12 @@
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: create
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  # mail
+  profiles:
+    active: ${PROFILE:dev}
+# MAIL
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: everythinginparking3@gmail.com
-    password: test
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:mail@gmail.com}
+    password: ${MAIL_PASSWORD:password}
     properties:
       mail:
         smtp:
@@ -19,23 +14,22 @@ spring:
           timeout: 5000
           starttls:
             enable: true
-  # redis
+# REDIS
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 
-# file
-file:
-  dir: src/test/resources/static/images/
-
-# authcode
+# AUTH CODE
 authcode:
   expired-time: 300
 
-
-# key
+# API KEY
 kakao:
-  key: test
-seoul-public-parking-key: test
-pusan-public-parking-key: test
+  key: ${KAKAO_API_KEY:kakao}
+seoul-public-parking-key: ${SEOUL_API_KEY:seoul}
+pusan-public-parking-key: ${PUSAN_API_KEY:pusan}
+
+# Allow origin
+cors:
+  allowedOrigins: ${ORIGIN:http://localhost:3000}

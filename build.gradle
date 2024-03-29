@@ -31,8 +31,8 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
     // 메일
     implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -45,6 +45,10 @@ dependencies {
     testImplementation "org.testcontainers:junit-jupiter:1.19.6"
     testImplementation "com.redis:testcontainers-redis:2.2.0"
     testImplementation "org.testcontainers:mysql:1.19.6"
+
+    // flyway 추가
+    implementation 'org.flywaydb:flyway-mysql'
+    implementation 'org.flywaydb:flyway-core'
 }
 
 tasks.named('test') {

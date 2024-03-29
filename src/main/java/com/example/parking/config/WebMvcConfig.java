@@ -1,13 +1,18 @@
 package com.example.parking.config;
 
 import com.example.parking.config.argumentresolver.AuthArgumentResolver;
+import com.example.parking.config.interceptor.AuthInterceptor;
+
+import io.swagger.v3.oas.models.PathItem;
 import com.example.parking.config.argumentresolver.parking.ParkingQueryArgumentResolver;
 import com.example.parking.config.argumentresolver.parking.ParkingSearchConditionArgumentResolver;
 import com.example.parking.external.config.interceptor.AuthInterceptor;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -20,11 +25,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final ParkingQueryArgumentResolver parkingQueryArgumentResolver;
     private final ParkingSearchConditionArgumentResolver parkingSearchConditionArgumentResolver;
 
+    @Value("${cors.allowedOrigins}")
+    private String[] allowedOrigins;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(List.of(
+                        "/v3/api-docs/**",
+                        "/swagger-resources/**",
+                        "/swagger-ui/**",
+                        "/signup",
+                        "/signin"
                         "/users",
                         "/login",
                         "/parkings"
@@ -36,5 +49,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
         resolvers.add(authArgumentResolver);
         resolvers.add(parkingQueryArgumentResolver);
         resolvers.add(parkingSearchConditionArgumentResolver);
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins(allowedOrigins)
+                .allowedMethods(
+                        PathItem.HttpMethod.OPTIONS.name(),
+                        PathItem.HttpMethod.GET.name(),
+                        PathItem.HttpMethod.POST.name(),
+                        PathItem.HttpMethod.PUT.name(),
+                        PathItem.HttpMethod.DELETE.name(),
+                        PathItem.HttpMethod.PATCH.name()
+                )
+                .allowCredentials(true)
+                .exposedHeaders("*");
     }
 }
