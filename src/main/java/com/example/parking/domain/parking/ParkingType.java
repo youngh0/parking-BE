@@ -2,7 +2,6 @@ package com.example.parking.domain.parking;
 
 import com.example.parking.domain.searchcondition.SearchConditionAvailable;
 import java.util.Arrays;
-import java.util.List;
 import lombok.Getter;
 
 @Getter
@@ -18,18 +17,6 @@ public enum ParkingType implements SearchConditionAvailable {
         this.description = description;
     }
 
-    public static List<ParkingType> collectMatch(List<String> descriptions) {
-        return descriptions.stream()
-                .filter(ParkingType::contains)
-                .map(ParkingType::find)
-                .toList();
-    }
-
-    private static boolean contains(String description) {
-        return Arrays.stream(values())
-                .anyMatch(e -> description.startsWith(e.getDescription()));
-    }
-
     @Override
     public ParkingType getDefault() {
         return NO_INFO;
@@ -40,9 +27,5 @@ public enum ParkingType implements SearchConditionAvailable {
                 .filter(e -> description.startsWith(e.getDescription()))
                 .findAny()
                 .orElse(NO_INFO);
-    }
-
-    public String getDescription() {
-        return description;
     }
 }

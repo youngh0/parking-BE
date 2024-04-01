@@ -1,5 +1,6 @@
 package com.example.parking.application.parking;
 
+import com.example.parking.application.SearchConditionMapper;
 import com.example.parking.application.parking.dto.ParkingLotsResponse;
 import com.example.parking.application.parking.dto.ParkingLotsResponse.ParkingResponse;
 import com.example.parking.application.parking.dto.ParkingQueryRequest;
@@ -14,7 +15,6 @@ import com.example.parking.domain.parking.ParkingType;
 import com.example.parking.domain.parking.PayType;
 import com.example.parking.domain.parking.repository.ParkingRepository;
 import com.example.parking.domain.searchcondition.FeeType;
-import com.example.parking.domain.searchcondition.SearchConditionAvailable;
 import com.example.parking.support.Association;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -33,6 +33,7 @@ public class ParkingService {
     private final ParkingRepository parkingRepository;
     private final ParkingApplicationService parkingApplicationService;
     private final FavoriteRepository favoriteRepository;
+    private final SearchConditionMapper searchConditionMapper;
 
     @Transactional(readOnly = true)
     public ParkingLotsResponse findParkingLots(ParkingQueryRequest parkingQueryRequest,
@@ -54,16 +55,14 @@ public class ParkingService {
         return new ParkingLotsResponse(parkingResponses);
     }
 
-    private FilterCondition toFilterCondition(ParkingSearchConditionRequest parkingSearchConditionRequest) {
-        List<ParkingType> parkingTypes = SearchConditionAvailable.collectMatch(
-                parkingSearchConditionRequest.getParkingTypes(), ParkingType.values());
-        List<OperationType> operationTypes = SearchConditionAvailable.collectMatch(
-                parkingSearchConditionRequest.getOperationTypes(), OperationType.values());
-        List<PayType> payTypes = SearchConditionAvailable.collectMatch(parkingSearchConditionRequest.getPayTypes(),
-                PayType.values());
+    private FilterCondition toFilterCondition(ParkingSearchConditionRequest request) {
+        List<ParkingType> parkingTypes = searchConditionMapper.toEnums(ParkingType.class, request.getParkingTypes());
+        List<OperationType> operationTypes = searchConditionMapper.toEnums(OperationType.class,
+                request.getOperationTypes());
+        List<PayType> payTypes = searchConditionMapper.toEnums(PayType.class, request.getPayTypes());
+        FeeType feeType = searchConditionMapper.toEnum(FeeType.class, request.getFeeType());
 
-        return new FilterCondition(operationTypes, parkingTypes, payTypes,
-                FeeType.find(parkingSearchConditionRequest.getFeeType()));
+        return new FilterCondition(operationTypes, parkingTypes, payTypes, feeType);
     }
 
     private List<Favorite> findMemberFavorites(Long memberId) {
