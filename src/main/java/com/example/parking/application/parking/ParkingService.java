@@ -2,6 +2,9 @@ package com.example.parking.application.parking;
 
 import com.example.parking.application.parking.dto.ParkingDetailInfoResponse;
 import com.example.parking.application.parking.dto.ParkingDetailInfoResponse.FeeInfo;
+import com.example.parking.application.parking.dto.ParkingDetailInfoResponse.HolidayOperatingTime;
+import com.example.parking.application.parking.dto.ParkingDetailInfoResponse.SaturdayOperatingTime;
+import com.example.parking.application.parking.dto.ParkingDetailInfoResponse.WeekdayOperatingTime;
 import com.example.parking.application.review.ReviewService;
 import com.example.parking.application.review.dto.ReviewInfoResponse;
 import com.example.parking.domain.parking.Parking;
@@ -54,6 +57,15 @@ public class ParkingService {
                 diffMinute,
                 parking.getBaseInformation().getTel(),
                 parking.getBaseInformation().getPayTypes().getDescription(),
+                new WeekdayOperatingTime(
+                        parking.getOperatingTime().getWeekdayBeginTime(),
+                        parking.getOperatingTime().getWeekdayEndTime()),
+                new SaturdayOperatingTime(
+                        parking.getOperatingTime().getSaturdayBeginTime(),
+                        parking.getOperatingTime().getSaturdayEndTime()),
+                new HolidayOperatingTime(
+                        parking.getOperatingTime().getHolidayBeginTime(),
+                        parking.getOperatingTime().getHolidayEndTime()),
                 reviews
         );
     }

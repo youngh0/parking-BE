@@ -1,6 +1,7 @@
 package com.example.parking.application.parking.dto;
 
 import com.example.parking.application.review.dto.ReviewInfoResponse;
+import java.time.LocalTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,12 +20,17 @@ public class ParkingDetailInfoResponse {
     private Integer lastUpdated;
     private String tel;
     private String paymentType;
+    private WeekdayOperatingTime weekdayOperatingTime;
+    private SaturdayOperatingTime saturdayOperatingTime;
+    private HolidayOperatingTime holidayOperatingTime;
     private ReviewInfoResponse reviewInfo;
 
     public ParkingDetailInfoResponse(String parkingName, String parkingType, Double latitude, Double longitude,
                                      FeeInfo feeInfo,
                                      Integer currentParkingCount, Integer capacity, Integer lastUpdated, String tel,
-                                     String paymentType, ReviewInfoResponse reviewInfo) {
+                                     String paymentType, WeekdayOperatingTime weekdayOperatingTime,
+                                     SaturdayOperatingTime saturdayOperatingTime,
+                                     HolidayOperatingTime holidayOperatingTime, ReviewInfoResponse reviewInfo) {
         this.parkingName = parkingName;
         this.parkingType = parkingType;
         this.latitude = latitude;
@@ -35,6 +41,9 @@ public class ParkingDetailInfoResponse {
         this.lastUpdated = lastUpdated;
         this.tel = tel;
         this.paymentType = paymentType;
+        this.weekdayOperatingTime = weekdayOperatingTime;
+        this.saturdayOperatingTime = saturdayOperatingTime;
+        this.holidayOperatingTime = holidayOperatingTime;
         this.reviewInfo = reviewInfo;
     }
 
@@ -47,6 +56,42 @@ public class ParkingDetailInfoResponse {
         public FeeInfo(Integer fee, Integer time) {
             this.fee = fee;
             this.time = time;
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class WeekdayOperatingTime {
+        private LocalTime beginTime;
+        private LocalTime endTime;
+
+        public WeekdayOperatingTime(LocalTime beginTime, LocalTime endTime) {
+            this.beginTime = beginTime;
+            this.endTime = endTime;
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class SaturdayOperatingTime {
+        private LocalTime beginTime;
+        private LocalTime endTime;
+
+        public SaturdayOperatingTime(LocalTime beginTime, LocalTime endTime) {
+            this.beginTime = beginTime;
+            this.endTime = endTime;
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class HolidayOperatingTime {
+        private LocalTime beginTime;
+        private LocalTime endTime;
+
+        public HolidayOperatingTime(LocalTime beginTime, LocalTime endTime) {
+            this.beginTime = beginTime;
+            this.endTime = endTime;
         }
     }
 }
