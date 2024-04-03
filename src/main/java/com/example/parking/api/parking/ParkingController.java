@@ -23,5 +23,15 @@ public class ParkingController {
     public ResponseEntity<ParkingDetailInfoResponse> findParking(@PathVariable Long parkingId) {
         ParkingDetailInfoResponse parkingDetailInfoResponse = parkingService.findParking(parkingId);
         return ResponseEntity.status(HttpStatus.OK).body(parkingDetailInfoResponse);
+    @Operation(summary = "주차장 반경 조회", description = "주차장 반경 조회")
+    @GetMapping("/parkings")
+    public ResponseEntity<ParkingLotsResponse> find(
+            @ParkingQuery ParkingQueryRequest parkingQueryRequest,
+            @ParkingSearchCondition ParkingSearchConditionRequest parkingSearchConditionRequest,
+            @Parameter(hidden = true) @MemberAuth(nullable = true) Long parkingMemberId
+    ) {
+        ParkingLotsResponse parkingLots = parkingService.findParkingLots(parkingQueryRequest,
+                parkingSearchConditionRequest, parkingMemberId);
+        return ResponseEntity.ok(parkingLots);
     }
 }

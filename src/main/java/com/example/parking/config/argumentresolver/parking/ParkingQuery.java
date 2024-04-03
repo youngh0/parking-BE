@@ -1,4 +1,4 @@
-package com.example.parking.config.argumentresolver;
+package com.example.parking.config.argumentresolver.parking;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,5 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MemberAuth {
-
-    boolean nullable() default false;
+public @interface ParkingQuery {
 }

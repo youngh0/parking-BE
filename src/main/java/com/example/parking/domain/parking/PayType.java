@@ -13,7 +13,7 @@ public enum PayType implements SearchConditionAvailable {
 
     private final String description;
 
-    PayType(final String description) {
+    PayType(String description) {
         this.description = description;
     }
 
