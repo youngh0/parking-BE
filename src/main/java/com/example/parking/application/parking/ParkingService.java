@@ -34,7 +34,8 @@ public class ParkingService {
     }
 
     @Transactional(readOnly = true)
-    public ParkingDetailInfoResponse findParking(Long parkingId, LocalDateTime now) {
+    public ParkingDetailInfoResponse findParking(Long parkingId) {
+        LocalDateTime now = LocalDateTime.now();
         ReviewInfoResponse reviews = reviewService.readReviews(parkingId);
         Parking parking = parkingRepository.getById(parkingId);
         int diffMinute = parking.calculateUpdatedDiff(now);

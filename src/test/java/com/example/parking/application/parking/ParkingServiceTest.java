@@ -23,7 +23,6 @@ import com.example.parking.domain.parking.TimeUnit;
 import com.example.parking.domain.review.Content;
 import com.example.parking.support.exception.DomainException;
 import com.example.parking.support.exception.ExceptionInformation;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -34,7 +33,7 @@ class ParkingServiceTest extends ContainerTest {
     @Test
     void 조회하려는_주차장이_없으면_예외() {
         //given
-        Assertions.assertThatThrownBy(() -> parkingService.findParking(1L, LocalDateTime.now()))
+        Assertions.assertThatThrownBy(() -> parkingService.findParking(1L))
                 .isInstanceOf(DomainException.class)
                 .hasMessage(ExceptionInformation.INVALID_PARKING.getMessage());
     }
@@ -55,8 +54,7 @@ class ParkingServiceTest extends ContainerTest {
         reviewService.createReview(parking.getId(), member.getId(), reviewCreateRequest);
 
         // when, then
-        ParkingDetailInfoResponse parkingDetailInfoResponse = parkingService.findParking(parking.getId(),
-                LocalDateTime.now());
+        ParkingDetailInfoResponse parkingDetailInfoResponse = parkingService.findParking(parking.getId());
         assertAll(
                 () -> Assertions.assertThat(parkingDetailInfoResponse.getReviewInfo().reviews()).hasSize(2),
                 () -> Assertions.assertThat(parkingDetailInfoResponse.getParkingName()).isEqualTo(parkingName)

@@ -4,7 +4,6 @@ import com.example.parking.application.parking.ParkingService;
 import com.example.parking.application.parking.dto.ParkingDetailInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +21,7 @@ public class ParkingController {
     @Operation(summary = "주차장 상세조회", description = "주차장 상세조회")
     @GetMapping("/parkings/{parkingId}")
     public ResponseEntity<ParkingDetailInfoResponse> findParking(@PathVariable Long parkingId) {
-        ParkingDetailInfoResponse parkingDetailInfoResponse = parkingService.findParking(parkingId,
-                LocalDateTime.now());
+        ParkingDetailInfoResponse parkingDetailInfoResponse = parkingService.findParking(parkingId);
         return ResponseEntity.status(HttpStatus.OK).body(parkingDetailInfoResponse);
     }
 }
