@@ -1,10 +1,7 @@
 package com.example.parking.external.scheduler;
 
-import com.example.parking.application.review.ReviewService;
-import com.example.parking.domain.review.service.ReviewDomainService;
 import com.example.parking.external.coordinate.CoordinateService;
 import com.example.parking.fake.BasicParkingRepository;
-import com.example.parking.fake.BasicReviewRepository;
 import com.example.parking.fake.ExceptionParkingApiService;
 import com.example.parking.fake.FakeCoordinateService;
 import com.example.parking.fake.FakeParkingService;
@@ -18,11 +15,7 @@ import org.junit.jupiter.api.Test;
 class ParkingUpdateSchedulerTest {
 
     private final FakeParkingService parkingService = new FakeParkingService(
-            new BasicParkingRepository(),
-            new ReviewService(
-                    new BasicReviewRepository(),
-                    new ReviewDomainService(new BasicReviewRepository())
-            )
+            new BasicParkingRepository()
     );
     private final CoordinateService coordinateService = new FakeCoordinateService();
 

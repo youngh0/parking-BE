@@ -1,22 +1,22 @@
 package com.example.parking.application.parking;
 
 import com.example.parking.application.SearchConditionMapper;
-import com.example.parking.application.parking.dto.ParkingLotsResponse;
-import com.example.parking.application.parking.dto.ParkingLotsResponse.ParkingResponse;
-import com.example.parking.application.parking.dto.ParkingQueryRequest;
-import com.example.parking.application.parking.dto.ParkingSearchConditionRequest;
-import com.example.parking.domain.favorite.Favorite;
-import com.example.parking.domain.favorite.FavoriteRepository;
-import com.example.parking.domain.parking.Fee;
-import com.example.parking.domain.parking.Location;
-import com.example.parking.domain.parking.OperationType;
 import com.example.parking.application.parking.dto.ParkingDetailInfoResponse;
 import com.example.parking.application.parking.dto.ParkingDetailInfoResponse.FeeInfo;
 import com.example.parking.application.parking.dto.ParkingDetailInfoResponse.HolidayOperatingTime;
 import com.example.parking.application.parking.dto.ParkingDetailInfoResponse.SaturdayOperatingTime;
 import com.example.parking.application.parking.dto.ParkingDetailInfoResponse.WeekdayOperatingTime;
+import com.example.parking.application.parking.dto.ParkingLotsResponse;
+import com.example.parking.application.parking.dto.ParkingLotsResponse.ParkingResponse;
+import com.example.parking.application.parking.dto.ParkingQueryRequest;
+import com.example.parking.application.parking.dto.ParkingSearchConditionRequest;
 import com.example.parking.application.review.ReviewService;
 import com.example.parking.application.review.dto.ReviewInfoResponse;
+import com.example.parking.domain.favorite.Favorite;
+import com.example.parking.domain.favorite.FavoriteRepository;
+import com.example.parking.domain.parking.Fee;
+import com.example.parking.domain.parking.Location;
+import com.example.parking.domain.parking.OperationType;
 import com.example.parking.domain.parking.Parking;
 import com.example.parking.domain.parking.ParkingFeeCalculator;
 import com.example.parking.domain.parking.ParkingType;
@@ -27,10 +27,9 @@ import com.example.parking.domain.searchcondition.FeeType;
 import com.example.parking.support.Association;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import com.example.parking.domain.parking.ParkingRepository;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +45,7 @@ public class ParkingService {
     private final FavoriteRepository favoriteRepository;
     private final SearchConditionMapper searchConditionMapper;
     private final ParkingFeeCalculator parkingFeeCalculator;
+    private final ReviewService reviewService;
 
     @Transactional(readOnly = true)
     public ParkingLotsResponse findParkingLots(ParkingQueryRequest parkingQueryRequest,
@@ -135,7 +135,6 @@ public class ParkingService {
                 parking.getLocation().getLongitude()
         );
     }
-    private final ReviewService reviewService;
 
     @Transactional
     public void saveAll(List<Parking> parkingLots) {
@@ -150,8 +149,8 @@ public class ParkingService {
     @Transactional(readOnly = true)
     public ParkingDetailInfoResponse findParking(Long parkingId) {
         LocalDateTime now = LocalDateTime.now();
-        ReviewInfoResponse reviews = reviewService.readReviews(parkingId);
         Parking parking = parkingRepository.getById(parkingId);
+        ReviewInfoResponse reviews = reviewService.readReviews(parkingId);
         int diffMinute = parking.calculateUpdatedDiff(now);
 
         return toParkingResponse(reviews, parking, diffMinute);
