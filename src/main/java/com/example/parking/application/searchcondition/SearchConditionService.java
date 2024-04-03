@@ -1,5 +1,6 @@
 package com.example.parking.application.searchcondition;
 
+import com.example.parking.application.SearchConditionMapper;
 import com.example.parking.application.searchcondition.dto.SearchConditionDto;
 import com.example.parking.domain.parking.OperationType;
 import com.example.parking.domain.parking.ParkingType;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SearchConditionService {
 
     private final SearchConditionRepository searchConditionRepository;
+    private final SearchConditionMapper searchConditionMapper;
 
     public SearchConditionDto findSearchCondition(Long memberId) {
         SearchCondition searchCondition = searchConditionRepository.getByMemberId(memberId);
@@ -58,18 +60,12 @@ public class SearchConditionService {
     private SearchCondition createSearchCondition(Long memberId, SearchConditionDto searchConditionDto) {
         return new SearchCondition(
                 Association.from(memberId),
-                toEnums(searchConditionDto.getOperationType(), OperationType.values()),
-                toEnums(searchConditionDto.getParkingType(), ParkingType.values()),
-                toEnums(searchConditionDto.getFeeType(), FeeType.values()),
-                toEnums(searchConditionDto.getPayType(), PayType.values()),
-                SearchConditionAvailable.find(searchConditionDto.getPriority(), Priority.values()),
+                searchConditionMapper.toEnums(OperationType.class, searchConditionDto.getOperationType()),
+                searchConditionMapper.toEnums(ParkingType.class, searchConditionDto.getParkingType()),
+                searchConditionMapper.toEnums(FeeType.class, searchConditionDto.getFeeType()),
+                searchConditionMapper.toEnums(PayType.class, searchConditionDto.getPayType()),
+                searchConditionMapper.toEnum(Priority.class, searchConditionDto.getPriority()),
                 Hours.from(searchConditionDto.getHours())
         );
-    }
-
-    public <E extends SearchConditionAvailable> List<E> toEnums(List<String> descriptions, E... values) {
-        return descriptions.stream()
-                .map(description -> SearchConditionAvailable.find(description, values))
-                .toList();
     }
 }

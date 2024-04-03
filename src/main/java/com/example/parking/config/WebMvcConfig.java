@@ -1,8 +1,9 @@
 package com.example.parking.config;
 
 import com.example.parking.config.argumentresolver.AuthArgumentResolver;
+import com.example.parking.config.argumentresolver.parking.ParkingQueryArgumentResolver;
+import com.example.parking.config.argumentresolver.parking.ParkingSearchConditionArgumentResolver;
 import com.example.parking.config.interceptor.AuthInterceptor;
-
 import io.swagger.v3.oas.models.PathItem;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final AuthInterceptor authInterceptor;
     private final AuthArgumentResolver authArgumentResolver;
+    private final ParkingQueryArgumentResolver parkingQueryArgumentResolver;
+    private final ParkingSearchConditionArgumentResolver parkingSearchConditionArgumentResolver;
 
     @Value("${cors.allowedOrigins}")
     private String[] allowedOrigins;
@@ -32,13 +35,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/swagger-resources/**",
                         "/swagger-ui/**",
                         "/signup",
-                        "/signin"
+                        "/signin",
+                        "/parkings"
                 ));
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(authArgumentResolver);
+        resolvers.add(parkingQueryArgumentResolver);
+        resolvers.add(parkingSearchConditionArgumentResolver);
     }
 
     @Override

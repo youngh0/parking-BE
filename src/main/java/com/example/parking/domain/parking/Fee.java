@@ -48,6 +48,10 @@ public class Fee {
         return otherFee;
     }
 
+    public boolean isFree() {
+        return fee == 0;
+    }
+
     public boolean isValidFee() {
         return !NO_INFO.equals(this);
     }
