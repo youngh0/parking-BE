@@ -35,6 +35,7 @@ public class AuthService {
 
     @Transactional
     public String createSession(Long memberId) {
+        System.out.println("aa");
         LocalDateTime current = LocalDateTime.now();
         String uuid = UUID.randomUUID().toString();
 
