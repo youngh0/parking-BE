@@ -1,0 +1,5 @@
+dependencies {
+    implementation project(':parking-core')
+
+    testImplementation(testFixtures(project(":parking-core")))
+}

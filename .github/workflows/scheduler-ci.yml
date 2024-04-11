@@ -1,12 +1,12 @@
-name: Backend CI
+name: Backend scheduler CI
 
 on:
   push:
     branches: [ main ]
-    paths: [ parking-core ]
+    paths: [ parking-scheduler ]
   pull_request:
     branches: [ main ]
-    paths: [ parking-core ]
+    paths: [ parking-scheduler ]
 
 permissions:
   checks: write
@@ -35,5 +35,5 @@ jobs:
       - name: Gradle 명령 실행을 위한 권한을 부여합니다
         run: chmod +x gradlew
 
-      - name: 테스트 수행
-        run: ./gradlew :parking-core:test
+      - name: 스케줄러 테스트 수행
+        run: ./gradlew :parking-scheduler:test
