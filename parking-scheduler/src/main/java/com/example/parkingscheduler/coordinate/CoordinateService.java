@@ -27,7 +27,7 @@ public class CoordinateService {
     public Location extractLocationByAddress(String address, Location location) {
         UriComponents uriComponents = makeCompleteUri(address);
         ResponseEntity<CoordinateResponse> result = connect(uriComponents);
-
+        System.out.println("test");
         if (isEmptyResultData(result)) {
             return location;
         }
