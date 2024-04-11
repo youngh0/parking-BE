@@ -3,10 +3,12 @@ name: Backend scheduler CI
 on:
   push:
     branches: [ main ]
-    paths: [ parking-scheduler ]
+    paths:
+      - "parking-scheduler/**"
   pull_request:
     branches: [ main ]
-    paths: [ parking-scheduler ]
+    paths:
+      - "parking-scheduler/**"
 
 permissions:
   checks: write
