@@ -3,8 +3,10 @@ name: Backend CI
 on:
   push:
     branches: [ main ]
+    paths: [ parking-core ]
   pull_request:
     branches: [ main ]
+    paths: [ parking-core ]
 
 permissions:
   checks: write
