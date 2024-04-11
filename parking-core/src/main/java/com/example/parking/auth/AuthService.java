@@ -37,7 +37,7 @@ public class AuthService {
     public String createSession(Long memberId) {
         LocalDateTime current = LocalDateTime.now();
         String uuid = UUID.randomUUID().toString();
-
+        System.out.println("test");
         MemberSession memberSession = new MemberSession(uuid, memberId, current, current.plusMinutes(DURATION_MINUTE));
         memberSessionRepository.save(memberSession);
         return memberSession.getSessionId();
