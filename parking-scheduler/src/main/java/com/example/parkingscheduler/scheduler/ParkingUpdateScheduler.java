@@ -11,10 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,15 +23,17 @@ import org.springframework.stereotype.Component;
 public class ParkingUpdateScheduler {
 
     private final List<ParkingApiService> parkingApiServices;
-    private final CoordinateService coordinateService;
+    private final ParkingMapper parkingMapper;
+    private final ParkingService parkingService;
     private final ParkingRepository parkingRepository;
+    private final CoordinateService coordinateService;
 
-    @Scheduled(cron = "0 */30 * * * *")
+    @Scheduled(cron = "0/10 * * * * ?")
     public void autoUpdateOfferCurrentParking() {
         Map<String, Parking> parkingLots = readBy(ParkingApiService::offerCurrentParking);
         Map<String, Parking> saved = findAllByName(parkingLots.keySet());
-        updateSavedParkingLots(parkingLots, saved);
-        saveNewParkingLots(parkingLots, saved);
+        List<Parking> newParkingLots = findNewParkingLots(parkingLots, saved);
+        parkingService.updateParkingLots(parkingLots, saved, newParkingLots);
     }
 
     private Map<String, Parking> readBy(Predicate<ParkingApiService> currentParkingAvailable) {
@@ -42,7 +41,7 @@ public class ParkingUpdateScheduler {
                 .filter(currentParkingAvailable)
                 .map(this::read)
                 .flatMap(Collection::stream)
-                .collect(toParkingMap());
+                .collect(parkingMapper.toParkingMap());
     }
 
     private List<Parking> read(ParkingApiService parkingApiService) {
@@ -54,36 +53,10 @@ public class ParkingUpdateScheduler {
         }
     }
 
-    private Collector<Parking, ?, Map<String, Parking>> toParkingMap() {
-        return Collectors.toMap(
-                parking -> parking.getBaseInformation().getName(),
-                Function.identity(),
-                (existing, replacement) -> existing
-        );
-    }
-
     private Map<String, Parking> findAllByName(Set<String> names) {
         return parkingRepository.findAllByBaseInformationNameIn(names)
                 .stream()
-                .collect(toParkingMap());
-    }
-
-    private void updateSavedParkingLots(Map<String, Parking> parkingLots, Map<String, Parking> saved) {
-        for (String parkingName : saved.keySet()) {
-            Parking origin = saved.get(parkingName);
-            Parking updated = parkingLots.get(parkingName);
-            origin.update(updated);
-        }
-    }
-
-    private void saveNewParkingLots(Map<String, Parking> parkingLots, Map<String, Parking> saved) {
-        List<Parking> newParkingLots = parkingLots.keySet()
-                .stream()
-                .filter(parkingName -> !saved.containsKey(parkingName))
-                .map(parkingLots::get)
-                .toList();
-        updateLocation(newParkingLots);
-        parkingRepository.saveAll(newParkingLots);
+                .collect(parkingMapper.toParkingMap());
     }
 
     private void updateLocation(List<Parking> newParkingLots) {
@@ -95,11 +68,21 @@ public class ParkingUpdateScheduler {
         }
     }
 
+    private List<Parking> findNewParkingLots(Map<String, Parking> parkingLots, Map<String, Parking> saved) {
+        List<Parking> newParkingLots = parkingLots.keySet()
+                .stream()
+                .filter(parkingName -> !saved.containsKey(parkingName))
+                .map(parkingLots::get)
+                .toList();
+        updateLocation(newParkingLots);
+        return newParkingLots;
+    }
+
     @Scheduled(fixedRate = 30, timeUnit = TimeUnit.DAYS)
     public void autoUpdateNotOfferCurrentParking() {
         Map<String, Parking> parkingLots = readBy(parkingApiService -> !parkingApiService.offerCurrentParking());
         Map<String, Parking> saved = findAllByName(parkingLots.keySet());
-        updateSavedParkingLots(parkingLots, saved);
-        saveNewParkingLots(parkingLots, saved);
+        List<Parking> newParkingLots = findNewParkingLots(parkingLots, saved);
+        parkingService.updateParkingLots(parkingLots, saved, newParkingLots);
     }
 }

@@ -27,8 +27,10 @@ class ParkingUpdateSchedulerTest {
 
         ParkingUpdateScheduler scheduler = new ParkingUpdateScheduler(
                 List.of(offerCurrentParkingApiService),
-                coordinateService,
-                parkingRepository
+                new ParkingMapper(),
+                new ParkingService(parkingRepository),
+                parkingRepository,
+                coordinateService
         );
 
         //when
@@ -50,8 +52,10 @@ class ParkingUpdateSchedulerTest {
 
         ParkingUpdateScheduler scheduler = new ParkingUpdateScheduler(
                 List.of(notOfferCurrentParkingApiService),
-                coordinateService,
-                parkingRepository
+                new ParkingMapper(),
+                new ParkingService(parkingRepository),
+                parkingRepository,
+                coordinateService
         );
 
         //when
@@ -74,8 +78,10 @@ class ParkingUpdateSchedulerTest {
 
         ParkingUpdateScheduler scheduler = new ParkingUpdateScheduler(
                 List.of(offerCurrentParkingApiService, notOfferCurrentParkingApiService),
-                coordinateService,
-                parkingRepository
+                new ParkingMapper(),
+                new ParkingService(parkingRepository),
+                parkingRepository,
+                coordinateService
         );
 
         //when
@@ -91,8 +97,10 @@ class ParkingUpdateSchedulerTest {
         //given
         ParkingUpdateScheduler scheduler = new ParkingUpdateScheduler(
                 List.of(new OfferCurrentParkingApiService(5), new ExceptionParkingApiService()),
-                coordinateService,
-                parkingRepository
+                new ParkingMapper(),
+                new ParkingService(parkingRepository),
+                parkingRepository,
+                coordinateService
         );
 
         //when

@@ -6,6 +6,10 @@ plugins {
 
 
 subprojects {
+    repositories {
+        mavenCentral()
+    }
+
     group = 'com.example'
     version = '0.0.1-SNAPSHOT'
     sourceCompatibility = '17'
@@ -53,9 +57,6 @@ subprojects {
         implementation 'org.flywaydb:flyway-core'
     }
 
-    repositories {
-        mavenCentral()
-    }
 
     test {
         useJUnitPlatform()

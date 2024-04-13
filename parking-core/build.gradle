@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+    implementation group: 'org.hibernate.orm', name: 'hibernate-spatial', version: '6.3.1.Final'
     testFixturesImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testFixturesImplementation group: 'org.hibernate.orm', name: 'hibernate-spatial', version: '6.3.1.Final'
 }
