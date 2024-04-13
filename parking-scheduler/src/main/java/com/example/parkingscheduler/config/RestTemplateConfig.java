@@ -17,6 +17,7 @@ public class RestTemplateConfig {
     @Qualifier("coordinateRestTemplate")
     public RestTemplate coordinateRestTemplate(RestTemplateBuilder restTemplateBuilder,
                                                @Value("${kakao.key}") String kakaoUrl) {
+        System.out.println("test");
         return restTemplateBuilder
                 .errorHandler(new CoordinateErrorHandler())
                 .defaultHeader(AUTH_HEADER, kakaoUrl)
