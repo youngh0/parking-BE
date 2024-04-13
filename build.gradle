@@ -6,6 +6,10 @@ plugins {
 
 
 subprojects {
+    repositories {
+        mavenCentral()
+    }
+
     group = 'com.example'
     version = '0.0.1-SNAPSHOT'
     sourceCompatibility = '17'
@@ -28,6 +32,7 @@ subprojects {
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation group: 'org.hibernate.orm', name: 'hibernate-spatial', version: '6.3.1.Final'
         compileOnly 'org.projectlombok:lombok'
         runtimeOnly 'com.h2database:h2'
         runtimeOnly 'com.mysql:mysql-connector-j'
@@ -51,10 +56,6 @@ subprojects {
         // flyway 추가
         implementation 'org.flywaydb:flyway-mysql'
         implementation 'org.flywaydb:flyway-core'
-    }
-
-    repositories {
-        mavenCentral()
     }
 
     test {

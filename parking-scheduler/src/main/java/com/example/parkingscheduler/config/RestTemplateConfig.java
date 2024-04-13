@@ -23,4 +23,9 @@ public class RestTemplateConfig {
                 .defaultHeader(AUTH_HEADER, kakaoUrl)
                 .build();
     }
+
+    @Bean
+    public RestTemplateBuilder restTemplateBuilder() {
+        return new RestTemplateBuilder();
+    }
 }
