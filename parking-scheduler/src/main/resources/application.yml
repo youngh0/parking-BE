@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/parking?serverTimezone=UTC&characterEncoding=UTF-8
     username: root
-    password: dudgh123
+    password: aaa
   data:
     redis:
       host: pct-redis
@@ -15,7 +15,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: everythinginparking3@gmail.com
-    password: hanjvizvuslxlcsg
+    password: sdfds
     properties:
       mail:
         smtp:
@@ -25,9 +25,9 @@ spring:
             enable: true
 
 kakao:
-  key: KakaoAK f63498303a635aa83cd60fd558fdbc2f
-seoul-public-parking-key: 7a7250537070617238334472465257
-pusan-public-parking-key: ec3Qt4%2FbCRaddaK2FMoeVpVW2SqG%2B2cdn4Xdf1LpWru4O8opXbJc0wbbSdjXhQykcw2S8HmDuA%2BW3GiFFGDPgQ%3D%3D
+  key: refjerl
+seoul-public-parking-key: reiljflwae
+pusan-public-parking-key: fkahjlfew
 
 authcode:
   expired-time: 300
