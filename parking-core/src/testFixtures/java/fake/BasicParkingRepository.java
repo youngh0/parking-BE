@@ -8,12 +8,11 @@ import com.example.parking.domain.parking.Location;
 import com.example.parking.domain.parking.OperatingTime;
 import com.example.parking.domain.parking.OperationType;
 import com.example.parking.domain.parking.Parking;
+import com.example.parking.domain.parking.ParkingRepository;
 import com.example.parking.domain.parking.ParkingType;
 import com.example.parking.domain.parking.PayTypes;
 import com.example.parking.domain.parking.Space;
 import com.example.parking.domain.parking.TimeUnit;
-import com.example.parking.domain.parking.repository.ParkingRepository;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.locationtech.jts.geom.Point;
 
 public class BasicParkingRepository implements ParkingRepository, BasicRepository<Parking, Long> {
 
@@ -31,16 +29,6 @@ public class BasicParkingRepository implements ParkingRepository, BasicRepositor
     @Override
     public Optional<Parking> findById(Long id) {
         return Optional.of(store.get(id));
-    }
-
-    @Override
-    public List<Parking> findAroundParkingLots(Point point, int radius) {
-        return Collections.EMPTY_LIST;
-    }
-
-    @Override
-    public List<Parking> findAroundParkingLotsOrderByDistance(Point point, int radius) {
-        return Collections.EMPTY_LIST;
     }
 
     @Override

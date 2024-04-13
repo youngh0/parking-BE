@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
+@EnableScheduling
 public class RestTemplateConfig {
 
     private static final String AUTH_HEADER = "Authorization";
@@ -21,5 +23,10 @@ public class RestTemplateConfig {
                 .errorHandler(new CoordinateErrorHandler())
                 .defaultHeader(AUTH_HEADER, kakaoUrl)
                 .build();
+    }
+
+    @Bean
+    public RestTemplateBuilder RestTemplateBuilder() {
+        return new RestTemplateBuilder();
     }
 }
